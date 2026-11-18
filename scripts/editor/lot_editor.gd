@@ -119,6 +119,123 @@ func can_hold_wall(edge: Vector3i) -> bool:
 	return a == null or a != lot.blocking_object_at(sides[1])
 
 
+# --- Portes et fenêtres ---------------------------------------------------------
+
+## Devis pour poser une ouverture à partir de `edge` : il faut un mur sans ouverture sur chaque segment.
+func quote_opening(edge: Vector3i, definition: OpeningDefinition) -> Dictionary:
+	var valid := true
+	for i in definition.width_segments:
+		var segment := Edges.next_along(edge, i)
+		if not lot.has_wall(segment) or lot.opening_at(segment) != null:
+			valid = false
+	return {"cost": definition.price, "valid": valid}
+
+
+func place_opening(edge: Vector3i, definition: OpeningDefinition, swing_positive: bool,
+		hinge_flipped: bool) -> bool:
+	var quote := quote_opening(edge, definition)
+	if not quote["valid"] or not Wallet.pay(quote["cost"]):
+		return false
+	var opening := PlacedOpening.new()
+	opening.definition = definition
+	opening.edge = edge
+	opening.swing_positive = swing_positive
+	opening.hinge_flipped = hinge_flipped
+	Wallet.stamp(opening, definition.price)
+	lot.openings.append(opening)
+	EventBus.item_bought.emit(opening, opening.price)
+	_commit(func() -> void: lot.openings.erase(opening), -quote["cost"])
+	return true
+
+
+# --- Sols ------------------------------------------------------------------------
+
+## Devis pour peindre un rectangle : cases à changer, coût net (l'ancien revêtement est revendu).
+func quote_floor(rect: Rect2i, definition: FloorDefinition) -> Dictionary:
+	var cells: Array[Vector2i] = []
+	var cost := 0
+	for cell in _cells_in(rect):
+		var current: PlacedFloor = lot.floors.get(cell)
+		if current != null and current.definition == definition:
+			continue
+		cells.append(cell)
+		cost += definition.price_per_cell
+		if current != null:
+			cost -= Wallet.resale_value(current)
+	return {"cells": cells, "cost": cost, "valid": not cells.is_empty()}
+
+
+func paint_floor(rect: Rect2i, definition: FloorDefinition) -> bool:
+	var quote := quote_floor(rect, definition)
+	if not quote["valid"]:
+		return false
+	var cost: int = quote["cost"]
+	if cost > 0 and not Wallet.pay(cost):
+		return false
+	if cost < 0:
+		Wallet.receive(-cost)
+	var previous := _replace_floors(quote["cells"], definition)
+	_commit(_restore_floors.bind(previous), -cost)
+	return true
+
+
+## Devis pour gommer : revêtements retirés et montant rendu.
+func quote_erase(rect: Rect2i) -> Dictionary:
+	var cells: Array[Vector2i] = []
+	var refund := 0
+	for cell in _cells_in(rect):
+		if lot.floors.has(cell):
+			cells.append(cell)
+			refund += Wallet.resale_value(lot.floors[cell])
+	return {"cells": cells, "refund": refund, "valid": not cells.is_empty()}
+
+
+func erase_floor(rect: Rect2i) -> bool:
+	var quote := quote_erase(rect)
+	if not quote["valid"]:
+		return false
+	Wallet.receive(quote["refund"])
+	var previous := _replace_floors(quote["cells"], null)
+	_commit(_restore_floors.bind(previous), quote["refund"])
+	return true
+
+
+## Pose `definition` (ou l'herbe si null) sur les cases ; renvoie les anciens revêtements.
+func _replace_floors(cells: Array[Vector2i], definition: FloorDefinition) -> Dictionary:
+	var previous := {}
+	for cell in cells:
+		previous[cell] = lot.floors.get(cell)
+		if previous[cell] != null:
+			EventBus.item_sold.emit(previous[cell], Wallet.resale_value(previous[cell]))
+		if definition == null:
+			lot.floors.erase(cell)
+			continue
+		var placed := PlacedFloor.new()
+		placed.definition = definition
+		Wallet.stamp(placed, definition.price_per_cell)
+		lot.floors[cell] = placed
+		EventBus.item_bought.emit(placed, placed.price)
+	return previous
+
+
+func _restore_floors(previous: Dictionary) -> void:
+	for cell in previous:
+		if previous[cell] == null:
+			lot.floors.erase(cell)
+		else:
+			lot.floors[cell] = previous[cell]
+
+
+## Cases d'un rectangle, limitées au terrain.
+func _cells_in(rect: Rect2i) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	var area := rect.intersection(Rect2i(Vector2i.ZERO, lot.size))
+	for y in range(area.position.y, area.end.y):
+		for x in range(area.position.x, area.end.x):
+			cells.append(Vector2i(x, y))
+	return cells
+
+
 # --- Interne -------------------------------------------------------------------
 
 func _commit(revert: Callable, money: int) -> void:

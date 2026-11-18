@@ -15,7 +15,7 @@ const TOOLS := [
 	[&"undo", "Annuler", "annuler", "Annule la dernière opération (Ctrl+Z)."],
 ]
 ## Outils pas encore disponibles.
-const DISABLED_TOOLS: Array[StringName] = [&"door", &"window", &"floor", &"eraser", &"move"]
+const DISABLED_TOOLS: Array[StringName] = [&"move"]
 
 var editor: LotEditor
 var _buttons: Dictionary[StringName, Button] = {}
