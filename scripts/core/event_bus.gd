@@ -57,6 +57,15 @@ signal item_sold(item: Resource, refund: int)
 
 # --- Éditeur ------------------------------------------------------------------
 
+## Un objet posé va être revendu ou déplacé : les actions qui le visent doivent s'arrêter.
+@warning_ignore("unused_signal")
+signal object_displaced(placed: Resource)
+## Le joueur a choisi un objet dans le catalogue (mode Acheter).
+@warning_ignore("unused_signal")
+signal catalog_item_selected(definition: Resource)
+## Le placement en cours est terminé ou annulé (le catalogue désélectionne sa vignette).
+@warning_ignore("unused_signal")
+signal placement_ended
 ## L'interface a choisi un outil de construction (`option` : couleur de mur, sol, porte…).
 @warning_ignore("unused_signal")
 signal build_tool_selected(tool: StringName, option: Resource)

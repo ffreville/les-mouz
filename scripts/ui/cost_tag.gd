@@ -57,7 +57,7 @@ func _on_cost_preview_changed(text: String, cost: int) -> void:
 	if not visible:
 		return
 	var price := ("+" + Palette.format_mz(-cost)) if cost < 0 else Palette.format_mz(cost)
-	_label.text = "%s · %s" % [text, price]
+	_label.text = text if cost == 0 else "%s · %s" % [text, price]
 	var short := cost > Wallet.funds
 	var color := Palette.CRITIQUE if short else Palette.ENCRE
 	if cost < 0:

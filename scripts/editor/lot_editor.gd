@@ -1,6 +1,7 @@
 class_name LotEditor
 extends Node
 ## Modifie le terrain en payant ou en remboursant, et garde un historique pour « Annuler ».
+## Murs, portes, fenêtres, sols et objets passent tous par ici.
 ## Chaque opération réussie émet EventBus.lot_changed. Ctrl+Z annule (hors mode Vivre).
 
 signal history_changed(can_undo: bool)
@@ -234,6 +235,119 @@ func _cells_in(rect: Rect2i) -> Array[Vector2i]:
 		for x in range(area.position.x, area.end.x):
 			cells.append(Vector2i(x, y))
 	return cells
+
+
+# --- Objets ----------------------------------------------------------------------
+
+## Devis de placement d'un objet : coût et validité, avec la raison d'un refus.
+## `moving` : l'objet déplacé, ignoré dans les vérifications de chevauchement.
+func quote_object(definition: SmartObjectDefinition, cell: Vector2i, rotation: int,
+		moving: PlacedObject = null) -> Dictionary:
+	var ghost := PlacedObject.new()
+	ghost.definition = definition
+	ghost.cell = cell
+	ghost.rotation = rotation
+	var cost := 0 if moving != null else definition.price
+	var problem := _placement_problem(ghost, moving)
+	return {"cost": cost, "reason": problem, "valid": problem == ""}
+
+
+func buy_object(definition: SmartObjectDefinition, cell: Vector2i, rotation: int) -> bool:
+	var quote := quote_object(definition, cell, rotation)
+	if not quote["valid"] or not Wallet.pay(quote["cost"]):
+		return false
+	var placed := PlacedObject.new()
+	placed.definition = definition
+	placed.cell = cell
+	placed.rotation = rotation
+	Wallet.stamp(placed, definition.price)
+	lot.objects.append(placed)
+	EventBus.item_bought.emit(placed, placed.price)
+	_commit(func() -> void: lot.objects.erase(placed), -quote["cost"])
+	return true
+
+
+func sell_object(placed: PlacedObject) -> bool:
+	if placed not in lot.objects:
+		return false
+	var refund := Wallet.resale_value(placed)
+	EventBus.object_displaced.emit(placed)
+	lot.objects.erase(placed)
+	Wallet.receive(refund)
+	EventBus.item_sold.emit(placed, refund)
+	_commit(func() -> void: lot.objects.append(placed), refund)
+	return true
+
+
+## Déplace (et tourne) un objet déjà posé, gratuitement.
+func move_object(placed: PlacedObject, cell: Vector2i, rotation: int) -> bool:
+	if not quote_object(placed.definition, cell, rotation, placed)["valid"]:
+		return false
+	var old_cell := placed.cell
+	var old_rotation := placed.rotation
+	EventBus.object_displaced.emit(placed)
+	placed.cell = cell
+	placed.rotation = rotation
+	var revert := func() -> void:
+		placed.cell = old_cell
+		placed.rotation = old_rotation
+	_commit(revert, 0)
+	return true
+
+
+## L'objet posé sous une case (les objets solides passent avant les tapis), ou null.
+func object_at(cell: Vector2i) -> PlacedObject:
+	var found: PlacedObject = lot.blocking_object_at(cell)
+	if found != null:
+		return found
+	for placed in lot.objects:
+		if placed.footprint().has_point(cell):
+			return placed
+	return null
+
+
+## Raison pour laquelle l'objet ne peut pas être posé là ("" s'il le peut).
+func _placement_problem(ghost: PlacedObject, moving: PlacedObject) -> String:
+	var rect := ghost.footprint()
+	if not Rect2i(Vector2i.ZERO, lot.size).encloses(rect):
+		return "Hors du terrain"
+	for other in lot.objects:
+		if other == moving or not other.footprint().intersects(rect):
+			continue
+		# Un tapis peut passer sous un meuble, mais pas sous un autre tapis.
+		if other.definition.blocks_movement == ghost.definition.blocks_movement:
+			return "Place occupée"
+	for y in range(rect.position.y, rect.end.y):
+		for x in range(rect.position.x, rect.end.x):
+			var cell := Vector2i(x, y)
+			if x + 1 < rect.end.x and lot.has_wall(Edges.between(cell, cell + Vector2i.RIGHT)):
+				return "Un mur traverse l'objet"
+			if y + 1 < rect.end.y and lot.has_wall(Edges.between(cell, cell + Vector2i.DOWN)):
+				return "Un mur traverse l'objet"
+	if ghost.definition.blocks_movement:
+		for character in world.characters:
+			if rect.has_point(character.get_cell()):
+				return "Un Mouz est dans le passage"
+	if not ghost.definition.actions.is_empty():
+		if _usable_spots(rect, moving).is_empty():
+			return "Aucune place pour l'utiliser"
+	return ""
+
+
+## Cases libres autour de l'emprise, sans mur entre elles et l'objet.
+func _usable_spots(rect: Rect2i, moving: PlacedObject) -> Array[Vector2i]:
+	var spots: Array[Vector2i] = []
+	for y in range(rect.position.y, rect.end.y):
+		for x in range(rect.position.x, rect.end.x):
+			var inner := Vector2i(x, y)
+			for direction in [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP]:
+				var outer: Vector2i = inner + direction
+				if rect.has_point(outer) or not lot.contains(outer) or lot.blocks_passage(inner, outer):
+					continue
+				var blocker := lot.blocking_object_at(outer)
+				if blocker == null or blocker == moving:
+					spots.append(outer)
+	return spots
 
 
 # --- Interne -------------------------------------------------------------------

@@ -2,7 +2,7 @@ class_name HudTheme
 extends RefCounted
 ## Construit le Theme Godot de l'interface à partir de la Palette (design « Maison de poche »).
 ## Variantes de type disponibles : SectionTitle, MutedLabel, StrongLabel, TitleLabel, BigLabel,
-## SpeedGroup, IconButton, ToggleChip, ModeTab, ToolButton, OptionCard.
+## SpeedGroup, IconButton, ToggleChip, ModeTab, ToolButton, CategoryTab, OptionCard.
 ## Polices : Nunito pour l'interface, Baloo 2 pour les titres (assets/fonts, licence OFL).
 
 const NUNITO := preload("res://assets/fonts/Nunito.ttf")
@@ -108,6 +108,10 @@ static func _buttons(theme: Theme) -> void:
 	theme.set_font_size("font_size", "ToolButton", 11)
 	theme.set_font("font", "ToolButton", font(NUNITO, 800))
 	theme.set_constant("icon_max_width", "ToolButton", 22)
+	# Onglets de catégorie du catalogue.
+	_button_variation(theme, "CategoryTab", 10, Vector4(12, 0, 12, 0), Palette.PAPIER_2)
+	theme.set_font_size("font_size", "CategoryTab", 13)
+	theme.set_constant("icon_max_width", "CategoryTab", 16)
 	# Cartes d'option (couleur de mur, sol…) et vignettes du catalogue.
 	theme.set_type_variation("OptionCard", "Button")
 	theme.set_stylebox("normal", "OptionCard", box(Palette.PAPIER_2, 10, Color.TRANSPARENT, 0, 8))

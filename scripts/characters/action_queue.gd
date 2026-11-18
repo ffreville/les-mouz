@@ -21,6 +21,7 @@ func setup(character: Character) -> void:
 	_character.mover.arrived.connect(_on_arrived)
 	GameClock.ticked.connect(_on_ticked)
 	EventBus.lot_changed.connect(_on_lot_changed)
+	EventBus.object_displaced.connect(_on_object_displaced)
 
 
 func is_empty() -> bool:
@@ -115,6 +116,13 @@ func _destination_for(action: QueuedAction) -> Vector2i:
 	if navigation.are_neighbors(here, partner_cell):
 		return here
 	return navigation.closest_reachable(navigation.cells_next_to(partner_cell), here)
+
+
+## Un objet est revendu ou déplacé : on abandonne les actions qui le visent.
+func _on_object_displaced(placed: Resource) -> void:
+	for action in items.duplicate():
+		if action.target_object != null and action.target_object.placed == placed:
+			cancel(action)
 
 
 ## Le terrain a changé : on recalcule le trajet en cours (un mur a pu apparaître).

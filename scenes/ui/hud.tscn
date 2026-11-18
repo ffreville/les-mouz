@@ -14,6 +14,7 @@
 [ext_resource type="Script" path="res://scripts/ui/pause_pill.gd" id="12_pause"]
 [ext_resource type="Script" path="res://scripts/ui/build_panel.gd" id="13_build"]
 [ext_resource type="Script" path="res://scripts/ui/cost_tag.gd" id="14_cost"]
+[ext_resource type="Script" path="res://scripts/ui/catalog_panel.gd" id="15_catalog"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -197,6 +198,22 @@ offset_top = 76.0
 offset_right = 284.0
 offset_bottom = 76.0
 script = ExtResource("13_build")
+
+[node name="CatalogPanel" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -208.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("15_catalog")
 
 [node name="CostTag" type="PanelContainer" parent="Root"]
 layout_mode = 0

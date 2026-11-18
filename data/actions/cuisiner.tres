@@ -9,5 +9,5 @@ id = &"cuisiner"
 icon = ExtResource("2_icon")
 display_name = "Cuisiner"
 duration_minutes = 45.0
-need_gains = Dictionary[StringName, float](&"faim": 80.0, &"plaisir": 10.0)
+need_gains = Dictionary[StringName, float]({&"faim": 80.0, &"plaisir": 10.0})
 relationship_gain = 0.0

@@ -26,6 +26,7 @@ var smart_objects: Array[SmartObject] = []
 @onready var grid_overlay: GridOverlay = $GridOverlay
 @onready var editor: LotEditor = $LotEditor
 @onready var build_controller: BuildController = $BuildController
+@onready var buy_controller: BuyController = $BuyController
 @onready var camera: CameraController = %Camera
 
 
@@ -33,10 +34,12 @@ func _ready() -> void:
 	lot = starting_lot.duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL)
 	editor.setup(self)
 	build_controller.setup(editor)
+	buy_controller.setup(editor)
 	camera.set_bounds(Rect2(Vector2.ZERO, Vector2(lot.size * lot.cell_size)))
 	refresh_lot()
-	_spawn_characters()
+	# Connecté avant la création des personnages : le monde se met à jour avant leurs files.
 	EventBus.lot_changed.connect(refresh_lot)
+	_spawn_characters()
 	if not characters.is_empty():
 		# Différé pour que l'interface soit prête à recevoir le signal de sélection.
 		selection.select.call_deferred(characters[0])

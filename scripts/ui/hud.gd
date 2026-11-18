@@ -18,6 +18,7 @@ var _selected: Character
 @onready var left_column: Control = %LeftColumn
 @onready var right_panel: Control = %RightPanel
 @onready var build_panel: BuildPanel = %BuildPanel
+@onready var catalog_panel: CatalogPanel = %CatalogPanel
 @onready var clock_panel: Control = %ClockPanel
 @onready var speed_group: Control = %SpeedGroup
 @onready var pause_pill: Control = %PausePill
@@ -66,3 +67,4 @@ func _on_mode_changed(mode: int) -> void:
 	speed_group.visible = live
 	pause_pill.visible = not live
 	build_panel.visible = mode == GameMode.Mode.BUILD
+	catalog_panel.visible = mode == GameMode.Mode.BUY
