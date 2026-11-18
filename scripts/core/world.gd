@@ -1,16 +1,19 @@
 class_name World
 extends Node2D
-## Assemble le monde au démarrage : maison, navigation, objets et personnages.
+## Assemble le monde : terrain, navigation, objets et personnages.
 ## Sert aussi d'annuaire (liste des objets et des personnages) pour les autres scripts.
 
-@export var layout: HouseLayout
-## Un personnage est créé par fiche, sur les points d'apparition du plan.
+## Terrain de départ. Il est copié au lancement : la partie modifie la copie, pas le fichier.
+@export var starting_lot: Lot
+## Un personnage est créé par fiche, sur les cases de départ du terrain.
 @export var character_profiles: Array[CharacterProfile] = []
 @export var character_scene: PackedScene
 @export var smart_object_scene: PackedScene
 ## Actions possibles entre deux personnages (ex. « Discuter »).
 @export var social_actions: Array[ActionDefinition] = []
 
+## Le terrain en cours de partie.
+var lot: Lot
 var characters: Array[Character] = []
 var smart_objects: Array[SmartObject] = []
 
@@ -23,41 +26,60 @@ var smart_objects: Array[SmartObject] = []
 
 
 func _ready() -> void:
-	floor_view.render(layout)
-	wall_view.render(layout)
-	_spawn_objects()
-	_build_navigation()
+	lot = starting_lot.duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL)
+	refresh_lot()
 	_spawn_characters()
+	EventBus.lot_changed.connect(refresh_lot)
 	if not characters.is_empty():
 		# Différé pour que l'interface soit prête à recevoir le signal de sélection.
 		selection.select.call_deferred(characters[0])
 
 
-## Les meubles qui bloquent le passage rendent leurs cases inaccessibles.
-func _build_navigation() -> void:
-	var blocked: Array[Vector2i] = []
-	for smart_object in smart_objects:
-		if not smart_object.definition.blocks_movement:
+## Redessine le terrain, synchronise les objets et recalcule la navigation.
+func refresh_lot() -> void:
+	floor_view.render(lot)
+	wall_view.render(lot)
+	_sync_objects()
+	_build_navigation()
+
+
+## Crée les nœuds des objets ajoutés au terrain et retire ceux qui n'y sont plus.
+func _sync_objects() -> void:
+	var existing: Dictionary[PlacedObject, SmartObject] = {}
+	for smart_object in smart_objects.duplicate():
+		if smart_object.placed in lot.objects:
+			existing[smart_object.placed] = smart_object
+		else:
+			smart_objects.erase(smart_object)
+			smart_object.queue_free()
+	for placed in lot.objects:
+		if existing.has(placed):
+			existing[placed].setup(placed, lot.cell_size)
 			continue
-		for y in range(smart_object.footprint.position.y, smart_object.footprint.end.y):
-			for x in range(smart_object.footprint.position.x, smart_object.footprint.end.x):
-				blocked.append(Vector2i(x, y))
-	navigation.setup(layout, blocked)
-
-
-func _spawn_objects() -> void:
-	for placement in layout.objects:
 		var smart_object: SmartObject = smart_object_scene.instantiate()
 		objects_root.add_child(smart_object)
-		smart_object.setup(placement.definition, placement.cell, layout.cell_size)
+		smart_object.setup(placed, lot.cell_size)
 		smart_objects.append(smart_object)
+
+
+## Les objets solides rendent leurs cases inaccessibles.
+func _build_navigation() -> void:
+	var blocked: Array[Vector2i] = []
+	for placed in lot.objects:
+		if not placed.definition.blocks_movement:
+			continue
+		var rect := placed.footprint()
+		for y in range(rect.position.y, rect.end.y):
+			for x in range(rect.position.x, rect.end.x):
+				blocked.append(Vector2i(x, y))
+	navigation.setup(lot, blocked)
 
 
 func _spawn_characters() -> void:
 	for i in character_profiles.size():
 		var character: Character = character_scene.instantiate()
 		characters_root.add_child(character)
-		var spawn := layout.character_spawns[i % layout.character_spawns.size()]
+		var spawn := lot.spawn_cells[i % lot.spawn_cells.size()]
 		character.setup(self, character_profiles[i], spawn)
 		characters.append(character)
 

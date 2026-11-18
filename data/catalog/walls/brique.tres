@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="WallStyleDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/wall_style_definition.gd" id="1_wall"]
+
+[resource]
+script = ExtResource("1_wall")
+id = &"brique"
+display_name = "Brique"
+color = Color(0.6118, 0.3569, 0.2902, 1)
+price_per_segment = 80

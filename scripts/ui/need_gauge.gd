@@ -75,5 +75,7 @@ func _draw_stripes(fill: Rect2) -> void:
 		var stripe := PackedVector2Array([Vector2(x, fill.end.y), Vector2(x + STRIPE, fill.end.y),
 				Vector2(x + STRIPE + h, fill.position.y), Vector2(x + h, fill.position.y)])
 		for piece in Geometry2D.intersect_polygons(stripe, clip):
-			draw_colored_polygon(piece, STRIPE_COLOR)
+			# Les morceaux minuscules (jauge presque vide) ne se triangulent pas.
+			if not Geometry2D.triangulate_polygon(piece).is_empty():
+				draw_colored_polygon(piece, STRIPE_COLOR)
 		x += STRIPE + STRIPE_GAP

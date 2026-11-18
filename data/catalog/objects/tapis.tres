@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SmartObjectDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/smart_object_definition.gd" id="1_object"]
+[ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="2_action"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tapis.svg" id="3_sprite"]
+
+[resource]
+script = ExtResource("1_object")
+id = &"tapis"
+display_name = "Tapis"
+sprite = ExtResource("3_sprite")
+color = Color(0.9059, 0.6588, 0.5529, 1)
+size = Vector2i(6, 4)
+blocks_movement = false
+actions = Array[ExtResource("2_action")]([])
+capacity = 1
+price = 150
+category = &"deco"

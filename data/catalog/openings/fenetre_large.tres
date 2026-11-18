@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="OpeningDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/opening_definition.gd" id="1_opening"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fenetre_large.svg" id="2_sprite"]
+
+[resource]
+script = ExtResource("1_opening")
+id = &"fenetre_large"
+display_name = "Fenêtre large"
+kind = 1
+sprite = ExtResource("2_sprite")
+width_segments = 2
+price = 350

@@ -2,6 +2,8 @@ class_name SmartObjectDefinition
 extends Resource
 ## Un type d'objet « intelligent » : son apparence et les actions qu'il propose.
 
+## Identifiant unique (sert à la sauvegarde et au catalogue).
+@export var id: StringName = &"objet"
 @export var display_name: String = "Objet"
 ## Image vue de dessus, à la taille de l'objet (32 px par case). Sans image : un rectangle de `color`.
 @export var sprite: Texture2D
@@ -14,3 +16,7 @@ extends Resource
 @export var actions: Array[ActionDefinition] = []
 ## Nombre de personnages pouvant l'utiliser en même temps.
 @export var capacity: int = 1
+## Prix d'achat en Mz.
+@export var price: int = 100
+## Catégorie du catalogue : cuisine, chambre, salon, salle_de_bain ou deco.
+@export var category: StringName = &"deco"

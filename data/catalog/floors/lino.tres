@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="FloorDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/floor_definition.gd" id="1_floor"]
+[ext_resource type="Texture2D" path="res://assets/floors/lino.svg" id="2_tile"]
+
+[resource]
+script = ExtResource("1_floor")
+id = &"lino"
+display_name = "Lino à motif"
+texture = ExtResource("2_tile")
+price_per_cell = 8

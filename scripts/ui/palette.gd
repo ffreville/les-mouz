@@ -21,6 +21,12 @@ const OMBRE := Color(0.169, 0.141, 0.251, 0.12)
 # --- Maison ------------------------------------------------------------------
 const JARDIN := Color("#A7C796")
 const JARDIN_POINT := Color("#98BC86")
+## Herbe hors du terrain et haie qui l'entoure.
+const HORS_TERRAIN := Color("#94B884")
+const HAIE := Color("#6E9A5F")
+## Variation du solde : hausse (la baisse utilise CRITIQUE / CRITIQUE_DOUX).
+const GAIN := Color("#0B6E52")
+const GAIN_DOUX := Color("#D3EFE5")
 const MUR := Color("#5B4E72")
 const SEUIL := Color("#C9A27E")
 ## Épaisseur des murs, en pixels.
@@ -70,3 +76,13 @@ static func palier_relation(valeur: float) -> String:
 	if valeur <= 50.0:
 		return "Copains"
 	return "Inséparables"
+
+
+## Formate un montant : 18450 -> « 18 450 Mz » (espaces insécables).
+static func format_mz(amount: int) -> String:
+	var digits := str(absi(amount))
+	var out := ""
+	while digits.length() > 3:
+		out = "\u00a0" + digits.substr(digits.length() - 3) + out
+		digits = digits.substr(0, digits.length() - 3)
+	return ("−" if amount < 0 else "") + digits + out + "\u00a0Mz"

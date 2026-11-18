@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/core/world.gd" id="1_world"]
 [ext_resource type="Script" path="res://scripts/core/floor_view.gd" id="2_floor"]
 [ext_resource type="Script" path="res://scripts/core/wall_view.gd" id="15_walls"]
-[ext_resource type="Resource" path="res://data/house/house_layout.tres" id="3_layout"]
+[ext_resource type="Resource" path="res://data/lots/maison_demo.tres" id="3_lot"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
 [ext_resource type="Script" path="res://scripts/core/grid_navigation.gd" id="5_nav"]
 [ext_resource type="Script" path="res://scripts/core/selection_manager.gd" id="6_selection"]
@@ -20,7 +20,7 @@
 
 [node name="World" type="Node2D" parent="."]
 script = ExtResource("1_world")
-layout = ExtResource("3_layout")
+starting_lot = ExtResource("3_lot")
 character_profiles = Array[ExtResource("9_profile")]([ExtResource("10_pepin"), ExtResource("12_myrtille")])
 character_scene = ExtResource("8_character")
 smart_object_scene = ExtResource("11_object")
@@ -48,6 +48,6 @@ script = ExtResource("15_walls")
 script = ExtResource("7_input")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(320, 232)
+position = Vector2(340, 288)
 
 [node name="HUD" parent="." instance=ExtResource("4_hud")]

@@ -40,6 +40,21 @@ signal mood_changed(character: Node, mood: float)
 @warning_ignore("unused_signal")
 signal relationship_changed(a: Node, b: Node, value: float, delta: float)
 
+# --- Terrain et argent -------------------------------------------------------
+
+## Le terrain a été modifié (murs, sols, ouvertures ou objets).
+@warning_ignore("unused_signal")
+signal lot_changed
+## Le solde a changé de `delta` (négatif pour une dépense).
+@warning_ignore("unused_signal")
+signal money_changed(funds: int, delta: int)
+## Un élément du catalogue a été acheté (`item` : PlacedWall, PlacedFloor, PlacedOpening ou PlacedObject).
+@warning_ignore("unused_signal")
+signal item_bought(item: Resource, price: int)
+## Un élément a été revendu ou démoli, pour `refund` Mz.
+@warning_ignore("unused_signal")
+signal item_sold(item: Resource, refund: int)
+
 # --- Sélection et interface --------------------------------------------------
 
 ## Le joueur a sélectionné un autre personnage.

@@ -1,7 +1,7 @@
 class_name GridNavigation
 extends Node
-## Recherche de chemin sur la grille de la maison (AStar2D).
-## Chaque case intérieure libre est un point ; deux cases voisines sont reliées
+## Recherche de chemin sur la grille du terrain (AStar2D).
+## Chaque case libre du terrain est un point ; deux cases voisines sont reliées
 ## si aucun mur ne les sépare. Les meubles rendent leurs cases inaccessibles.
 
 const NO_CELL := Vector2i(-1, -1)
@@ -9,30 +9,30 @@ const ORTHOGONAL: Array[Vector2i] = [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEF
 
 var cell_size: int = 32
 var _astar := AStar2D.new()
-var _layout: HouseLayout
+var _lot: Lot
 var _blocked: Dictionary[Vector2i, bool] = {}
 
 
 ## Construit le graphe. `blocked_cells` : cases occupées par des meubles.
-func setup(layout: HouseLayout, blocked_cells: Array[Vector2i]) -> void:
-	_layout = layout
-	cell_size = layout.cell_size
+func setup(lot: Lot, blocked_cells: Array[Vector2i]) -> void:
+	_lot = lot
+	cell_size = lot.cell_size
 	_astar.clear()
 	_blocked.clear()
 	for cell in blocked_cells:
 		_blocked[cell] = true
-	for y in layout.grid_size.y:
-		for x in layout.grid_size.x:
+	for y in lot.size.y:
+		for x in lot.size.x:
 			var cell := Vector2i(x, y)
 			if is_walkable(cell):
 				_astar.add_point(_id(cell), Vector2(cell))
-	for y in layout.grid_size.y:
-		for x in layout.grid_size.x:
+	for y in lot.size.y:
+		for x in lot.size.x:
 			_connect_neighbors(Vector2i(x, y))
 
 
 func is_walkable(cell: Vector2i) -> bool:
-	return _layout.is_inside(cell) and not _blocked.has(cell)
+	return _lot.contains(cell) and not _blocked.has(cell)
 
 
 ## Centre d'une case, en coordonnées du monde.
@@ -85,7 +85,7 @@ func cells_around(rect: Rect2i) -> Array[Vector2i]:
 				var outer := inner + direction
 				if rect.has_point(outer) or outer in result:
 					continue
-				if is_walkable(outer) and not _layout.has_wall_between(inner, outer):
+				if is_walkable(outer) and not _lot.blocks_passage(inner, outer):
 					result.append(outer)
 	return result
 
@@ -108,7 +108,7 @@ func _connect_neighbors(cell: Vector2i) -> void:
 	# Orthogonal : vers la droite et le bas (le graphe est bidirectionnel).
 	for direction in [Vector2i.RIGHT, Vector2i.DOWN]:
 		var other: Vector2i = cell + direction
-		if is_walkable(other) and not _layout.has_wall_between(cell, other):
+		if is_walkable(other) and not _lot.blocks_passage(cell, other):
 			_astar.connect_points(_id(cell), _id(other))
 	# Diagonale : seulement si les deux chemins en « L » sont libres (pas de coin coupé).
 	for direction in [Vector2i(1, 1), Vector2i(-1, 1)]:
@@ -121,12 +121,12 @@ func _connect_neighbors(cell: Vector2i) -> void:
 
 
 func _is_open_step(a: Vector2i, b: Vector2i) -> bool:
-	return is_walkable(a) and is_walkable(b) and not _layout.has_wall_between(a, b)
+	return is_walkable(a) and is_walkable(b) and not _lot.blocks_passage(a, b)
 
 
 func _id(cell: Vector2i) -> int:
-	return cell.y * _layout.grid_size.x + cell.x
+	return cell.y * _lot.size.x + cell.x
 
 
 func _cell(id: int) -> Vector2i:
-	return Vector2i(id % _layout.grid_size.x, id / _layout.grid_size.x)
+	return Vector2i(id % _lot.size.x, id / _lot.size.x)
