@@ -4,15 +4,34 @@
 [ext_resource type="Script" path="res://scripts/core/house_view.gd" id="2_view"]
 [ext_resource type="Resource" path="res://data/house/house_layout.tres" id="3_layout"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
+[ext_resource type="Script" path="res://scripts/core/grid_navigation.gd" id="5_nav"]
+[ext_resource type="Script" path="res://scripts/core/selection_manager.gd" id="6_selection"]
+[ext_resource type="Script" path="res://scripts/core/input_controller.gd" id="7_input"]
+[ext_resource type="PackedScene" path="res://scenes/characters/character.tscn" id="8_character"]
+[ext_resource type="Script" path="res://scripts/characters/character_profile.gd" id="9_profile"]
+[ext_resource type="Resource" path="res://data/characters/lou.tres" id="10_lou"]
 
 [node name="Main" type="Node2D"]
 
 [node name="World" type="Node2D" parent="."]
 script = ExtResource("1_world")
 layout = ExtResource("3_layout")
+character_profiles = Array[ExtResource("9_profile")]([ExtResource("10_lou")])
+character_scene = ExtResource("8_character")
 
 [node name="HouseView" type="Node2D" parent="World"]
 script = ExtResource("2_view")
+
+[node name="Navigation" type="Node" parent="World"]
+script = ExtResource("5_nav")
+
+[node name="Selection" type="Node" parent="World"]
+script = ExtResource("6_selection")
+
+[node name="Characters" type="Node2D" parent="World"]
+
+[node name="InputController" type="Node2D" parent="World"]
+script = ExtResource("7_input")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(384, 248)

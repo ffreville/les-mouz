@@ -12,6 +12,8 @@ extends Resource
 @export var walls: Array[Rect2i] = []
 ## Cases de mur transformées en passage.
 @export var doors: Array[Vector2i] = []
+## Cases de départ des personnages (un par fiche, dans l'ordre).
+@export var character_spawns: Array[Vector2i] = [Vector2i(4, 4)]
 @export var wall_color: Color = Color(0.23, 0.21, 0.19)
 @export var door_color: Color = Color(0.55, 0.47, 0.38)
 
