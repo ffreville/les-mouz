@@ -86,7 +86,7 @@ func _setup_game_menu() -> void:
 	var popup := logo.get_popup()
 	popup.add_item("Nouvelle partie…", 0)
 	popup.id_pressed.connect(func(_id: int) -> void: _ask_new_game())
-	confirm_panel.confirmed.connect(func() -> void: SaveSystem.new_game(get_tree()))
+	confirm_panel.confirmed.connect(func() -> void: SaveManager.start_new_game("Nouvelle partie"))
 
 
 func _ask_new_game() -> void:

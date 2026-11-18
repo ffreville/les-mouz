@@ -23,6 +23,23 @@ func setup(character: Node, need_definitions: Array[NeedDefinition]) -> void:
 	GameClock.ticked.connect(_on_ticked)
 
 
+## Remet des valeurs enregistrées (chargement d'une partie), sans signal de besoin critique.
+func restore(values: Dictionary) -> void:
+	for need_id in values:
+		if _values.has(StringName(need_id)):
+			_values[StringName(need_id)] = clampf(float(values[need_id]), MIN_VALUE, MAX_VALUE)
+			need_changed.emit(StringName(need_id), _values[StringName(need_id)])
+	_notify_mood()
+
+
+## Valeurs actuelles de tous les besoins (pour la sauvegarde).
+func snapshot() -> Dictionary:
+	var values := {}
+	for need_id in _values:
+		values[String(need_id)] = _values[need_id]
+	return values
+
+
 func has_need(need_id: StringName) -> bool:
 	return _values.has(need_id)
 

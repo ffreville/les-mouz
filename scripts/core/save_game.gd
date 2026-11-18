@@ -1,7 +1,8 @@
 class_name SaveGame
 extends Resource
-## Contenu d'une sauvegarde : le terrain, l'argent et l'heure de jeu.
-## Enregistrée dans user://partie.tres (voir SaveSystem).
+## Ancien format de sauvegarde (user://partie.tres), lu une seule fois par SaveManager
+## pour le convertir au format JSON. Ne plus l'utiliser pour enregistrer.
+## Ce fichier doit rester à cet emplacement : les anciennes sauvegardes y font référence.
 
 @export var lot: Lot
 @export var funds: int = 0

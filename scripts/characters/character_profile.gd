@@ -2,6 +2,8 @@ class_name CharacterProfile
 extends Resource
 ## Fiche d'un personnage : identité, apparence et réglages propres.
 
+## Identifiant unique (sert à la sauvegarde).
+@export var id: StringName = &"mouz"
 @export var display_name: String = "Mouz"
 ## Image vue de dessus (32 × 32), tournée vers le haut.
 @export var sprite: Texture2D

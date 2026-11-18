@@ -32,6 +32,14 @@ static func load_folder(folder: String) -> Array:
 	return items
 
 
+## L'élément d'un dossier qui porte cet identifiant, ou null.
+static func find(folder: String, id: StringName) -> Resource:
+	for item in load_folder(folder):
+		if item.id == id:
+			return item
+	return null
+
+
 ## Objets d'une catégorie.
 static func objects_in(category: StringName) -> Array:
 	return load_folder(OBJECTS).filter(func(o): return o.category == category)

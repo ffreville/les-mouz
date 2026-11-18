@@ -14,6 +14,7 @@ EventBus="*res://scripts/core/event_bus.gd"
 Palette="*res://scripts/ui/palette.gd"
 Wallet="*res://scripts/core/wallet.gd"
 GameMode="*res://scripts/core/game_mode.gd"
+SaveManager="*res://scripts/save/save_manager.gd"
 
 [display]
 

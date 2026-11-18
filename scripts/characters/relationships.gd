@@ -32,6 +32,13 @@ func change_with(other: Character, amount: float) -> void:
 	EventBus.relationship_changed.emit(_character, other, new_value, new_value - old_value)
 
 
+## Remet une valeur enregistrée, des deux côtés, sans émettre de changement.
+func restore_with(other: Character, value: float) -> void:
+	value = clampf(value, MIN_VALUE, MAX_VALUE)
+	_store(other, value)
+	other.relationships._store(_character, value)
+
+
 func _store(other: Node, value: float) -> void:
 	_values[other] = value
 	changed.emit(other, value)

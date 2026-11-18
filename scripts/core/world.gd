@@ -34,11 +34,10 @@ var smart_objects: Array[SmartObject] = []
 
 
 func _ready() -> void:
-	var saved := SaveSystem.load_game() if use_save else null
-	if saved != null:
-		lot = saved.lot
-		Wallet.set_funds(saved.funds)
-		GameClock.restore(saved.total_minutes)
+	var saved := SaveManager.take_pending() if use_save else {}
+	if not saved.is_empty():
+		lot = LotSerializer.from_data(saved["lot"])
+		WorldSerializer.apply_globals(saved)
 	else:
 		lot = starting_lot.duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL)
 	editor.setup(self)
@@ -54,8 +53,10 @@ func _ready() -> void:
 	if not characters.is_empty():
 		# Différé pour que l'interface soit prête à recevoir le signal de sélection.
 		selection.select.call_deferred(characters[0])
-	# Sur un terrain encore vide, on commence par construire.
-	if lot.walls.is_empty() and lot.objects.is_empty():
+	if not saved.is_empty():
+		WorldSerializer.apply_to_world(self, saved)
+	elif lot.walls.is_empty() and lot.objects.is_empty():
+		# Sur un terrain encore vide, on commence par construire.
 		GameMode.set_mode.call_deferred(GameMode.Mode.BUILD)
 
 

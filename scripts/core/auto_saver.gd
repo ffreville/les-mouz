@@ -1,7 +1,8 @@
 class_name AutoSaver
 extends Node
-## Sauvegarde automatique : peu après chaque modification du terrain, au retour
-## en mode Vivre, toutes les 2 minutes réelles, et à la fermeture du jeu.
+## Sauvegarde automatique de la partie en cours (voir SaveManager) : peu après chaque
+## modification du terrain, au retour en mode Vivre, toutes les 2 minutes réelles,
+## et à la fermeture du jeu.
 
 @export var delay_after_change: float = 1.0
 @export var periodic_interval: float = 120.0
@@ -35,7 +36,7 @@ func _on_mode_changed(mode: int) -> void:
 
 func save_now() -> void:
 	if world != null and world.lot != null:
-		SaveSystem.save_game(world.lot)
+		SaveManager.save_current(world)
 
 
 func _notification(what: int) -> void:

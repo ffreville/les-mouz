@@ -11,6 +11,7 @@
 
 [resource]
 script = ExtResource("1_profile")
+id = &"pepin"
 display_name = "Pépin"
 sprite = ExtResource("8_sprite")
 color = Color(0.949, 0.6471, 0.4196, 1)
