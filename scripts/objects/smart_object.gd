@@ -3,8 +3,8 @@ extends Node2D
 ## Un objet posé dans la maison. Il se dessine, annonce ses actions
 ## et gère qui l'utilise (réservation).
 
-const MARGIN := 3.0
-const LABEL_SIZE := 11
+## Les objets traversables (tapis) passent sous les autres.
+const FLOOR_OBJECT_Z := -1
 
 var definition: SmartObjectDefinition
 ## Cases occupées par l'objet.
@@ -19,6 +19,8 @@ func setup(p_definition: SmartObjectDefinition, cell: Vector2i, cell_size: int) 
 	name = definition.display_name
 	position = Vector2(cell) * cell_size
 	_pixel_size = Vector2(definition.size) * cell_size
+	if not definition.blocks_movement:
+		z_index = FLOOR_OBJECT_Z
 	queue_redraw()
 
 
@@ -28,6 +30,10 @@ func get_display_name() -> String:
 
 func get_actions() -> Array[ActionDefinition]:
 	return definition.actions
+
+
+func has_actions() -> bool:
+	return not definition.actions.is_empty()
 
 
 func occupies(cell: Vector2i) -> bool:
@@ -59,12 +65,12 @@ func release(user: Node) -> void:
 func _draw() -> void:
 	if definition == null:
 		return
-	var area := Rect2(Vector2(MARGIN, MARGIN), _pixel_size - Vector2(MARGIN, MARGIN) * 2)
+	if definition.sprite != null:
+		draw_texture_rect(definition.sprite, Rect2(Vector2.ZERO, _pixel_size), false)
+		return
+	# Graphisme provisoire si aucune image n'est fournie.
+	var area := Rect2(Vector2.ONE * 3, _pixel_size - Vector2.ONE * 6)
 	draw_rect(area, definition.color)
-	draw_rect(area, definition.color.darkened(0.5), false, 2.0)
-	var font := ThemeDB.fallback_font
-	var baseline := Vector2(0, _pixel_size.y / 2 + LABEL_SIZE / 2.0 - 1)
-	draw_string_outline(font, baseline, definition.display_name, HORIZONTAL_ALIGNMENT_CENTER,
-			_pixel_size.x, LABEL_SIZE, 3, Color(0, 0, 0, 0.6))
-	draw_string(font, baseline, definition.display_name, HORIZONTAL_ALIGNMENT_CENTER,
-			_pixel_size.x, LABEL_SIZE, Color.WHITE)
+	draw_rect(area, Palette.CONTOUR, false, 2.0)
+	draw_string(ThemeDB.fallback_font, Vector2(0, _pixel_size.y / 2 + 4), definition.display_name,
+			HORIZONTAL_ALIGNMENT_CENTER, _pixel_size.x, 11, Palette.ENCRE)

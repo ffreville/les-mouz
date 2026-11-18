@@ -1,32 +1,38 @@
 class_name GridNavigation
 extends Node
-## Recherche de chemin sur la grille de la maison (AStarGrid2D).
-## Les murs et les meubles sont des cases « solides ».
+## Recherche de chemin sur la grille de la maison (AStar2D).
+## Chaque case intérieure libre est un point ; deux cases voisines sont reliées
+## si aucun mur ne les sépare. Les meubles rendent leurs cases inaccessibles.
 
 const NO_CELL := Vector2i(-1, -1)
+const ORTHOGONAL: Array[Vector2i] = [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP]
 
-var astar := AStarGrid2D.new()
 var cell_size: int = 32
+var _astar := AStar2D.new()
+var _layout: HouseLayout
+var _blocked: Dictionary[Vector2i, bool] = {}
 
 
-func setup(grid_size: Vector2i, p_cell_size: int) -> void:
-	cell_size = p_cell_size
-	astar.region = Rect2i(Vector2i.ZERO, grid_size)
-	astar.cell_size = Vector2(cell_size, cell_size)
-	# Diagonales autorisées seulement si elles ne frôlent pas un obstacle.
-	astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
-	astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE
-	astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
-	astar.update()
-
-
-func set_blocked(cell: Vector2i, blocked: bool) -> void:
-	if astar.is_in_boundsv(cell):
-		astar.set_point_solid(cell, blocked)
+## Construit le graphe. `blocked_cells` : cases occupées par des meubles.
+func setup(layout: HouseLayout, blocked_cells: Array[Vector2i]) -> void:
+	_layout = layout
+	cell_size = layout.cell_size
+	_astar.clear()
+	_blocked.clear()
+	for cell in blocked_cells:
+		_blocked[cell] = true
+	for y in layout.grid_size.y:
+		for x in layout.grid_size.x:
+			var cell := Vector2i(x, y)
+			if is_walkable(cell):
+				_astar.add_point(_id(cell), Vector2(cell))
+	for y in layout.grid_size.y:
+		for x in layout.grid_size.x:
+			_connect_neighbors(Vector2i(x, y))
 
 
 func is_walkable(cell: Vector2i) -> bool:
-	return astar.is_in_boundsv(cell) and not astar.is_point_solid(cell)
+	return _layout.is_inside(cell) and not _blocked.has(cell)
 
 
 ## Centre d'une case, en coordonnées du monde.
@@ -40,9 +46,12 @@ func world_to_cell(world_position: Vector2) -> Vector2i:
 
 ## Liste des cases de `from` à `to` (incluses). Vide si aucun chemin.
 func find_path(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
 	if not is_walkable(from) or not is_walkable(to):
-		return []
-	return astar.get_id_path(from, to)
+		return result
+	for id in _astar.get_id_path(_id(from), _id(to)):
+		result.append(_cell(id))
+	return result
 
 
 ## Longueur du chemin en cases, ou INF si la case est inaccessible.
@@ -66,13 +75,58 @@ func closest_reachable(candidates: Array[Vector2i], from: Vector2i) -> Vector2i:
 	return best
 
 
-## Cases libres qui touchent un rectangle (côtés uniquement, pas les coins).
+## Cases libres collées à un rectangle (côtés uniquement), sans mur entre elles et lui.
 func cells_around(rect: Rect2i) -> Array[Vector2i]:
 	var result: Array[Vector2i] = []
-	for x in range(rect.position.x, rect.end.x):
-		result.append(Vector2i(x, rect.position.y - 1))
-		result.append(Vector2i(x, rect.end.y))
 	for y in range(rect.position.y, rect.end.y):
-		result.append(Vector2i(rect.position.x - 1, y))
-		result.append(Vector2i(rect.end.x, y))
-	return result.filter(is_walkable)
+		for x in range(rect.position.x, rect.end.x):
+			var inner := Vector2i(x, y)
+			for direction in ORTHOGONAL:
+				var outer := inner + direction
+				if rect.has_point(outer) or outer in result:
+					continue
+				if is_walkable(outer) and not _layout.has_wall_between(inner, outer):
+					result.append(outer)
+	return result
+
+
+## Cases où l'on peut se tenir pour être à côté de `cell` (sans mur entre les deux).
+func cells_next_to(cell: Vector2i) -> Array[Vector2i]:
+	return cells_around(Rect2i(cell, Vector2i.ONE))
+
+
+## Vrai si l'on peut aller directement de `a` à `b` en un pas (voisins sans mur).
+func are_neighbors(a: Vector2i, b: Vector2i) -> bool:
+	if not is_walkable(a) or not is_walkable(b):
+		return false
+	return _astar.are_points_connected(_id(a), _id(b))
+
+
+func _connect_neighbors(cell: Vector2i) -> void:
+	if not is_walkable(cell):
+		return
+	# Orthogonal : vers la droite et le bas (le graphe est bidirectionnel).
+	for direction in [Vector2i.RIGHT, Vector2i.DOWN]:
+		var other: Vector2i = cell + direction
+		if is_walkable(other) and not _layout.has_wall_between(cell, other):
+			_astar.connect_points(_id(cell), _id(other))
+	# Diagonale : seulement si les deux chemins en « L » sont libres (pas de coin coupé).
+	for direction in [Vector2i(1, 1), Vector2i(-1, 1)]:
+		var other: Vector2i = cell + direction
+		var side_a := cell + Vector2i(direction.x, 0)
+		var side_b := cell + Vector2i(0, direction.y)
+		if is_walkable(other) and _is_open_step(cell, side_a) and _is_open_step(side_a, other) \
+				and _is_open_step(cell, side_b) and _is_open_step(side_b, other):
+			_astar.connect_points(_id(cell), _id(other))
+
+
+func _is_open_step(a: Vector2i, b: Vector2i) -> bool:
+	return is_walkable(a) and is_walkable(b) and not _layout.has_wall_between(a, b)
+
+
+func _id(cell: Vector2i) -> int:
+	return cell.y * _layout.grid_size.x + cell.x
+
+
+func _cell(id: int) -> Vector2i:
+	return Vector2i(id % _layout.grid_size.x, id / _layout.grid_size.x)

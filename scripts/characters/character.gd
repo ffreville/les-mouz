@@ -1,10 +1,14 @@
 class_name Character
 extends Node2D
-## Un personnage (« Mouz »). Ce script assemble ses composants et gère son dessin ;
+## Un personnage (« Mouz »). Ce script assemble ses composants et gère son apparence ;
 ## la logique est déléguée aux nœuds enfants (déplacement, besoins, file d'actions…).
 
-const RADIUS := 12.0
 const CLICK_RADIUS := 16.0
+const SELECTION_RADIUS := 19.0
+const SELECTION_DASH := 7.0
+const SELECTION_GAP := 4.0
+## Vitesse à laquelle le corps pivote vers sa direction de marche.
+const TURN_SPEED := 12.0
 
 var profile: CharacterProfile
 var world: World
@@ -13,6 +17,7 @@ var world: World
 var is_selected: bool = false:
 	set(value):
 		is_selected = value
+		name_tag.visible = value
 		queue_redraw()
 
 @onready var mover: GridMover = $Mover
@@ -20,8 +25,9 @@ var is_selected: bool = false:
 @onready var queue: ActionQueue = $Queue
 @onready var brain: AutonomyBrain = $Brain
 @onready var relationships: Relationships = $Relationships
-@onready var name_label: Label = $NameLabel
-@onready var action_label: Label = $ActionLabel
+@onready var body: Sprite2D = $Body
+@onready var name_tag: Label = $NameTag
+@onready var bubble: ActionBubble = $Bubble
 
 
 ## À appeler juste après l'ajout dans l'arbre.
@@ -30,14 +36,15 @@ func setup(p_world: World, p_profile: CharacterProfile, cell: Vector2i) -> void:
 	profile = p_profile
 	name = profile.display_name
 	position = world.navigation.cell_to_world(cell)
-	name_label.text = profile.display_name
+	body.texture = profile.sprite
+	name_tag.text = profile.display_name
+	name_tag.visible = is_selected
 	mover.setup(world.navigation, self, profile.walk_speed)
 	needs.setup(self, profile.needs)
 	queue.setup(self)
 	relationships.setup(self)
 	brain.setup(self, profile.autonomy_enabled)
-	queue.changed.connect(_refresh_action_label)
-	_refresh_action_label()
+	bubble.setup(queue)
 	queue_redraw()
 
 
@@ -54,17 +61,22 @@ func contains_point(world_position: Vector2) -> bool:
 	return position.distance_to(world_position) <= CLICK_RADIUS
 
 
-## Affiche sous le personnage l'action qu'il est en train de faire.
-func _refresh_action_label() -> void:
-	var action := queue.current()
-	var running := action != null and action.state == QueuedAction.State.RUNNING
-	action_label.text = action.definition.display_name if running else ""
+func _process(delta: float) -> void:
+	# Le sprite regarde vers le haut : on l'oriente dans la direction de marche.
+	var target := mover.facing.angle() + PI / 2
+	body.rotation = lerp_angle(body.rotation, target, minf(1.0, delta * TURN_SPEED))
 
 
+## Anneau de sélection en pointillés, sous le sprite.
 func _draw() -> void:
-	if profile == null:
+	if not is_selected:
 		return
-	if is_selected:
-		draw_circle(Vector2.ZERO, RADIUS + 5, Color(1, 1, 1, 0.9), false, 2.0)
-	draw_circle(Vector2.ZERO, RADIUS, profile.color)
-	draw_circle(Vector2.ZERO, RADIUS, profile.color.darkened(0.45), false, 2.0)
+	var accent := Palette.ACCENT
+	draw_circle(Vector2.ZERO, SELECTION_RADIUS, Color(accent, 0.18))
+	var circumference := TAU * SELECTION_RADIUS
+	var dash_angle := TAU * SELECTION_DASH / circumference
+	var step := TAU * (SELECTION_DASH + SELECTION_GAP) / circumference
+	var angle := 0.0
+	while angle < TAU:
+		draw_arc(Vector2.ZERO, SELECTION_RADIUS, angle, minf(angle + dash_angle, TAU), 6, accent, 3.0, true)
+		angle += step

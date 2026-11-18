@@ -6,6 +6,8 @@ extends Resource
 @export var id: StringName = &"action"
 ## Texte affiché dans les menus et la file d'actions.
 @export var display_name: String = "Action"
+## Icône 24 × 24 affichée dans le menu, la file d'actions et la bulle au-dessus du personnage.
+@export var icon: Texture2D
 ## Durée en minutes de jeu.
 @export var duration_minutes: float = 30.0
 ## Points gagnés sur la durée totale, par identifiant de besoin (ex. &"faim": 60).

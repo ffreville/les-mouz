@@ -1,30 +1,36 @@
 class_name HouseLayout
 extends Resource
-## Plan de la maison : grille, pièces, murs, portes, meubles et points d'apparition.
-## Tout se modifie dans l'inspecteur, sans toucher au code.
+## Plan de la maison : pièces, portes, meubles et points d'apparition.
+## Les murs ne sont pas décrits : il y en a un entre deux cases de pièces différentes
+## (ou entre une pièce et l'extérieur), sauf si l'une des deux cases est une porte.
 
 ## Taille de la grille, en cases.
-@export var grid_size: Vector2i = Vector2i(24, 16)
+@export var grid_size: Vector2i = Vector2i(20, 16)
 ## Taille d'une case, en pixels.
 @export var cell_size: int = 32
 @export var rooms: Array[RoomDefinition] = []
-## Rectangles de murs, en cases.
-@export var walls: Array[Rect2i] = []
-## Cases de mur transformées en passage.
+## Cases de porte : le mur qui sépare cette case d'une autre pièce (ou de l'extérieur) est ouvert.
 @export var doors: Array[Vector2i] = []
 ## Meubles et objets posés dans la maison.
 @export var objects: Array[ObjectPlacement] = []
 ## Cases de départ des personnages (un par fiche, dans l'ordre).
 @export var character_spawns: Array[Vector2i] = [Vector2i(4, 4)]
-@export var wall_color: Color = Color(0.23, 0.21, 0.19)
-@export var door_color: Color = Color(0.55, 0.47, 0.38)
 
 
-## Vrai si la case est un mur (et pas une porte).
-func is_wall(cell: Vector2i) -> bool:
-	if cell in doors:
+## Indice de la pièce qui contient la case, ou -1 si elle est dehors.
+func room_index_at(cell: Vector2i) -> int:
+	for i in rooms.size():
+		if rooms[i].rect.has_point(cell):
+			return i
+	return -1
+
+
+func is_inside(cell: Vector2i) -> bool:
+	return room_index_at(cell) >= 0
+
+
+## Vrai si un mur sépare deux cases voisines (horizontalement ou verticalement).
+func has_wall_between(a: Vector2i, b: Vector2i) -> bool:
+	if room_index_at(a) == room_index_at(b):
 		return false
-	for wall in walls:
-		if wall.has_point(cell):
-			return true
-	return false
+	return not (a in doors or b in doors)

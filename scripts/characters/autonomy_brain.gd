@@ -83,7 +83,7 @@ func _list_candidates() -> Array[Dictionary]:
 		# On ne dérange pas quelqu'un d'occupé (un ordre du joueur, lui, interrompt).
 		if other == _character or _is_busy(other):
 			continue
-		var spot := navigation.closest_reachable(navigation.cells_around(Rect2i(other.get_cell(), Vector2i.ONE)), here)
+		var spot := navigation.closest_reachable(navigation.cells_next_to(other.get_cell()), here)
 		if spot == GridNavigation.NO_CELL:
 			continue
 		var distance := navigation.path_length(here, spot)

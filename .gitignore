@@ -1,5 +1,4 @@
 # Cache et fichiers générés par Godot
 .godot/
-*.import
 /android/
 .DS_Store

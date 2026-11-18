@@ -111,10 +111,9 @@ func _destination_for(action: QueuedAction) -> Vector2i:
 	if action.is_social_guest:
 		return here
 	var partner_cell := action.target_character.get_cell()
-	if _is_next_to(here, partner_cell):
+	if navigation.are_neighbors(here, partner_cell):
 		return here
-	var spots := navigation.cells_around(Rect2i(partner_cell, Vector2i.ONE))
-	return navigation.closest_reachable(spots, here)
+	return navigation.closest_reachable(navigation.cells_next_to(partner_cell), here)
 
 
 func _on_arrived() -> void:
@@ -129,7 +128,7 @@ func _on_destination_reached(action: QueuedAction) -> void:
 		return
 	# Le partenaire a pu bouger pendant le trajet : on le rejoint à nouveau.
 	if action.is_social() and not action.is_social_guest \
-			and not _is_next_to(_character.get_cell(), action.target_character.get_cell()):
+			and not _character.world.navigation.are_neighbors(_character.get_cell(), action.target_character.get_cell()):
 		action.approach_attempts += 1
 		if action.approach_attempts > MAX_APPROACH_ATTEMPTS:
 			cancel(action)
@@ -193,8 +192,3 @@ func _stop(action: QueuedAction) -> void:
 	_character.mover.stop()
 	if action.target_object != null:
 		action.target_object.release(_character)
-
-
-## Vrai si deux cases se touchent (y compris en diagonale) sans être confondues.
-static func _is_next_to(a: Vector2i, b: Vector2i) -> bool:
-	return a != b and absi(a.x - b.x) <= 1 and absi(a.y - b.y) <= 1

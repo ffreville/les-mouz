@@ -6,6 +6,9 @@ extends Node
 ## Le personnage est arrivé à destination.
 signal arrived
 
+## Dernière direction de marche (le personnage garde son orientation à l'arrêt).
+var facing: Vector2 = Vector2.UP
+
 var _navigation: GridNavigation
 var _body: Node2D
 var _speed: float = 96.0
@@ -52,5 +55,6 @@ func _process(delta: float) -> void:
 			if _path.is_empty():
 				arrived.emit()
 		else:
+			facing = (target - _body.position).normalized()
 			_body.position = _body.position.move_toward(target, step)
 			step = 0.0

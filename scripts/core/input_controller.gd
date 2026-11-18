@@ -30,7 +30,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	var cell := world.navigation.world_to_cell(position_in_world)
 	var smart_object := world.get_object_at_cell(cell)
 	if smart_object != null:
-		_open_object_menu(selected, smart_object, click.position)
+		if smart_object.has_actions():
+			_open_object_menu(selected, smart_object, click.position)
 	elif world.navigation.is_walkable(cell):
 		selected.queue.enqueue(QueuedAction.move_to(cell))
 
@@ -40,6 +41,7 @@ func _open_object_menu(actor: Character, smart_object: SmartObject, screen_posit
 	for action in smart_object.get_actions():
 		options.append({
 			"label": action.display_name,
+			"icon": action.icon,
 			"callback": func() -> void:
 				actor.queue.enqueue(QueuedAction.use_object(action, smart_object)),
 		})
@@ -51,6 +53,7 @@ func _open_character_menu(actor: Character, other: Character, screen_position: V
 	for action in world.social_actions:
 		options.append({
 			"label": action.display_name,
+			"icon": action.icon,
 			"callback": func() -> void:
 				actor.queue.enqueue(QueuedAction.with_character(action, other)),
 		})

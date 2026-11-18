@@ -7,10 +7,12 @@
 [ext_resource type="Resource" path="res://data/needs/hygiene.tres" id="5_hygiene"]
 [ext_resource type="Resource" path="res://data/needs/social.tres" id="6_social"]
 [ext_resource type="Resource" path="res://data/needs/plaisir.tres" id="7_plaisir"]
+[ext_resource type="Texture2D" path="res://assets/sprites/mouz_pepin.svg" id="8_sprite"]
 
 [resource]
 script = ExtResource("1_profile")
-display_name = "Sam"
-color = Color(0.25, 0.75, 0.7, 1)
+display_name = "Pépin"
+sprite = ExtResource("8_sprite")
+color = Color(0.949, 0.6471, 0.4196, 1)
 walk_speed = 96.0
 needs = Array[ExtResource("2_need")]([ExtResource("3_faim"), ExtResource("4_energie"), ExtResource("5_hygiene"), ExtResource("6_social"), ExtResource("7_plaisir")])

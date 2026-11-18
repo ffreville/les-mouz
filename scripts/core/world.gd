@@ -14,7 +14,8 @@ extends Node2D
 var characters: Array[Character] = []
 var smart_objects: Array[SmartObject] = []
 
-@onready var house_view: HouseView = $HouseView
+@onready var floor_view: FloorView = $FloorView
+@onready var wall_view: WallView = $WallView
 @onready var navigation: GridNavigation = $Navigation
 @onready var selection: SelectionManager = $Selection
 @onready var characters_root: Node2D = $Characters
@@ -22,22 +23,26 @@ var smart_objects: Array[SmartObject] = []
 
 
 func _ready() -> void:
-	house_view.render(layout)
-	_build_navigation()
+	floor_view.render(layout)
+	wall_view.render(layout)
 	_spawn_objects()
+	_build_navigation()
 	_spawn_characters()
 	if not characters.is_empty():
 		# Différé pour que l'interface soit prête à recevoir le signal de sélection.
 		selection.select.call_deferred(characters[0])
 
 
+## Les meubles qui bloquent le passage rendent leurs cases inaccessibles.
 func _build_navigation() -> void:
-	navigation.setup(layout.grid_size, layout.cell_size)
-	for y in layout.grid_size.y:
-		for x in layout.grid_size.x:
-			var cell := Vector2i(x, y)
-			if layout.is_wall(cell):
-				navigation.set_blocked(cell, true)
+	var blocked: Array[Vector2i] = []
+	for smart_object in smart_objects:
+		if not smart_object.definition.blocks_movement:
+			continue
+		for y in range(smart_object.footprint.position.y, smart_object.footprint.end.y):
+			for x in range(smart_object.footprint.position.x, smart_object.footprint.end.x):
+				blocked.append(Vector2i(x, y))
+	navigation.setup(layout, blocked)
 
 
 func _spawn_objects() -> void:
@@ -46,10 +51,6 @@ func _spawn_objects() -> void:
 		objects_root.add_child(smart_object)
 		smart_object.setup(placement.definition, placement.cell, layout.cell_size)
 		smart_objects.append(smart_object)
-		# Les meubles bloquent le passage.
-		for y in range(smart_object.footprint.position.y, smart_object.footprint.end.y):
-			for x in range(smart_object.footprint.position.x, smart_object.footprint.end.x):
-				navigation.set_blocked(Vector2i(x, y), true)
 
 
 func _spawn_characters() -> void:
@@ -69,9 +70,9 @@ func get_character_at(world_position: Vector2) -> Character:
 	return null
 
 
-## L'objet qui occupe cette case, ou null.
+## L'objet solide qui occupe cette case, ou null (les tapis sont ignorés).
 func get_object_at_cell(cell: Vector2i) -> SmartObject:
 	for smart_object in smart_objects:
-		if smart_object.occupies(cell):
+		if smart_object.definition.blocks_movement and smart_object.occupies(cell):
 			return smart_object
 	return null

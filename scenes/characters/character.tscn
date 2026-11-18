@@ -7,22 +7,41 @@
 [ext_resource type="Script" path="res://scripts/characters/autonomy_brain.gd" id="5_brain"]
 [ext_resource type="Resource" path="res://data/settings/autonomy_settings.tres" id="6_autonomy"]
 [ext_resource type="Script" path="res://scripts/characters/relationships.gd" id="7_relationships"]
+[ext_resource type="Script" path="res://scripts/characters/action_bubble.gd" id="8_bubble"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_tag"]
+content_margin_left = 6.0
+content_margin_top = 1.0
+content_margin_right = 6.0
+content_margin_bottom = 1.0
+bg_color = Color(0.239, 0.2, 0.341, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="Character" type="Node2D"]
 z_index = 10
 script = ExtResource("1_character")
 
-[node name="NameLabel" type="Label" parent="."]
-offset_left = -50.0
-offset_top = -34.0
-offset_right = 50.0
-offset_bottom = -16.0
+[node name="Body" type="Sprite2D" parent="."]
+
+[node name="NameTag" type="Label" parent="."]
+offset_left = -40.0
+offset_top = 20.0
+offset_right = 40.0
+offset_bottom = 38.0
 mouse_filter = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(1, 0.973, 0.933, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBox_tag")
 text = "Mouz"
 horizontal_alignment = 1
+
+[node name="Bubble" type="Node2D" parent="."]
+z_index = 1
+position = Vector2(18, -26)
+script = ExtResource("8_bubble")
 
 [node name="Mover" type="Node" parent="."]
 script = ExtResource("2_mover")
@@ -32,18 +51,6 @@ script = ExtResource("3_needs")
 
 [node name="Queue" type="Node" parent="."]
 script = ExtResource("4_queue")
-
-[node name="ActionLabel" type="Label" parent="."]
-offset_left = -60.0
-offset_top = -48.0
-offset_right = 60.0
-offset_bottom = -34.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.95, 0.7, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 10
-horizontal_alignment = 1
 
 [node name="Brain" type="Node" parent="."]
 script = ExtResource("5_brain")

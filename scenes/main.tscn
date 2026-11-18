@@ -1,7 +1,8 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/core/world.gd" id="1_world"]
-[ext_resource type="Script" path="res://scripts/core/house_view.gd" id="2_view"]
+[ext_resource type="Script" path="res://scripts/core/floor_view.gd" id="2_floor"]
+[ext_resource type="Script" path="res://scripts/core/wall_view.gd" id="15_walls"]
 [ext_resource type="Resource" path="res://data/house/house_layout.tres" id="3_layout"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
 [ext_resource type="Script" path="res://scripts/core/grid_navigation.gd" id="5_nav"]
@@ -9,9 +10,9 @@
 [ext_resource type="Script" path="res://scripts/core/input_controller.gd" id="7_input"]
 [ext_resource type="PackedScene" path="res://scenes/characters/character.tscn" id="8_character"]
 [ext_resource type="Script" path="res://scripts/characters/character_profile.gd" id="9_profile"]
-[ext_resource type="Resource" path="res://data/characters/lou.tres" id="10_lou"]
+[ext_resource type="Resource" path="res://data/characters/pepin.tres" id="10_pepin"]
 [ext_resource type="PackedScene" path="res://scenes/objects/smart_object.tscn" id="11_object"]
-[ext_resource type="Resource" path="res://data/characters/sam.tres" id="12_sam"]
+[ext_resource type="Resource" path="res://data/characters/myrtille.tres" id="12_myrtille"]
 [ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="13_action"]
 [ext_resource type="Resource" path="res://data/actions/discuter.tres" id="14_discuter"]
 
@@ -20,13 +21,14 @@
 [node name="World" type="Node2D" parent="."]
 script = ExtResource("1_world")
 layout = ExtResource("3_layout")
-character_profiles = Array[ExtResource("9_profile")]([ExtResource("10_lou"), ExtResource("12_sam")])
+character_profiles = Array[ExtResource("9_profile")]([ExtResource("10_pepin"), ExtResource("12_myrtille")])
 character_scene = ExtResource("8_character")
 smart_object_scene = ExtResource("11_object")
 social_actions = Array[ExtResource("13_action")]([ExtResource("14_discuter")])
 
-[node name="HouseView" type="Node2D" parent="World"]
-script = ExtResource("2_view")
+[node name="FloorView" type="Node2D" parent="World"]
+z_index = -10
+script = ExtResource("2_floor")
 
 [node name="Navigation" type="Node" parent="World"]
 script = ExtResource("5_nav")
@@ -36,12 +38,16 @@ script = ExtResource("6_selection")
 
 [node name="Objects" type="Node2D" parent="World"]
 
+[node name="WallView" type="Node2D" parent="World"]
+z_index = 5
+script = ExtResource("15_walls")
+
 [node name="Characters" type="Node2D" parent="World"]
 
 [node name="InputController" type="Node2D" parent="World"]
 script = ExtResource("7_input")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(384, 248)
+position = Vector2(320, 232)
 
 [node name="HUD" parent="." instance=ExtResource("4_hud")]

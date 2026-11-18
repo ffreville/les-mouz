@@ -2,7 +2,9 @@ class_name NeedsPanel
 extends VBoxContainer
 ## Affiche l'humeur et les barres de besoins du personnage sélectionné.
 
-const MOOD_COLOR := Color(0.95, 0.8, 0.3)
+const MOOD_COLOR := Color("#6C5BB3")
+const MOOD_BACKGROUND := Color("#E6E1F5")
+const MOOD_ICON := preload("res://assets/icons/ink/humeur.svg")
 
 var _needs: NeedsComponent
 var _bars: Dictionary[StringName, NeedBar] = {}
@@ -18,11 +20,11 @@ func set_character(character: Character) -> void:
 	_bars.clear()
 
 	_needs = character.needs
-	_mood_bar = _add_bar("Humeur", MOOD_COLOR, 0.0)
+	_mood_bar = _add_bar("Humeur", MOOD_ICON, MOOD_COLOR, MOOD_BACKGROUND, Palette.SEUIL_CRITIQUE)
 	_mood_bar.set_value(_needs.get_mood())
-	add_child(HSeparator.new())
 	for definition in _needs.definitions:
-		var bar := _add_bar(definition.display_name, definition.color, definition.critical_threshold)
+		var bar := _add_bar(definition.display_name, definition.icon, definition.color,
+				definition.background_color, definition.critical_threshold)
 		bar.set_value(_needs.get_value(definition.id))
 		_bars[definition.id] = bar
 
@@ -30,9 +32,9 @@ func set_character(character: Character) -> void:
 	_needs.mood_changed.connect(_on_mood_changed)
 
 
-func _add_bar(title: String, color: Color, critical_threshold: float) -> NeedBar:
+func _add_bar(title: String, icon: Texture2D, color: Color, background: Color, critical: float) -> NeedBar:
 	var bar := NeedBar.new()
-	bar.setup(title, color, critical_threshold)
+	bar.setup(title, icon, color, background, critical)
 	add_child(bar)
 	return bar
 

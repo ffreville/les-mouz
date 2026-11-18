@@ -7,112 +7,162 @@
 [ext_resource type="Script" path="res://scripts/ui/context_menu.gd" id="5_menu"]
 [ext_resource type="Script" path="res://scripts/ui/relationship_panel.gd" id="6_relations"]
 [ext_resource type="Script" path="res://scripts/ui/character_switcher.gd" id="7_switcher"]
+[ext_resource type="Script" path="res://scripts/ui/speed_controls.gd" id="8_speed"]
+[ext_resource type="Script" path="res://scripts/ui/mouz_header.gd" id="9_header"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
 
-[node name="TopBar" type="PanelContainer" parent="."]
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopBar" type="PanelContainer" parent="Root"]
+layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 44.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 64.0
 grow_horizontal = 2
 
-[node name="Margin" type="MarginContainer" parent="TopBar"]
+[node name="Row" type="HBoxContainer" parent="Root/TopBar"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 4
+theme_override_constants/separation = 12
 
-[node name="Row" type="HBoxContainer" parent="TopBar/Margin"]
+[node name="Logo" type="Label" parent="Root/TopBar/Row"]
 layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Les Mouz"
 
-[node name="ClockPanel" type="HBoxContainer" parent="TopBar/Margin/Row"]
-layout_mode = 2
-size_flags_horizontal = 3
-script = ExtResource("2_clock")
-
-[node name="SwitcherLabel" type="Label" parent="TopBar/Margin/Row"]
-layout_mode = 2
-text = "Contrôler :"
-
-[node name="CharacterSwitcher" type="HBoxContainer" parent="TopBar/Margin/Row"]
+[node name="CharacterSwitcher" type="HBoxContainer" parent="Root/TopBar/Row"]
 layout_mode = 2
 script = ExtResource("7_switcher")
 
-[node name="LeftPanel" type="PanelContainer" parent="."]
-offset_left = 8.0
-offset_top = 52.0
-offset_right = 240.0
-offset_bottom = 400.0
-
-[node name="Margin" type="MarginContainer" parent="LeftPanel"]
+[node name="SpacerLeft" type="Control" parent="Root/TopBar/Row"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+size_flags_horizontal = 3
+mouse_filter = 2
 
-[node name="Content" type="VBoxContainer" parent="LeftPanel/Margin"]
+[node name="ClockPanel" type="HBoxContainer" parent="Root/TopBar/Row"]
 layout_mode = 2
-theme_override_constants/separation = 6
+script = ExtResource("2_clock")
 
-[node name="CharacterName" type="Label" parent="LeftPanel/Margin/Content"]
+[node name="SpacerRight" type="Control" parent="Root/TopBar/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="SpeedGroup" type="PanelContainer" parent="Root/TopBar/Row"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"SpeedGroup"
+
+[node name="SpeedControls" type="HBoxContainer" parent="Root/TopBar/Row/SpeedGroup"]
+layout_mode = 2
+script = ExtResource("8_speed")
+
+[node name="Separator" type="VSeparator" parent="Root/TopBar/Row"]
+layout_mode = 2
+
+[node name="AutonomyToggle" type="Button" parent="Root/TopBar/Row"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "—"
-
-[node name="NeedsPanel" type="VBoxContainer" parent="LeftPanel/Margin/Content"]
-unique_name_in_owner = true
-layout_mode = 2
-script = ExtResource("3_needs")
-
-[node name="AutonomyCheck" type="CheckBox" parent="LeftPanel/Margin/Content"]
-unique_name_in_owner = true
-layout_mode = 2
+size_flags_vertical = 4
 focus_mode = 0
+theme_type_variation = &"ToggleChip"
+toggle_mode = true
 text = "Autonomie"
 
-[node name="RelationsTitle" type="Label" parent="LeftPanel/Margin/Content"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 15
-text = "Relations"
+[node name="LeftColumn" type="VBoxContainer" parent="Root"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 76.0
+offset_right = 284.0
+offset_bottom = 76.0
+theme_override_constants/separation = 12
 
-[node name="RelationshipPanel" type="VBoxContainer" parent="LeftPanel/Margin/Content"]
+[node name="MouzPanel" type="PanelContainer" parent="Root/LeftColumn"]
+layout_mode = 2
+
+[node name="Content" type="VBoxContainer" parent="Root/LeftColumn/MouzPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MouzHeader" type="HBoxContainer" parent="Root/LeftColumn/MouzPanel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("9_header")
+
+[node name="NeedsPanel" type="VBoxContainer" parent="Root/LeftColumn/MouzPanel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 12
+script = ExtResource("3_needs")
+
+[node name="RelationPanel" type="PanelContainer" parent="Root/LeftColumn"]
+layout_mode = 2
+
+[node name="Content" type="VBoxContainer" parent="Root/LeftColumn/RelationPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Root/LeftColumn/RelationPanel/Content"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+text = "RELATION"
+
+[node name="RelationshipPanel" type="VBoxContainer" parent="Root/LeftColumn/RelationPanel/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("6_relations")
 
-[node name="RightPanel" type="PanelContainer" parent="."]
+[node name="RightPanel" type="PanelContainer" parent="Root"]
+layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -248.0
-offset_top = 52.0
-offset_right = -8.0
-offset_bottom = 380.0
+offset_left = -284.0
+offset_top = 76.0
+offset_right = -12.0
+offset_bottom = 76.0
 grow_horizontal = 0
 
-[node name="Margin" type="MarginContainer" parent="RightPanel"]
+[node name="Content" type="VBoxContainer" parent="Root/RightPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_override_constants/separation = 10
 
-[node name="Content" type="VBoxContainer" parent="RightPanel/Margin"]
+[node name="Header" type="HBoxContainer" parent="Root/RightPanel/Content"]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="RightPanel/Margin/Content"]
+[node name="Title" type="Label" parent="Root/RightPanel/Content/Header"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "File d'actions"
+size_flags_horizontal = 3
+theme_type_variation = &"SectionTitle"
+text = "FILE D'ACTIONS"
 
-[node name="ActionQueuePanel" type="VBoxContainer" parent="RightPanel/Margin/Content"]
+[node name="QueueCount" type="Label" parent="Root/RightPanel/Content/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+text = "0"
+
+[node name="ActionQueuePanel" type="VBoxContainer" parent="Root/RightPanel/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("4_queue")
+
+[node name="Help" type="Label" parent="Root/RightPanel/Content"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "Clique sur un objet ou sur l'autre Mouz pour ajouter une action."
+autowrap_mode = 3
 
 [node name="ContextMenu" type="PopupMenu" parent="."]
 script = ExtResource("5_menu")
