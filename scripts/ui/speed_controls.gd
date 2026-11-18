@@ -40,7 +40,7 @@ func _ready() -> void:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	var key := event as InputEventKey
-	if key == null or not key.pressed or key.echo or not GameMode.is_live():
+	if key == null or not key.pressed or key.echo or not GameMode.is_live() or PauseMenu.is_open:
 		return
 	match key.keycode:
 		KEY_SPACE:

@@ -26,6 +26,11 @@ var _drag_start := Vector2i.ZERO
 var _dragging := false
 
 
+## Vrai pendant un tracé (Échap sert alors à l'annuler, pas à ouvrir le menu).
+func is_busy() -> bool:
+	return _dragging
+
+
 func setup(p_editor: LotEditor) -> void:
 	editor = p_editor
 

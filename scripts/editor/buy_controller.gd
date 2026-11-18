@@ -20,6 +20,11 @@ var _cell := Vector2i.ZERO
 var _build_tool: StringName = &"wall"
 
 
+## Vrai quand un objet est en main (Échap sert alors à le lâcher, pas à ouvrir le menu).
+func is_busy() -> bool:
+	return _definition != null
+
+
 func setup(p_editor: LotEditor) -> void:
 	editor = p_editor
 

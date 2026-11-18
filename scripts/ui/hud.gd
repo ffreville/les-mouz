@@ -19,8 +19,9 @@ var _selected: Character
 @onready var right_panel: Control = %RightPanel
 @onready var build_panel: BuildPanel = %BuildPanel
 @onready var catalog_panel: CatalogPanel = %CatalogPanel
-@onready var logo: MenuButton = %Logo
-@onready var confirm_panel: ConfirmPanel = %ConfirmPanel
+@onready var logo: Button = %Logo
+@onready var pause_menu: PauseMenu = %PauseMenu
+@onready var toast: Toast = %Toast
 @onready var clock_panel: Control = %ClockPanel
 @onready var speed_group: Control = %SpeedGroup
 @onready var pause_pill: Control = %PausePill
@@ -42,6 +43,7 @@ func _ready() -> void:
 func _on_character_selected(character: Node) -> void:
 	if build_panel.editor == null:
 		build_panel.setup(character.world.editor)
+		pause_menu.setup(character.world)
 	if _selected != null:
 		_selected.brain.enabled_changed.disconnect(_on_brain_enabled_changed)
 	_selected = character
@@ -73,9 +75,8 @@ func _on_mode_changed(mode: int) -> void:
 	catalog_panel.visible = mode == GameMode.Mode.BUY
 
 
-## Le logo ouvre le menu du jeu (Nouvelle partie…). Raccourci : Ctrl+N.
+## Le logo ouvre le menu du jeu (comme Échap).
 func _setup_game_menu() -> void:
-	logo.flat = true
 	logo.add_theme_font_override("font", HudTheme.font(HudTheme.BALOO, 800))
 	logo.add_theme_font_size_override("font_size", 24)
 	for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
@@ -83,19 +84,5 @@ func _setup_game_menu() -> void:
 	# Sans marges, pour garder la barre du haut à sa hauteur.
 	for state in ["normal", "hover", "pressed", "focus", "hover_pressed"]:
 		logo.add_theme_stylebox_override(state, StyleBoxEmpty.new())
-	var popup := logo.get_popup()
-	popup.add_item("Nouvelle partie…", 0)
-	popup.id_pressed.connect(func(_id: int) -> void: _ask_new_game())
-	confirm_panel.confirmed.connect(func() -> void: SaveManager.start_new_game("Nouvelle partie"))
-
-
-func _ask_new_game() -> void:
-	confirm_panel.ask("Recommencer sur un terrain vide avec %s ? La maison actuelle sera perdue." \
-			% Palette.format_mz(Wallet.settings.start_funds), "Nouvelle partie")
-
-
-func _unhandled_key_input(event: InputEvent) -> void:
-	var key := event as InputEventKey
-	if key != null and key.pressed and key.keycode == KEY_N and key.is_command_or_control_pressed():
-		_ask_new_game()
-		get_viewport().set_input_as_handled()
+	logo.pressed.connect(pause_menu.open)
+	pause_menu.message.connect(toast.show_message)
