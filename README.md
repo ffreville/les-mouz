@@ -28,13 +28,40 @@ Les graphismes suivent la direction artistique « Maison de poche » décrite da
 
 À la première ouverture, Godot crée le dossier `.godot/` (cache, ignoré par git). Si tu ajoutes un script avec un nouveau `class_name` en dehors de l'éditeur, ouvre l'éditeur une fois (ou lance `Godot --headless --path . --import`) pour qu'il soit reconnu.
 
-## La partie
+## Les parties et les sauvegardes
 
-- Une **nouvelle partie** démarre sur un terrain vide de 30 × 20 cases, en mode Construire, avec le budget de départ.
-- La partie est **sauvegardée automatiquement** dans `user://partie.tres` : peu après chaque modification du terrain, au retour en mode Vivre, toutes les 2 minutes et à la fermeture du jeu. Elle contient le terrain, l'argent et l'heure. Les besoins et les relations repartent de zéro au chargement.
-- **Recommencer** : clic sur le logo « Les Mouz », puis « Nouvelle partie… » (ou Ctrl+N).
+Le jeu s'ouvre sur un **écran d'accueil** :
 
-Sur macOS, `user://` correspond à `~/Library/Application Support/Godot/app_userdata/Les Mouz/`.
+- **Continuer** reprend la dernière partie enregistrée ;
+- **Nouvelle partie** demande un nom, puis démarre sur un terrain vide de 30 × 20 cases, en mode Construire, avec le budget de départ ;
+- **Charger une partie** affiche toutes les parties : vignette du terrain, nom, jour, argent, nombre d'objets et date. On peut y **renommer** ou **supprimer** une partie directement sur sa carte ;
+- **Quitter**.
+
+En jeu, **Échap** (ou un clic sur le logo « Les Mouz ») ouvre le **menu** et arrête le temps : Reprendre, Sauvegarder, Sauvegarder sous… (une copie avec un autre nom, qui devient la partie en cours), Charger une partie…, Menu principal, Quitter le jeu. **Ctrl+S** sauvegarde à tout moment.
+
+La partie en cours est aussi **sauvegardée automatiquement** : peu après chaque modification du terrain, au retour en mode Vivre, toutes les 2 minutes, avant d'en charger une autre et à la fermeture du jeu.
+
+Une sauvegarde contient tout l'état de la partie : le terrain, l'argent, l'heure et la vitesse, la position, les besoins, les relations et l'autonomie de chaque Mouz, le Mouz sélectionné et la caméra.
+
+### Où sont les fichiers
+
+Chaque partie est un dossier de `user://saves/` (sur macOS : `~/Library/Application Support/Godot/app_userdata/Les Mouz/saves/`) :
+
+| Fichier | Contenu |
+|---|---|
+| `data.json` | L'état de la partie, en JSON lisible, avec ses informations sous `"meta"` (nom, date, jour, argent) |
+| `data.json.bak` | La version précédente, utilisée automatiquement si `data.json` est abîmé |
+| `vignette.png` | L'image du terrain pour l'écran Charger |
+
+L'écriture passe par un fichier temporaire : une coupure en pleine sauvegarde ne détruit jamais la dernière version valide. Les sauvegardes ne contiennent ni ressource ni script Godot, seulement des données : un fichier venu d'ailleurs ne peut pas exécuter de code.
+
+L'ancienne sauvegarde unique (`user://partie.tres`) est convertie automatiquement en une partie « Ma maison » au premier lancement, puis renommée `partie.tres.ancien`.
+
+### Faire évoluer le format
+
+Le format est décrit dans `scripts/save/world_serializer.gd` (état de la partie) et `scripts/save/lot_serializer.gd` (terrain). Les éléments du catalogue y sont désignés par leur `id` : on peut déplacer ou renommer les fichiers `.tres` sans casser les sauvegardes, mais **il ne faut pas changer l'`id` d'un élément existant**. Un `id` inconnu (élément retiré du catalogue) est ignoré au chargement.
+
+Pour changer le format : augmenter `WorldSerializer.FORMAT_VERSION`, puis compléter `WorldSerializer.migrate()` pour mettre à jour les anciennes sauvegardes (par exemple, ajouter une valeur par défaut à une nouvelle clé). Une sauvegarde d'un format plus récent que le jeu est refusée plutôt que mal lue.
 
 ## Commandes
 
@@ -45,7 +72,8 @@ Sur macOS, `user://` correspond à `~/Library/Application Support/Godot/app_user
 | **F1** / **F2** / **F3** (ou les onglets en haut) | Modes Vivre / Construire / Acheter |
 | Flèches, ZQSD, bouton du milieu | Faire défiler la vue |
 | Molette | Zoomer |
-| Ctrl+N | Nouvelle partie |
+| Échap | Menu du jeu (ou annule le tracé / lâche l'objet en cours) |
+| Ctrl+S | Sauvegarder |
 
 ### Vivre
 
@@ -109,7 +137,7 @@ data/                  Resources (.tres) : tout le contenu et l'équilibrage
   characters/          Fiches des Mouz (Pépin, Myrtille)
   lots/                Terrains : terrain_vide (nouvelle partie), maison_demo (exemple)
   settings/            Horloge, autonomie, économie
-scenes/                main.tscn, personnage, objet, HUD
+scenes/                title.tscn (accueil, scène de démarrage), main.tscn (le jeu), personnage, objet, HUD
 scripts/
   core/                Autoloads (GameClock, EventBus, Wallet, GameMode), monde, rendu, navigation,
                        caméra, catalogue, sauvegarde
@@ -118,7 +146,8 @@ scripts/
   needs/               Définition d'un besoin et composant « besoins » d'un personnage
   objects/             Définitions d'action et d'objet, objet posé dans le monde
   characters/          Personnage, déplacement, file d'actions, autonomie, relations
-  ui/                  Autoload Palette, thème, et tous les panneaux du HUD
+  save/                Autoload SaveManager, format JSON (terrain, partie), vignettes
+  ui/                  Autoload Palette, thème, panneaux du HUD, écran d'accueil, menu en jeu
 ```
 
 Principes à retenir :
@@ -162,7 +191,9 @@ C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catal
 
 **Ajouter un personnage** : dupliquer `data/characters/myrtille.tres` (nom, `sprite`, `color`), ajouter la copie à `character_profiles` sur le nœud `World`, et une case de départ dans `spawn_cells` de `data/lots/terrain_vide.tres`.
 
-**Partir de la maison de démo** : sur le nœud `World` de `scenes/main.tscn`, mettre `starting_lot` sur `data/lots/maison_demo.tres`, puis lancer une nouvelle partie.
+**Partir de la maison de démo** : sur le nœud `World` de `scenes/main.tscn`, mettre `starting_lot` sur `data/lots/maison_demo.tres`, puis lancer une nouvelle partie depuis l'écran d'accueil.
+
+**Lancer directement le jeu sans l'accueil** : ouvrir `scenes/main.tscn` dans l'éditeur et appuyer sur F6. La partie n'a alors pas d'emplacement : « Sauvegarder » en crée un, nommé « Ma partie ».
 
 ## Où modifier l'équilibrage
 
@@ -223,11 +254,13 @@ func _on_item_bought(item: Resource, price: int) -> void:
 	print("%s : achat de %s pour %s" % [GameClock.format_time(), item.get_class(), Palette.format_mz(price)])
 ```
 
+Le gestionnaire de sauvegardes a aussi ses signaux : `SaveManager.saved(slot_id)` après chaque enregistrement, et `SaveManager.slots_changed` quand la liste des parties change.
+
 ## Limites connues
 
 - Les Mouz peuvent se traverser : ils ne bloquent pas la navigation.
 - Deux Mouz peuvent viser le même objet. Le premier arrivé le réserve, et l'action du second est annulée ; son autonomie choisit alors autre chose.
-- La sauvegarde garde le terrain, l'argent et l'heure, mais pas les besoins, les relations ni la position des Mouz.
+- La file d'actions des Mouz n'est pas sauvegardée : au chargement, ils repartent les mains vides (l'autonomie reprend vite la main).
 - Il n'y a pas encore de revenus ni de dépenses régulières : l'argent ne bouge qu'en construisant et en achetant.
 
 ## Crédits
