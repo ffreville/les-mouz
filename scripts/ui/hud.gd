@@ -4,6 +4,7 @@ extends CanvasLayer
 
 @onready var character_name: Label = %CharacterName
 @onready var needs_panel: NeedsPanel = %NeedsPanel
+@onready var queue_panel: ActionQueuePanel = %ActionQueuePanel
 
 
 func _ready() -> void:
@@ -13,3 +14,4 @@ func _ready() -> void:
 func _on_character_selected(character: Node) -> void:
 	character_name.text = character.get_display_name()
 	needs_panel.set_character(character)
+	queue_panel.set_character(character)

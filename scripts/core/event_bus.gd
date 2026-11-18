@@ -48,4 +48,4 @@ signal character_selected(character: Node)
 ## Demande d'ouverture d'un menu contextuel.
 ## `options` : tableau de dictionnaires { "label": String, "callback": Callable }.
 @warning_ignore("unused_signal")
-signal context_menu_requested(options: Array, screen_position: Vector2)
+signal context_menu_requested(title: String, options: Array, screen_position: Vector2)

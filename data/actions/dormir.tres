@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ActionDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="1_action"]
+
+[resource]
+script = ExtResource("1_action")
+id = &"dormir"
+display_name = "Dormir"
+duration_minutes = 420.0
+need_gains = Dictionary[StringName, float]({&"energie": 130.0})
+relationship_gain = 0.0

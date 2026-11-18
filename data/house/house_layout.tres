@@ -2,6 +2,13 @@
 
 [ext_resource type="Script" path="res://scripts/core/house_layout.gd" id="1_layout"]
 [ext_resource type="Script" path="res://scripts/core/room_definition.gd" id="2_room"]
+[ext_resource type="Script" path="res://scripts/objects/object_placement.gd" id="3_placement"]
+[ext_resource type="Resource" path="res://data/objects/frigo.tres" id="4_frigo"]
+[ext_resource type="Resource" path="res://data/objects/lit.tres" id="5_lit"]
+[ext_resource type="Resource" path="res://data/objects/douche.tres" id="6_douche"]
+[ext_resource type="Resource" path="res://data/objects/canape.tres" id="7_canape"]
+[ext_resource type="Resource" path="res://data/objects/bibliotheque.tres" id="8_bibliotheque"]
+[ext_resource type="Resource" path="res://data/objects/tele.tres" id="9_tele"]
 
 [sub_resource type="Resource" id="Room_salon"]
 script = ExtResource("2_room")
@@ -27,6 +34,36 @@ display_name = "Salle de bain"
 rect = Rect2i(13, 9, 10, 6)
 floor_color = Color(0.73, 0.84, 0.9, 1)
 
+[sub_resource type="Resource" id="Place_frigo"]
+script = ExtResource("3_placement")
+definition = ExtResource("4_frigo")
+cell = Vector2i(21, 1)
+
+[sub_resource type="Resource" id="Place_lit"]
+script = ExtResource("3_placement")
+definition = ExtResource("5_lit")
+cell = Vector2i(1, 11)
+
+[sub_resource type="Resource" id="Place_douche"]
+script = ExtResource("3_placement")
+definition = ExtResource("6_douche")
+cell = Vector2i(21, 13)
+
+[sub_resource type="Resource" id="Place_canape"]
+script = ExtResource("3_placement")
+definition = ExtResource("7_canape")
+cell = Vector2i(3, 6)
+
+[sub_resource type="Resource" id="Place_bibliotheque"]
+script = ExtResource("3_placement")
+definition = ExtResource("8_bibliotheque")
+cell = Vector2i(8, 1)
+
+[sub_resource type="Resource" id="Place_tele"]
+script = ExtResource("3_placement")
+definition = ExtResource("9_tele")
+cell = Vector2i(3, 1)
+
 [resource]
 script = ExtResource("1_layout")
 grid_size = Vector2i(24, 16)
@@ -34,4 +71,5 @@ cell_size = 32
 rooms = Array[ExtResource("2_room")]([SubResource("Room_salon"), SubResource("Room_cuisine"), SubResource("Room_chambre"), SubResource("Room_sdb")])
 walls = Array[Rect2i]([Rect2i(0, 0, 24, 1), Rect2i(0, 15, 24, 1), Rect2i(0, 0, 1, 16), Rect2i(23, 0, 1, 16), Rect2i(12, 0, 1, 16), Rect2i(0, 8, 24, 1)])
 doors = Array[Vector2i]([Vector2i(12, 4), Vector2i(12, 11), Vector2i(6, 8), Vector2i(17, 8)])
-character_spawns = Array[Vector2i]([Vector2i(4, 5), Vector2i(8, 5)])
+objects = Array[ExtResource("3_placement")]([SubResource("Place_frigo"), SubResource("Place_lit"), SubResource("Place_douche"), SubResource("Place_canape"), SubResource("Place_bibliotheque"), SubResource("Place_tele")])
+character_spawns = Array[Vector2i]([Vector2i(5, 4), Vector2i(9, 4)])
