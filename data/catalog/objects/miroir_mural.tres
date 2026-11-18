@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="SmartObjectDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/smart_object_definition.gd" id="1_object"]
+[ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="2_action"]
+[ext_resource type="Texture2D" path="res://assets/sprites/miroir_mural_nature.svg" id="3_nature"]
+[ext_resource type="Texture2D" path="res://assets/sprites/miroir_mural_retro.svg" id="4_retro"]
+[ext_resource type="Texture2D" path="res://assets/sprites/miroir_mural_moderne.svg" id="5_moderne"]
+[ext_resource type="Resource" path="res://data/actions/se_maquiller.tres" id="6_se_maquiller"]
+[ext_resource type="Resource" path="res://data/actions/se_raser.tres" id="7_se_raser"]
+
+[resource]
+script = ExtResource("1_object")
+id = &"miroir_mural"
+display_name = "Miroir et meuble"
+sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("3_nature"), &"retro": ExtResource("4_retro"), &"moderne": ExtResource("5_moderne")})
+active_sprites = Dictionary[StringName, Texture2D]({})
+size = Vector2i(2, 1)
+blocks_movement = true
+actions = Array[ExtResource("2_action")]([ExtResource("6_se_maquiller"), ExtResource("7_se_raser")])
+capacity = 1
+price = 350
+category = &"salle_de_bain"

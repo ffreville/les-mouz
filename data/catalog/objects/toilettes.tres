@@ -2,17 +2,20 @@
 
 [ext_resource type="Script" path="res://scripts/objects/smart_object_definition.gd" id="1_object"]
 [ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="2_action"]
-[ext_resource type="Texture2D" path="res://assets/sprites/toilettes.svg" id="3_sprite"]
+[ext_resource type="Texture2D" path="res://assets/sprites/toilettes_nature.svg" id="3_nature"]
+[ext_resource type="Texture2D" path="res://assets/sprites/toilettes_retro.svg" id="4_retro"]
+[ext_resource type="Texture2D" path="res://assets/sprites/toilettes_moderne.svg" id="5_moderne"]
+[ext_resource type="Resource" path="res://data/actions/utiliser_toilettes.tres" id="6_utiliser_toilettes"]
 
 [resource]
 script = ExtResource("1_object")
 id = &"toilettes"
 display_name = "Toilettes"
-sprite = ExtResource("3_sprite")
-color = Color(0.9686, 0.9529, 0.9255, 1)
+sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("3_nature"), &"retro": ExtResource("4_retro"), &"moderne": ExtResource("5_moderne")})
+active_sprites = Dictionary[StringName, Texture2D]({})
 size = Vector2i(1, 1)
 blocks_movement = true
-actions = Array[ExtResource("2_action")]([])
+actions = Array[ExtResource("2_action")]([ExtResource("6_utiliser_toilettes")])
 capacity = 1
 price = 300
 category = &"salle_de_bain"

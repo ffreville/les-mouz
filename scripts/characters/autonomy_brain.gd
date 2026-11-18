@@ -42,6 +42,9 @@ func choose_action() -> QueuedAction:
 	for candidate in _list_candidates():
 		var score: float = score_gains(candidate.definition) \
 				- candidate.distance * settings.distance_penalty_per_cell
+		# Rejoindre quelqu'un qui joue déjà vaut aussi le bonus partagé.
+		if candidate.get("shared", false):
+			score += score_gains(candidate.definition, true)
 		if score > best_score:
 			best_score = score
 			best = candidate.action
@@ -49,13 +52,15 @@ func choose_action() -> QueuedAction:
 
 
 ## Partie « besoins » du score : on ne compte que ce qui manque vraiment.
-func score_gains(definition: ActionDefinition) -> float:
+## `shared` : on compte les gains de l'activité partagée au lieu des gains de base.
+func score_gains(definition: ActionDefinition, shared := false) -> float:
 	var needs := _character.needs
+	var gains := definition.shared_need_gains if shared else definition.need_gains
 	var score := 0.0
-	for need_id in definition.need_gains:
+	for need_id in gains:
 		if not needs.has_need(need_id):
 			continue
-		var useful_gain := minf(definition.need_gains[need_id], NeedsComponent.MAX_VALUE - needs.get_value(need_id))
+		var useful_gain := minf(gains[need_id], NeedsComponent.MAX_VALUE - needs.get_value(need_id))
 		score += useful_gain * pow(needs.get_urgency(need_id), settings.urgency_exponent)
 	return score
 
@@ -69,15 +74,19 @@ func _list_candidates() -> Array[Dictionary]:
 	for smart_object in _character.world.smart_objects:
 		if smart_object.get_actions().is_empty() or smart_object.is_used_by_other(_character):
 			continue
-		var spot := navigation.closest_reachable(navigation.cells_around(smart_object.footprint), here)
+		var spot := navigation.closest_reachable(smart_object.get_spots(navigation), here)
 		if spot == GridNavigation.NO_CELL:
 			continue
 		var distance := navigation.path_length(here, spot)
+		var shared := not smart_object.other_users(_character).is_empty()
 		for definition in smart_object.get_actions():
+			if smart_object.action_problem(definition, _character.world) != "":
+				continue
 			candidates.append({
 				"action": QueuedAction.use_object(definition, smart_object),
 				"definition": definition,
 				"distance": distance,
+				"shared": shared,
 			})
 	for other in _character.world.characters:
 		# On ne dérange pas quelqu'un d'occupé (un ordre du joueur, lui, interrompt).

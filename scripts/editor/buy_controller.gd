@@ -14,6 +14,7 @@ const SELL_ICON := preload("res://assets/icons/ink/vendre.svg")
 var editor: LotEditor
 ## Objet en cours de placement (nouveau ou déplacé), null sinon.
 var _definition: SmartObjectDefinition
+var _collection: StringName = &""
 var _moving: PlacedObject
 var _rotation := 0
 var _cell := Vector2i.ZERO
@@ -47,9 +48,15 @@ func _on_build_tool_selected(tool: StringName, _option: Resource) -> void:
 	_stop()
 
 
-func _on_catalog_item_selected(definition: Resource) -> void:
+func _on_catalog_item_selected(definition: Resource, collection: StringName) -> void:
+	# Changer de style pendant qu'on tient déjà cet objet ne remet pas la rotation à zéro.
+	var same := definition == _definition and _moving == null
 	_moving = null
 	_definition = definition
+	_collection = collection
+	if same:
+		queue_redraw()
+		return
 	_rotation = 0
 	_track_mouse()
 	_update_preview()
@@ -101,7 +108,7 @@ func _on_click(screen_position: Vector2) -> void:
 	if _moving != null:
 		if editor.move_object(_moving, _cell, _rotation):
 			_stop()
-	elif editor.buy_object(_definition, _cell, _rotation):
+	elif editor.buy_object(_definition, _cell, _rotation, _collection):
 		# On garde l'objet en main pour en poser un autre, s'il reste de quoi payer.
 		if not Wallet.can_afford(_definition.price):
 			_stop()
@@ -114,16 +121,37 @@ func _open_object_menu(placed: PlacedObject, screen_position: Vector2) -> void:
 	var full := refund == placed.price
 	var options: Array = [
 		{"label": "Déplacer", "icon": MOVE_ICON, "callback": _start_moving.bind(placed)},
+	]
+	options.append_array(_style_options(placed))
+	options.append_array([
 		{"label": "Revendre +%s" % Palette.format_mz(refund), "icon": SELL_ICON,
 			"callback": func() -> void: editor.sell_object(placed)},
 		{"label": "Remboursé en entier aujourd'hui" if full else "75 % du prix d'achat", "disabled": true},
-	]
+	])
 	EventBus.context_menu_requested.emit(placed.definition.display_name, options, screen_position)
+
+
+## Une ligne par autre collection : « Style Rétro · gratuit » ou « Style Rétro · 200 Mz ».
+func _style_options(placed: PlacedObject) -> Array:
+	var options: Array = []
+	var cost := editor.restyle_cost(placed)
+	for collection in Catalog.collections():
+		if collection.id == placed.get_collection() or not placed.definition.sprites.has(collection.id):
+			continue
+		var price := "gratuit" if cost == 0 else Palette.format_mz(cost)
+		options.append({
+			"label": "Style %s · %s" % [collection.display_name, price],
+			"icon": collection.icon, "icon_modulate": collection.color,
+			"disabled": not Wallet.can_afford(cost),
+			"callback": func() -> void: editor.restyle_object(placed, collection.id),
+		})
+	return options
 
 
 func _start_moving(placed: PlacedObject) -> void:
 	_moving = placed
 	_definition = placed.definition
+	_collection = placed.get_collection()
 	_rotation = placed.rotation
 	_track_mouse()
 	_update_preview()
@@ -169,7 +197,7 @@ func _draw() -> void:
 	var cs := float(editor.lot.cell_size)
 	var valid: bool = editor.quote_object(_definition, _cell, _rotation, _moving)["valid"]
 	var origin := Vector2(_cell) * cs
-	SmartObject.draw_definition(self, _definition, _rotation, origin, cs, Color(1, 1, 1, GHOST_ALPHA))
+	SmartObject.draw_definition(self, _definition, _rotation, origin, cs, Color(1, 1, 1, GHOST_ALPHA), _collection)
 	var size := Vector2(_definition.size)
 	if _rotation % 2 == 1:
 		size = Vector2(size.y, size.x)

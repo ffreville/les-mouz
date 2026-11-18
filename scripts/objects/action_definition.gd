@@ -14,3 +14,25 @@ extends Resource
 @export var need_gains: Dictionary[StringName, float] = {}
 ## Variation de la relation (actions sociales uniquement), sur la durée totale.
 @export var relationship_gain: float = 0.0
+
+# --- Activités partagées -----------------------------------------------------------
+
+## Gains supplémentaires quand un autre Mouz utilise le même objet en même temps
+## (échecs, apéro, repas à table…), sur la durée totale.
+@export var shared_need_gains: Dictionary[StringName, float] = {}
+## Relation gagnée avec chaque Mouz qui partage l'objet, sur la durée totale.
+@export var shared_relationship_gain: float = 0.0
+
+# --- Objet voisin -------------------------------------------------------------------
+
+## Identifiant d'un objet qui doit se trouver à proximité (ex. &"tele" pour le canapé).
+## Pendant l'action, cet objet passe « en marche » (la télé s'allume).
+@export var nearby_object_id: StringName = &""
+## Distance maximale, en cases, entre les deux objets.
+@export var nearby_radius: int = 6
+
+# --- Interrupteur -------------------------------------------------------------------
+
+enum Switch { NONE, TURN_ON, TURN_OFF }
+## Allumer ou éteindre l'objet (lampes) à la fin de l'action.
+@export var switch: Switch = Switch.NONE

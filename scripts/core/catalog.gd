@@ -6,6 +6,7 @@ const FLOORS := "res://data/catalog/floors"
 const WALLS := "res://data/catalog/walls"
 const OPENINGS := "res://data/catalog/openings"
 const OBJECTS := "res://data/catalog/objects"
+const COLLECTIONS := "res://data/catalog/collections"
 
 ## Catégories d'objets, dans l'ordre d'affichage : [identifiant, nom, icône].
 const CATEGORIES := [
@@ -13,6 +14,8 @@ const CATEGORIES := [
 	[&"chambre", "Chambre"],
 	[&"salon", "Salon"],
 	[&"salle_de_bain", "Salle de bain"],
+	[&"loisirs", "Loisirs"],
+	[&"jardin", "Jardin"],
 	[&"deco", "Déco"],
 ]
 
@@ -40,12 +43,21 @@ static func find(folder: String, id: StringName) -> Resource:
 	return null
 
 
+## Les collections de styles, dans leur ordre d'affichage.
+static func collections() -> Array:
+	var items: Array = load_folder(COLLECTIONS).duplicate()
+	items.sort_custom(func(a, b): return a.order < b.order)
+	return items
+
+
 ## Objets d'une catégorie.
 static func objects_in(category: StringName) -> Array:
 	return load_folder(OBJECTS).filter(func(o): return o.category == category)
 
 
 static func _price(item: Resource) -> int:
+	if item is CollectionDefinition:
+		return item.order
 	if item is FloorDefinition:
 		return item.price_per_cell
 	if item is WallStyleDefinition:

@@ -60,9 +60,9 @@ signal item_sold(item: Resource, refund: int)
 ## Un objet posé va être revendu ou déplacé : les actions qui le visent doivent s'arrêter.
 @warning_ignore("unused_signal")
 signal object_displaced(placed: Resource)
-## Le joueur a choisi un objet dans le catalogue (mode Acheter).
+## Le joueur a choisi un objet dans le catalogue (mode Acheter), dans une collection.
 @warning_ignore("unused_signal")
-signal catalog_item_selected(definition: Resource)
+signal catalog_item_selected(definition: Resource, collection: StringName)
 ## Le placement en cours est terminé ou annulé (le catalogue désélectionne sa vignette).
 @warning_ignore("unused_signal")
 signal placement_ended

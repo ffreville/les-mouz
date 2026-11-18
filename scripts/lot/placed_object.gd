@@ -7,6 +7,15 @@ extends Purchase
 @export var cell: Vector2i
 ## Quarts de tour dans le sens horaire (0 à 3).
 @export_range(0, 3) var rotation: int = 0
+## Collection (style) de l'objet : &"nature", &"retro" ou &"moderne".
+@export var collection: StringName = &""
+## Allumé (lampes) : affiche l'image « en marche » même sans utilisateur.
+@export var switched_on: bool = false
+
+
+## Collection effective (celle par défaut si aucune n'est choisie ou si elle n'existe plus).
+func get_collection() -> StringName:
+	return collection if definition.sprites.has(collection) else definition.default_collection()
 
 
 ## Taille en cases une fois tourné.

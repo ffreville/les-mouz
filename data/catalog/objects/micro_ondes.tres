@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="SmartObjectDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/smart_object_definition.gd" id="1_object"]
+[ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="2_action"]
+[ext_resource type="Texture2D" path="res://assets/sprites/micro_ondes_nature.svg" id="3_nature"]
+[ext_resource type="Texture2D" path="res://assets/sprites/micro_ondes_nature_actif.svg" id="4_nature_actif"]
+[ext_resource type="Texture2D" path="res://assets/sprites/micro_ondes_retro.svg" id="5_retro"]
+[ext_resource type="Texture2D" path="res://assets/sprites/micro_ondes_retro_actif.svg" id="6_retro_actif"]
+[ext_resource type="Texture2D" path="res://assets/sprites/micro_ondes_moderne.svg" id="7_moderne"]
+[ext_resource type="Texture2D" path="res://assets/sprites/micro_ondes_moderne_actif.svg" id="8_moderne_actif"]
+[ext_resource type="Resource" path="res://data/actions/rechauffer.tres" id="9_rechauffer"]
+
+[resource]
+script = ExtResource("1_object")
+id = &"micro_ondes"
+display_name = "Micro-ondes"
+sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("3_nature"), &"retro": ExtResource("5_retro"), &"moderne": ExtResource("7_moderne")})
+active_sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("4_nature_actif"), &"retro": ExtResource("6_retro_actif"), &"moderne": ExtResource("8_moderne_actif")})
+size = Vector2i(1, 1)
+blocks_movement = true
+actions = Array[ExtResource("2_action")]([ExtResource("9_rechauffer")])
+capacity = 1
+price = 200
+category = &"cuisine"

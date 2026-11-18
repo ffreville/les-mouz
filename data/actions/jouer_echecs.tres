@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ActionDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="1_action"]
+[ext_resource type="Texture2D" path="res://assets/icons/ink/echecs.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_action")
+id = &"jouer_echecs"
+display_name = "Jouer aux échecs"
+icon = ExtResource("2_icon")
+duration_minutes = 45.0
+need_gains = Dictionary[StringName, float]({&"plaisir": 30.0})
+relationship_gain = 0.0
+shared_need_gains = Dictionary[StringName, float]({&"social": 30.0, &"plaisir": 10.0})
+shared_relationship_gain = 6.0
+nearby_object_id = &""
+switch = 0

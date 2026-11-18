@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CollectionDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/collection_definition.gd" id="1_collection"]
+[ext_resource type="Texture2D" path="res://assets/icons/white/moderne.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_collection")
+id = &"moderne"
+display_name = "Moderne"
+color = Color(0.2902, 0.3333, 0.4078, 1)
+icon = ExtResource("2_icon")
+icon_color = Color(1, 1, 1, 1)
+order = 2

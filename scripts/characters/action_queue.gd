@@ -105,10 +105,10 @@ func _destination_for(action: QueuedAction) -> Vector2i:
 	if action.is_move_only():
 		return action.target_cell
 	if action.target_object != null:
-		if not action.target_object.can_use(_character):
+		var target := action.target_object
+		if not target.can_use(_character) or target.action_problem(action.definition, _character.world) != "":
 			return GridNavigation.NO_CELL
-		var spots := navigation.cells_around(action.target_object.footprint)
-		return navigation.closest_reachable(spots, here)
+		return navigation.closest_reachable(target.get_spots(navigation), here)
 	# Action sociale : l'invité reste sur place, l'initiateur va à côté du partenaire.
 	if action.is_social_guest:
 		return here
@@ -163,6 +163,10 @@ func _run(action: QueuedAction) -> void:
 		cancel(action)
 		return
 	action.state = QueuedAction.State.RUNNING
+	if action.target_object != null and action.definition.nearby_object_id != &"":
+		action.powered_object = action.target_object.find_nearby(action.definition, _character.world)
+		if action.powered_object != null:
+			action.powered_object.power_on(_character)
 	EventBus.action_started.emit(_character, action)
 	if action.is_social() and not action.is_social_guest:
 		_invite_partner(action)
@@ -192,11 +196,34 @@ func _on_ticked(game_minutes: float) -> void:
 	# La relation est symétrique : seul l'initiateur l'applique, pour ne pas la compter deux fois.
 	if action.is_social() and not action.is_social_guest and definition.relationship_gain != 0.0:
 		_character.relationships.change_with(action.target_character, definition.relationship_gain * ratio)
+	if action.target_object != null:
+		_apply_shared_gains(action, ratio)
 	if action.elapsed_minutes >= definition.duration_minutes:
 		_finish(action)
 
 
+## Activité partagée : bonus quand d'autres Mouz utilisent le même objet en même temps.
+## Chacun applique la moitié du gain de relation, qui est symétrique.
+func _apply_shared_gains(action: QueuedAction, ratio: float) -> void:
+	var definition := action.definition
+	if definition.shared_need_gains.is_empty() and definition.shared_relationship_gain == 0.0:
+		return
+	var others := action.target_object.other_users(_character)
+	if others.is_empty():
+		return
+	for need_id in definition.shared_need_gains:
+		_character.needs.change(need_id, definition.shared_need_gains[need_id] * ratio)
+	for other in others:
+		_character.relationships.change_with(other, definition.shared_relationship_gain * ratio / 2.0)
+
+
 func _finish(action: QueuedAction) -> void:
+	if action.target_object != null:
+		match action.definition.switch:
+			ActionDefinition.Switch.TURN_ON:
+				action.target_object.placed.switched_on = true
+			ActionDefinition.Switch.TURN_OFF:
+				action.target_object.placed.switched_on = false
 	_stop(action)
 	items.erase(action)
 	action.state = QueuedAction.State.DONE
@@ -210,3 +237,7 @@ func _stop(action: QueuedAction) -> void:
 	_character.mover.stop()
 	if action.target_object != null:
 		action.target_object.release(_character)
+	if action.powered_object != null:
+		if is_instance_valid(action.powered_object):
+			action.powered_object.power_off(_character)
+		action.powered_object = null

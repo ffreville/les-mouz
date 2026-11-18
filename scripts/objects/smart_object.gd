@@ -1,18 +1,20 @@
 class_name SmartObject
 extends Node2D
-## Un objet posé dans la maison. Il se dessine, annonce ses actions
-## et gère qui l'utilise (réservation).
+## Un objet posé dans la maison. Il se dessine (dans sa collection, « en marche » ou non),
+## annonce ses actions et gère qui l'utilise (réservation).
 
 ## Les objets traversables (tapis) passent sous les autres.
 const FLOOR_OBJECT_Z := -1
 
-## L'objet tel qu'il est posé sur le terrain (définition, case, rotation, prix payé).
+## L'objet tel qu'il est posé sur le terrain (définition, case, rotation, style, prix payé).
 var placed: PlacedObject
 var definition: SmartObjectDefinition
 ## Cases occupées par l'objet.
 var footprint: Rect2i
 var _cell_size: float
 var _users: Array[Node] = []
+## Personnages qui font fonctionner l'objet à distance (la télé pour le canapé).
+var _powered_by: Array[Node] = []
 
 
 func setup(p_placed: PlacedObject, cell_size: int) -> void:
@@ -22,21 +24,22 @@ func setup(p_placed: PlacedObject, cell_size: int) -> void:
 	_cell_size = cell_size
 	name = definition.display_name
 	position = Vector2(footprint.position) * cell_size
-	if not definition.blocks_movement:
-		z_index = FLOOR_OBJECT_Z
+	z_index = FLOOR_OBJECT_Z if not definition.blocks_movement else 0
 	queue_redraw()
 
 
-## Dessine l'objet tourné de `rotation` quarts de tour, emprise posée à `origin`.
+## Dessine un objet tourné de `rotation` quarts de tour, emprise posée à `origin`.
 ## Partagé avec l'aperçu de placement de l'éditeur.
 static func draw_definition(canvas: CanvasItem, p_definition: SmartObjectDefinition, rotation: int,
-		origin: Vector2, cell_size: float, modulate := Color.WHITE) -> void:
+		origin: Vector2, cell_size: float, modulate := Color.WHITE, collection: StringName = &"",
+		active := false) -> void:
 	var native := Vector2(p_definition.size) * cell_size
 	var turned := Vector2(native.y, native.x) if rotation % 2 == 1 else native
 	canvas.draw_set_transform(origin + turned / 2, rotation * PI / 2)
 	var area := Rect2(-native / 2, native)
-	if p_definition.sprite != null:
-		canvas.draw_texture_rect(p_definition.sprite, area, false, modulate)
+	var sprite := p_definition.get_sprite(collection, active)
+	if sprite != null:
+		canvas.draw_texture_rect(sprite, area, false, modulate)
 	else:
 		# Graphisme provisoire si aucune image n'est fournie.
 		canvas.draw_rect(area.grow(-3), p_definition.color * modulate)
@@ -60,6 +63,59 @@ func occupies(cell: Vector2i) -> bool:
 	return footprint.has_point(cell)
 
 
+## « En marche » : utilisé, alimenté à distance ou allumé.
+func is_active() -> bool:
+	return not _users.is_empty() or not _powered_by.is_empty() or placed.switched_on
+
+
+## Cases où se tenir pour s'en servir : autour d'un meuble, dessus pour un tapis.
+func get_spots(navigation: GridNavigation) -> Array[Vector2i]:
+	if definition.blocks_movement:
+		return navigation.cells_around(footprint)
+	var cells: Array[Vector2i] = []
+	for y in range(footprint.position.y, footprint.end.y):
+		for x in range(footprint.position.x, footprint.end.x):
+			if navigation.is_walkable(Vector2i(x, y)):
+				cells.append(Vector2i(x, y))
+	return cells
+
+
+## Raison pour laquelle l'action n'est pas possible ici ("" si elle l'est).
+func action_problem(action: ActionDefinition, world: World) -> String:
+	match action.switch:
+		ActionDefinition.Switch.TURN_ON:
+			if placed.switched_on:
+				return "déjà allumé"
+		ActionDefinition.Switch.TURN_OFF:
+			if not placed.switched_on:
+				return "déjà éteint"
+	if action.nearby_object_id != &"" and find_nearby(action, world) == null:
+		var needed := Catalog.find(Catalog.OBJECTS, action.nearby_object_id)
+		return "pas de %s à côté" % (needed.display_name if needed != null else String(action.nearby_object_id))
+	return ""
+
+
+## L'objet voisin requis par l'action (la télé la plus proche du canapé), ou null.
+func find_nearby(action: ActionDefinition, world: World) -> SmartObject:
+	var best: SmartObject = null
+	var best_distance := action.nearby_radius + 1
+	var center := footprint.get_center()
+	for other in world.smart_objects:
+		if other == self or other.definition.id != action.nearby_object_id:
+			continue
+		var d := other.footprint.get_center() - center
+		var distance := maxi(absi(d.x), absi(d.y))
+		if distance < best_distance:
+			best_distance = distance
+			best = other
+	return best
+
+
+## Autres personnages en train d'utiliser l'objet.
+func other_users(user: Node) -> Array[Node]:
+	return _users.filter(func(other: Node) -> bool: return other != user)
+
+
 ## Vrai si `user` peut utiliser l'objet maintenant.
 func can_use(user: Node) -> bool:
 	return user in _users or _users.size() < definition.capacity
@@ -75,13 +131,28 @@ func reserve(user: Node) -> bool:
 		return false
 	if user not in _users:
 		_users.append(user)
+		queue_redraw()
 	return true
 
 
 func release(user: Node) -> void:
 	_users.erase(user)
+	queue_redraw()
+
+
+## L'objet fonctionne pour `user` qui s'en sert à distance (canapé → télé).
+func power_on(user: Node) -> void:
+	if user not in _powered_by:
+		_powered_by.append(user)
+		queue_redraw()
+
+
+func power_off(user: Node) -> void:
+	_powered_by.erase(user)
+	queue_redraw()
 
 
 func _draw() -> void:
 	if placed != null:
-		draw_definition(self, definition, placed.rotation, Vector2.ZERO, _cell_size)
+		draw_definition(self, definition, placed.rotation, Vector2.ZERO, _cell_size, Color.WHITE,
+				placed.get_collection(), is_active())

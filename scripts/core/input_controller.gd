@@ -41,9 +41,14 @@ func _unhandled_input(event: InputEvent) -> void:
 func _open_object_menu(actor: Character, smart_object: SmartObject, screen_position: Vector2) -> void:
 	var options: Array = []
 	for action in smart_object.get_actions():
+		var problem := smart_object.action_problem(action, world)
+		# Allumer / Éteindre : on ne montre que celui qui a un sens.
+		if action.switch != ActionDefinition.Switch.NONE and problem != "":
+			continue
 		options.append({
-			"label": action.display_name,
+			"label": action.display_name + (" (%s)" % problem if problem != "" else ""),
 			"icon": action.icon,
+			"disabled": problem != "",
 			"callback": func() -> void:
 				actor.queue.enqueue(QueuedAction.use_object(action, smart_object)),
 		})

@@ -371,3 +371,262 @@ R tourner · Échap annuler le tracé ou l'achat · Ctrl Z annuler la dernière 
 ## Corrections
 
 - `palette.gd` : l'épaisseur des murs s'appelle maintenant `EPAISSEUR_MUR` (la constante `MUR` reste la couleur). Ajouts : `MURS`, `SOLS`, `TERRAIN`, `BUDGET_DEPART`, `REVENTE_MEME_JOUR`, `REVENTE_ENSUITE` et `format_mz()`.
+
+---
+
+# Catalogue de 50 objets en trois collections (brief n° 4)
+
+Maquettes : même lien que plus haut, colonne « Catalogue en trois collections » du canvas (collections, mode Acheter Salon Rétro, trois maisons meublées, choisir un style, icônes, une planche par catégorie).
+
+## Les trois collections
+
+Une collection change les couleurs, les matières et l'arrondi des coins. Elle ne change jamais la taille en cases, la face avant, l'interaction ni le contour encre 2 px `#3D3357`.
+
+| | Nature (`nature`) | Rétro (`retro`) | Moderne (`moderne`) |
+|---|---|---|---|
+| Idée | Bois clair, sauge et lin, formes douces | Teck, moutarde, brique, orange ; formes très arrondies | Blanc, ardoise, métal ; lignes nettes |
+| Rayon des coins | ×1 | ×1,7 | ×0,35 |
+| Signature | veinage du bois, touche végétale | pieds compas visibles aux coins | filets métal sur les façades |
+| Couleur signature (pastille) | `#8DB596` | `#E2A93B` | `#4A5568` |
+| Bois | `#D9B48F` | `#A9653E` | `#E4E6EA` |
+| Bois foncé, pieds | `#B88E6B` | `#844A2B` | `#4A5568` |
+| Veinage, filets | `#C49D78` | `#94552F` | `#C9CDD4` |
+| Tissu | `#8DB596` | `#E2A93B` | `#5C6B80` |
+| Tissu foncé | `#6F9C7B` | `#C68B1F` | `#4A5568` |
+| Coussins | `#B5D1B9` | `#E8794A` | `#8796AB` |
+| Lin, crème, draps | `#EDE3D3` | `#F3E3C3` | `#F5F5F2` |
+| Électroménager | `#F7F3EC` | `#F3E3C3` | `#F5F5F2` |
+| Ombre électroménager | `#DCD5C8` | `#E0C89E` | `#D3D7DD` |
+| Plan de travail | `#EDE3D3` | `#F3E3C3` | `#4A5568` |
+| Accent | `#7DB36A` | `#B85C45` | `#3E9BD6` |
+| Accent 2 | `#E8B100` | `#4F9C95` | `#E8794A` |
+| Métal | `#8E99A6` | `#C9A66B` | `#A9B1BC` |
+| Pierre (cheminée) | `#C9C4BC` | `#B85C45` | `#E4E6EA` |
+| Pots | `#C97B5A` | `#B85C45` | `#F5F5F2` |
+
+Ces couleurs sont dans `tokens.json` → `collections`. Les draps restent blancs, l'eau `#D2E8F5`, les écrans `#2B2440` (éteints) ou `#9FD3F2` (allumés), et le feu `#D55E00` / `#E8794A` / `#E8B100` dans toutes les collections.
+
+Pour coordonner la maison, les maquettes utilisent : Nature → murs sauge, parquet, carrelage, moquette, faïence ; Rétro → murs brique, parquet foncé, lino, tomettes ; Moderne → murs ardoise, béton ciré, faïence.
+
+**Place pour les déclinaisons** : chaque sprite laisse une marge de 2 px et ne remplit pas toute sa surface de détails. Une version « simple » enlèvera des détails (coussins, objets posés), une version « luxe » en ajoutera (accent supplémentaire, matière plus riche) sans changer de langage.
+
+## Les 20 sprites existants
+
+Ils appartiennent à la collection **Nature**. Je les ai redessinés face avant vers le haut dans `<clé>_nature.svg`. Les anciens fichiers restent en place mais ne servent plus que de référence :
+
+| Ancien fichier | Face | Nouveau fichier |
+|---|---|---|
+| `svg/sprites/frigo.svg` | bas | `svg/sprites/frigo_nature.svg` |
+| `svg/sprites/cuisiniere.svg` | haut | `svg/sprites/cuisiniere_nature.svg` |
+| `svg/sprites/evier.svg` | haut | `svg/sprites/evier_nature.svg` |
+| `svg/sprites/plan_travail.svg` | bas | `svg/sprites/plan_travail_nature.svg` |
+| `svg/sprites/table.svg` | indifférent | `svg/sprites/table_nature.svg` |
+| `svg/sprites/chaise.svg` | haut | `svg/sprites/chaise_nature.svg` |
+| `svg/sprites/lit.svg` | bas | `svg/sprites/lit_nature.svg` |
+| `svg/sprites/armoire.svg` | haut | `svg/sprites/armoire_nature.svg` |
+| `svg/sprites/table_nuit.svg` | indifférent | `svg/sprites/table_nuit_nature.svg` |
+| `svg/sprites/bureau.svg` | haut | `svg/sprites/bureau_nature.svg` |
+| `svg/sprites/canape.svg` | haut | `svg/sprites/canape_nature.svg` |
+| `svg/sprites/tv.svg` | bas | `svg/sprites/tele_nature.svg` |
+| `svg/sprites/bibliotheque.svg` | indifférent | `svg/sprites/bibliotheque_nature.svg` |
+| `svg/sprites/lampe_pied.svg` | indifférent | `svg/sprites/lampe_pied_nature.svg` |
+| `svg/sprites/douche.svg` | bas | `svg/sprites/douche_nature.svg` |
+| `svg/sprites/baignoire.svg` | haut | `svg/sprites/baignoire_nature.svg` |
+| `svg/sprites/toilettes.svg` | haut | `svg/sprites/toilettes_nature.svg` |
+| `svg/sprites/lavabo.svg` | bas | `svg/sprites/lavabo_nature.svg` |
+| `svg/sprites/plante.svg` | indifférent | `svg/sprites/plante_nature.svg` |
+| `svg/sprites/tapis.svg` | indifférent | `svg/sprites/tapis_nature.svg` |
+
+Attention : la clé du meuble TV devient `tele` (l'ancien fichier s'appelait `tv.svg`).
+
+## Fichiers
+
+- `svg/sprites/<clé>_<collection>.svg` : 150 sprites (50 objets × 3 collections), tous face avant en haut, exactement à la taille de l'objet en cases.
+- `svg/sprites/<clé>_<collection>_actif.svg` : état « en marche » pour 13 objets × 3 collections (cuisinière, micro-ondes, machine à café, lave-vaisselle, lampe de chevet, meuble TV, lampe sur pied, cheminée, chaîne hi-fi, douche, machine à laver, ordinateur, barbecue). Même taille que le sprite normal : il suffit d'échanger la texture.
+- `apercu_<catégorie>.png` : une planche de contrôle par catégorie (Nature, Rétro, Moderne, puis l'état actif Nature).
+- Objets à poser contre un mur : le dos est en bas du sprite. Pour les orienter, tourne de 180° (mur du haut), 90° (mur de gauche) ou 270° (mur de droite).
+- Objets « au sol, traversables » (`tapis`, `tapis_yoga`) : sans contour extérieur, à dessiner sous les meubles et les Mouz.
+- Objets « à plusieurs » : la table et le salon de jardin ont une place en haut et une en bas (face à face) ; la table de jeux a un coussin de chaque côté ; le canapé a trois coussins ; la console a deux manettes.
+
+## Tous les objets
+
+Face avant = haut pour tous. Prix : je garde ceux du brief, ils sont cohérents entre eux.
+
+| Clé | Nom | Catégorie | Cases | Face | Collections | Prix | Interactions → icônes | État actif |
+|---|---|---|---|---|---|---|---|---|
+| `frigo` | Frigo | Cuisine | 1 × 1 | haut | nature, retro, moderne | 800 Mz | Manger → `manger`, Prendre un en-cas → `en_cas` | — |
+| `cuisiniere` | Cuisinière | Cuisine | 1 × 1 | haut | nature, retro, moderne | 650 Mz | Cuisiner → `cuisiner` | oui |
+| `evier` | Évier | Cuisine | 2 × 1 | haut | nature, retro, moderne | 400 Mz | Faire la vaisselle → `vaisselle` | — |
+| `plan_travail` | Plan de travail | Cuisine | 3 × 1 | haut | nature, retro, moderne | 300 Mz | Préparer un repas → `preparer_repas` | — |
+| `table` | Table | Cuisine | 2 × 2 | haut | nature, retro, moderne | 250 Mz | Manger à table → `manger` | — |
+| `chaise` | Chaise | Cuisine | 1 × 1 | haut | nature, retro, moderne | 80 Mz | S'asseoir → `s_asseoir` | — |
+| `micro_ondes` | Micro-ondes | Cuisine | 1 × 1 | haut | nature, retro, moderne | 200 Mz | Réchauffer un plat → `rechauffer` | oui |
+| `machine_cafe` | Machine à café | Cuisine | 1 × 1 | haut | nature, retro, moderne | 180 Mz | Boire un café → `cafe` | oui |
+| `lave_vaisselle` | Lave-vaisselle | Cuisine | 1 × 1 | haut | nature, retro, moderne | 450 Mz | Lancer la vaisselle → `vaisselle` | oui |
+| `poubelle` | Poubelle | Cuisine | 1 × 1 | haut | nature, retro, moderne | 40 Mz | Sortir la poubelle → `poubelle` | — |
+| `lit` | Lit double | Chambre | 2 × 3 | haut | nature, retro, moderne | 1 000 Mz | Dormir → `dormir`, Faire la sieste → `sieste` | — |
+| `armoire` | Armoire | Chambre | 2 × 1 | haut | nature, retro, moderne | 700 Mz | Se changer → `se_changer` | — |
+| `table_nuit` | Table de nuit | Chambre | 1 × 1 | haut | nature, retro, moderne | 90 Mz | Lire un peu → `lire` | — |
+| `bureau` | Bureau | Chambre | 2 × 1 | haut | nature, retro, moderne | 450 Mz | Lire → `lire`, Écrire → `ecrire` | — |
+| `lit_simple` | Lit simple | Chambre | 1 × 2 | haut | nature, retro, moderne | 600 Mz | Dormir → `dormir` | — |
+| `commode` | Commode | Chambre | 2 × 1 | haut | nature, retro, moderne | 400 Mz | Ranger ses affaires → `ranger` | — |
+| `coiffeuse` | Coiffeuse avec miroir | Chambre | 2 × 1 | haut | nature, retro, moderne | 500 Mz | Se coiffer → `se_coiffer` | — |
+| `lampe_chevet` | Lampe de chevet | Chambre | 1 × 1 | haut | nature, retro, moderne | 60 Mz | Lire au lit → `lire` | oui |
+| `canape` | Canapé | Salon | 3 × 2 | haut | nature, retro, moderne | 750 Mz | Regarder la TV → `regarder_tv`, Faire une sieste → `sieste` | — |
+| `tele` | Meuble TV | Salon | 3 × 1 | haut | nature, retro, moderne | 600 Mz | Regarder la TV → `regarder_tv` | oui |
+| `bibliotheque` | Bibliothèque | Salon | 3 × 1 | haut | nature, retro, moderne | 350 Mz | Lire → `lire` | — |
+| `lampe_pied` | Lampe sur pied | Salon | 1 × 1 | haut | nature, retro, moderne | 120 Mz | Allumer → `—`, éteindre → `—` | oui |
+| `fauteuil` | Fauteuil | Salon | 1 × 1 | haut | nature, retro, moderne | 350 Mz | S'asseoir → `s_asseoir`, Lire → `lire` | — |
+| `table_basse` | Table basse | Salon | 2 × 1 | haut | nature, retro, moderne | 150 Mz | Poser un verre → `—` | — |
+| `cheminee` | Cheminée | Salon | 2 × 1 | haut | nature, retro, moderne | 1 500 Mz | Se réchauffer → `se_rechauffer` | oui |
+| `console_jeux` | Console de jeux | Salon | 1 × 1 | haut | nature, retro, moderne | 400 Mz | Jouer aux jeux vidéo → `jeux_video` | — |
+| `chaine_hifi` | Chaîne hi-fi | Salon | 1 × 1 | haut | nature, retro, moderne | 300 Mz | Écouter de la musique → `musique`, Danser → `danser` | oui |
+| `douche` | Douche | Salle de bain | 2 × 2 | haut | nature, retro, moderne | 900 Mz | Se laver → `se_laver` | oui |
+| `baignoire` | Baignoire | Salle de bain | 3 × 2 | haut | nature, retro, moderne | 1 200 Mz | Prendre un bain → `bain` | — |
+| `toilettes` | Toilettes | Salle de bain | 1 × 1 | haut | nature, retro, moderne | 300 Mz | Utiliser → `toilettes` | — |
+| `lavabo` | Lavabo | Salle de bain | 1 × 1 | haut | nature, retro, moderne | 250 Mz | Se laver les mains → `se_laver_mains`, Se brosser les dents → `dents` | — |
+| `miroir_mural` | Miroir et meuble | Salle de bain | 2 × 1 | haut | nature, retro, moderne | 350 Mz | Se maquiller → `maquiller`, Se raser → `se_raser` | — |
+| `machine_laver` | Machine à laver | Salle de bain | 1 × 1 | haut | nature, retro, moderne | 550 Mz | Faire la lessive → `lessive` | oui |
+| `panier_linge` | Panier à linge | Salle de bain | 1 × 1 | haut | nature, retro, moderne | 50 Mz | Trier le linge → `linge` | — |
+| `ordinateur` | Ordinateur | Loisirs | 2 × 1 | haut | nature, retro, moderne | 900 Mz | Surfer → `surfer`, Jouer en ligne → `jeux_video`, Discuter en ligne → `discuter` | oui |
+| `piano` | Piano | Loisirs | 2 × 1 | haut | nature, retro, moderne | 1 800 Mz | Jouer du piano → `piano` | — |
+| `chevalet` | Chevalet de peinture | Loisirs | 1 × 1 | haut | nature, retro, moderne | 300 Mz | Peindre → `peindre` | — |
+| `tapis_yoga` | Tapis de yoga | Loisirs | 1 × 2 | haut | nature, retro, moderne | 80 Mz | Faire du yoga → `yoga` | — |
+| `table_jeux` | Table de jeux | Loisirs | 2 × 2 | haut | nature, retro, moderne | 400 Mz | Jouer aux échecs → `echecs`, Jouer aux cartes → `cartes` | — |
+| `telescope` | Télescope | Loisirs | 1 × 1 | haut | nature, retro, moderne | 700 Mz | Observer les étoiles → `etoiles` | — |
+| `barbecue` | Barbecue | Jardin | 1 × 1 | haut | nature, retro, moderne | 450 Mz | Faire un barbecue → `barbecue` | oui |
+| `hamac` | Hamac | Jardin | 3 × 1 | haut | nature, retro, moderne | 350 Mz | Faire la sieste → `sieste` | — |
+| `balancoire` | Balançoire | Jardin | 2 × 1 | haut | nature, retro, moderne | 300 Mz | Se balancer → `se_balancer` | — |
+| `potager` | Potager | Jardin | 2 × 2 | haut | nature, retro, moderne | 200 Mz | Jardiner → `jardiner`, Récolter → `recolter` | — |
+| `salon_jardin` | Salon de jardin | Jardin | 2 × 2 | haut | nature, retro, moderne | 500 Mz | Prendre l'apéro → `apero` | — |
+| `arbre` | Arbre | Jardin | 2 × 2 | haut | nature, retro, moderne | 150 Mz | Grimper → `grimper` | — |
+| `plante` | Plante en pot | Déco | 1 × 1 | haut | nature, retro, moderne | 40 Mz | Arroser → `arroser` | — |
+| `tapis` | Tapis | Déco | 6 × 4 | haut | nature, retro, moderne | 150 Mz | — | — |
+| `aquarium` | Aquarium | Déco | 2 × 1 | haut | nature, retro, moderne | 600 Mz | Regarder les poissons → `poissons`, Nourrir les poissons → `poissons` | — |
+| `horloge` | Horloge comtoise | Déco | 1 × 1 | haut | nature, retro, moderne | 450 Mz | Remonter l'horloge → `remonter_horloge` | — |
+
+## Déclinaisons suggérées (pour le prochain brief)
+
+| Clé | Déclinaison | Cases | Ce qui change |
+|---|---|---|---|
+| `frigo` | Petit frigo | 1 × 1 | Version simple : moins d'en-cas, se vide plus vite, 450 Mz |
+| `frigo` | Frigo américain | 2 × 1 | Luxe : deux portes, distributeur de glaçons, repas de meilleure qualité, 1 800 Mz |
+| `cuisiniere` | Réchaud deux feux | 1 × 1 | Simple : cuisson plus lente, risque de rater le plat |
+| `cuisiniere` | Piano de cuisson | 2 × 1 | Luxe : six feux, cuisine pour plusieurs Mouz, bonus de plaisir |
+| `evier` | Évier double bac | 3 × 1 | Vaisselle plus rapide, deux Mouz en même temps |
+| `plan_travail` | Plan d'angle | 2 × 2 | Se pose dans un coin |
+| `plan_travail` | Îlot central | 3 × 2 | Luxe : accessible des deux côtés, deux Mouz préparent ensemble |
+| `table` | Table pour deux | 1 × 2 | Simple : deux places seulement |
+| `table` | Grande tablée | 3 × 2 | Six places, bonus social aux repas partagés |
+| `chaise` | Tabouret | 1 × 1 | Simple : moins confortable, 30 Mz |
+| `chaise` | Chaise rembourrée | 1 × 1 | Luxe : confort supérieur |
+| `micro_ondes` | Four encastré | 1 × 1 | Luxe : réchauffe et cuit, repas de meilleure qualité |
+| `machine_cafe` | Cafetière filtre | 1 × 1 | Simple : plus lente, moins d'énergie gagnée |
+| `machine_cafe` | Machine expresso pro | 2 × 1 | Luxe : deux tasses à la fois, bonus de plaisir |
+| `lave_vaisselle` | Lave-vaisselle compact | 1 × 1 | Simple : cycle plus long, plus bruyant |
+| `poubelle` | Poubelle de tri | 2 × 1 | Trois bacs, se remplit moins vite |
+| `lit` | Futon | 2 × 2 | Simple : se pose au sol, sommeil moins réparateur |
+| `lit` | Lit à baldaquin | 3 × 3 | Luxe : meilleur sommeil, bonus d'humeur au réveil |
+| `armoire` | Penderie ouverte | 2 × 1 | Simple : se changer plus vite, moins de rangement |
+| `armoire` | Dressing | 3 × 2 | Luxe : on y entre, bonus d'humeur |
+| `table_nuit` | Caisse en bois | 1 × 1 | Simple : décor seul, 20 Mz |
+| `bureau` | Bureau d'angle | 2 × 2 | Plus de place, ordinateur et écriture côte à côte |
+| `bureau` | Secrétaire ancien | 2 × 1 | Luxe : bonus d'inspiration pour écrire |
+| `lit_simple` | Lit superposé | 1 × 2 | Deux places l'une sur l'autre |
+| `lit_simple` | Lit d'enfant | 1 × 2 | Plus court, pour les petits Mouz |
+| `commode` | Chiffonnier | 1 × 1 | Version haute et étroite, moins de rangement |
+| `coiffeuse` | Miroir sur pied | 1 × 1 | Simple : se coiffer debout, moins de bonus |
+| `lampe_chevet` | Lampe tactile | 1 × 1 | Luxe : intensité réglable, bonus pour lire au lit |
+| `canape` | Causeuse | 2 × 1 | Simple : deux places, moins de confort |
+| `canape` | Canapé d'angle | 3 × 3 | Luxe : quatre places, sieste plus réparatrice |
+| `tele` | Petite télé | 2 × 1 | Simple : moins de plaisir par heure |
+| `tele` | Home cinéma | 4 × 1 | Luxe : grand écran et enceintes, regarder à plusieurs |
+| `bibliotheque` | Étagère murale | 2 × 1 | Simple : moins de livres, apprentissage plus lent |
+| `bibliotheque` | Bibliothèque d'angle | 2 × 2 | Luxe : plus de choix, bonus d'apprentissage |
+| `lampe_pied` | Lampadaire arc | 1 × 2 | Luxe : éclaire deux cases plus loin |
+| `fauteuil` | Pouf | 1 × 1 | Simple : s'asseoir seulement |
+| `fauteuil` | Fauteuil inclinable | 1 × 2 | Luxe : on peut y faire la sieste |
+| `table_basse` | Table gigogne | 1 × 1 | Simple : plus petite |
+| `table_basse` | Table basse coffre | 2 × 1 | Rangement de jeux de société |
+| `cheminee` | Poêle à bois | 1 × 1 | Simple : chauffe une seule pièce, moins cher |
+| `cheminee` | Cheminée double face | 2 × 1 | Luxe : chauffe deux pièces à travers un mur |
+| `console_jeux` | Console portable | 1 × 1 | Simple : un seul joueur, pas besoin de télé |
+| `chaine_hifi` | Radio | 1 × 1 | Simple : musique seulement, pas de danse |
+| `chaine_hifi` | Platine vinyle | 2 × 1 | Luxe : bonus d'humeur, danser à plusieurs |
+| `douche` | Douche à l'italienne | 2 × 2 | Luxe : plus rapide, bonus de plaisir |
+| `douche` | Douche d'angle | 1 × 1 | Simple : se pose dans un coin, plus lente |
+| `baignoire` | Baignoire sabot | 2 × 1 | Simple : bain plus court |
+| `baignoire` | Spa | 3 × 3 | Luxe : à plusieurs, bonus de plaisir et social |
+| `toilettes` | Toilettes japonaises | 1 × 1 | Luxe : bonus d'hygiène |
+| `lavabo` | Double vasque | 2 × 1 | Deux Mouz se brossent les dents en même temps |
+| `miroir_mural` | Miroir lumineux | 2 × 1 | Luxe : se maquiller plus vite, meilleur résultat |
+| `machine_laver` | Lavante-séchante | 1 × 1 | Luxe : pas besoin d'étendre le linge |
+| `panier_linge` | Bac à trois compartiments | 2 × 1 | Tri plus rapide |
+| `ordinateur` | Ordinateur portable | 1 × 1 | Simple : se pose sur un bureau ou une table |
+| `ordinateur` | Poste de jeu | 3 × 1 | Luxe : deux écrans, bonus en jeu en ligne |
+| `piano` | Clavier électrique | 2 × 1 | Simple : moins cher, apprentissage plus lent |
+| `piano` | Piano à queue | 3 × 3 | Luxe : bonus de compétence et d'humeur pour ceux qui écoutent |
+| `chevalet` | Table à dessin | 2 × 1 | Dessiner assis, peindre plus vite |
+| `tapis_yoga` | Tapis épais | 1 × 2 | Luxe : bonus d'énergie après la séance |
+| `table_jeux` | Table de poker | 3 × 2 | Quatre joueurs, cartes uniquement |
+| `table_jeux` | Billard | 3 × 2 | Nouvelle interaction à deux |
+| `telescope` | Lunette de jardin | 1 × 1 | Simple : observer les oiseaux le jour |
+| `barbecue` | Plancha | 2 × 1 | Luxe : cuisine pour plusieurs Mouz, se pose sur la terrasse |
+| `hamac` | Hamac sur pied | 3 × 1 | Pas besoin d'arbres, se pose n'importe où |
+| `balancoire` | Balançoire double | 3 × 1 | Deux Mouz se balancent ensemble |
+| `potager` | Jardinière | 2 × 1 | Simple : moins de récoltes |
+| `potager` | Serre | 3 × 3 | Luxe : récoltes en toute saison |
+| `salon_jardin` | Table de pique-nique | 3 × 2 | Six places |
+| `salon_jardin` | Bistrot | 1 × 1 | Simple : deux places autour d'une petite table |
+| `arbre` | Arbuste | 1 × 1 | Simple : décor, on ne grimpe pas |
+| `arbre` | Arbre fruitier | 2 × 2 | Récolter des fruits |
+| `plante` | Cactus | 1 × 1 | Arroser une fois par semaine |
+| `plante` | Grande plante | 1 × 1 | Luxe : bonus d'humeur dans la pièce |
+| `tapis` | Petit tapis | 2 × 1 | Simple : décor seul |
+| `tapis` | Grand tapis | 8 × 5 | Luxe : bonus de confort dans la pièce |
+| `aquarium` | Bocal | 1 × 1 | Simple : un seul poisson |
+| `aquarium` | Grand aquarium | 3 × 1 | Luxe : bonus d'humeur, poissons rares |
+| `horloge` | Pendule murale | 1 × 1 | Simple : décor, pas besoin de la remonter |
+
+## Nouvelles icônes
+
+Grille 24 × 24, trait 2 px, versions `encre/` et `blanc/`.
+
+- Interactions : `en_cas`, `cuisiner`, `vaisselle`, `preparer_repas`, `s_asseoir`, `rechauffer`, `cafe`, `poubelle`, `sieste`, `se_changer`, `ecrire`, `ranger`, `se_coiffer`, `se_rechauffer`, `jeux_video`, `musique`, `danser`, `se_laver_mains`, `dents`, `maquiller`, `se_raser`, `lessive`, `linge`, `surfer`, `piano`, `peindre`, `yoga`, `echecs`, `cartes`, `etoiles`, `barbecue`, `se_balancer`, `jardiner`, `recolter`, `arroser`, `apero`, `grimper`, `poissons`, `remonter_horloge`, `allumer`, `toilettes`, `bain`
+- Catégories : `loisirs`, `jardin`
+- Collections : `nature` (feuille), `retro` (soleil), `moderne` (cube)
+- Regroupements : « Lancer la vaisselle » → `vaisselle` ; « Lire un peu » et « Lire au lit » → `lire` ; « Jouer en ligne » → `jeux_video` ; « Discuter en ligne » → `discuter` ; « Nourrir les poissons » → `poissons` ; « Faire une sieste » → `sieste` ; « Manger à table » → `manger`.
+
+## Composants : choisir un style
+
+### Pastille de collection
+
+- Rond de 22 px (20 dans la vignette), bordure 2 px `#3D3357`, fond = couleur signature de la collection.
+- Icône de la collection 12 px (trait 2,5) : encre sur Nature et Rétro, blanc sur Moderne. La forme de l'icône distingue les collections sans la couleur.
+- **Choisie** : anneau extérieur 2 px `#3D3357`, séparé par 2 px de papier (`box-shadow: 0 0 0 2px #FFF8EE, 0 0 0 4px #3D3357`). **Survol** : même anneau en accent.
+- Écart 8 px ; on n'affiche que les collections disponibles pour l'objet.
+
+### Vignette du catalogue
+
+- Inchangée (120 de large, padding 8, rayon 12, image 104 × 72) ; sous le prix : séparateur 2 px `#F6EBDD`, puis la rangée de pastilles.
+- L'image montre la collection choisie. Cliquer une pastille change l'image et la collection achetée, sans sélectionner la vignette.
+- États survol / choisi / trop cher inchangés. En « trop cher », les pastilles restent actives (on peut regarder les styles).
+- Hauteur du panneau catalogue : environ 252 px avec les pastilles.
+
+### Filtre par collection
+
+- À droite des onglets de catégorie : « Toutes / Nature / Rétro / Moderne ».
+- Groupe fond `#F6EBDD`, padding 3, rayon 11, écart 2. Bouton hauteur 30, padding 0 10, rayon 8, point 12 px couleur signature (bord intérieur 1,5 px encre) + Nunito 13/800.
+- Actif : fond `#3D3357`, texte `#FFF8EE`. Survol : fond blanc, bordure 2 px accent.
+- Un filtre actif masque les objets sans cette collection et affiche cette collection par défaut dans toutes les vignettes.
+
+### Onglets de catégorie compacts
+
+Avec 10 catégories, seul l'onglet actif garde son libellé (padding 0 12). Les autres sont des carrés 36 × 34 avec icône 16 et `aria-label` (infobulle au survol).
+
+### Bulle d'un objet posé
+
+- 236 de large. Ordre : en-tête (vignette + nom + « Collection Rétro » 11/700), Déplacer, **Changer de style**, Revendre.
+- « Changer de style » : icône `peindre` 20 + Nunito 15/700 ; en dessous, décalées de 30 px, les pastilles 22 px et le coût aligné à droite ; une ligne d'explication 11/700 encre douce.
+- Coût suggéré : **gratuit le jour de l'achat**, puis **25 % du prix** (revente à 75 % + rachat au prix plein). « Gratuit » en `#0B6E52` ; montant avec pièce 12 + Nunito 12/800 ; s'il manque de l'argent, le montant passe en `#B3261E` et la pastille est refusée.
+- Le changement se fait au clic sur une pastille, avec la variation du solde habituelle.

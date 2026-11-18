@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CollectionDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/collection_definition.gd" id="1_collection"]
+[ext_resource type="Texture2D" path="res://assets/icons/white/retro.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_collection")
+id = &"retro"
+display_name = "Rétro"
+color = Color(0.8863, 0.6627, 0.2314, 1)
+icon = ExtResource("2_icon")
+icon_color = Color(0.1686, 0.1412, 0.251, 1)
+order = 1

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="SmartObjectDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/smart_object_definition.gd" id="1_object"]
+[ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="2_action"]
+[ext_resource type="Texture2D" path="res://assets/sprites/lit_simple_nature.svg" id="3_nature"]
+[ext_resource type="Texture2D" path="res://assets/sprites/lit_simple_retro.svg" id="4_retro"]
+[ext_resource type="Texture2D" path="res://assets/sprites/lit_simple_moderne.svg" id="5_moderne"]
+[ext_resource type="Resource" path="res://data/actions/dormir.tres" id="6_dormir"]
+[ext_resource type="Resource" path="res://data/actions/sieste.tres" id="7_sieste"]
+
+[resource]
+script = ExtResource("1_object")
+id = &"lit_simple"
+display_name = "Lit simple"
+sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("3_nature"), &"retro": ExtResource("4_retro"), &"moderne": ExtResource("5_moderne")})
+active_sprites = Dictionary[StringName, Texture2D]({})
+size = Vector2i(1, 2)
+blocks_movement = true
+actions = Array[ExtResource("2_action")]([ExtResource("6_dormir"), ExtResource("7_sieste")])
+capacity = 1
+price = 600
+category = &"chambre"

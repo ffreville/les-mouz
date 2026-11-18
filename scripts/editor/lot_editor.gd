@@ -252,7 +252,8 @@ func quote_object(definition: SmartObjectDefinition, cell: Vector2i, rotation: i
 	return {"cost": cost, "reason": problem, "valid": problem == ""}
 
 
-func buy_object(definition: SmartObjectDefinition, cell: Vector2i, rotation: int) -> bool:
+func buy_object(definition: SmartObjectDefinition, cell: Vector2i, rotation: int,
+		collection: StringName = &"") -> bool:
 	var quote := quote_object(definition, cell, rotation)
 	if not quote["valid"] or not Wallet.pay(quote["cost"]):
 		return false
@@ -260,6 +261,7 @@ func buy_object(definition: SmartObjectDefinition, cell: Vector2i, rotation: int
 	placed.definition = definition
 	placed.cell = cell
 	placed.rotation = rotation
+	placed.collection = collection if definition.sprites.has(collection) else definition.default_collection()
 	Wallet.stamp(placed, definition.price)
 	lot.objects.append(placed)
 	EventBus.item_bought.emit(placed, placed.price)
@@ -292,6 +294,30 @@ func move_object(placed: PlacedObject, cell: Vector2i, rotation: int) -> bool:
 		placed.cell = old_cell
 		placed.rotation = old_rotation
 	_commit(revert, 0)
+	return true
+
+
+## Prix d'un changement de style : gratuit le jour de l'achat, ensuite la différence
+## entre une revente (75 %) et un rachat au prix plein, soit 25 % du prix.
+func restyle_cost(placed: PlacedObject) -> int:
+	return placed.price - Wallet.resale_value(placed)
+
+
+func restyle_object(placed: PlacedObject, collection: StringName) -> bool:
+	if placed not in lot.objects or not placed.definition.sprites.has(collection):
+		return false
+	var cost := restyle_cost(placed)
+	if not Wallet.pay(cost):
+		return false
+	var old_collection := placed.collection
+	var old_day := placed.bought_day
+	placed.collection = collection
+	# Racheté aujourd'hui : un nouveau changement le même jour est gratuit.
+	placed.bought_day = GameClock.get_day()
+	var revert := func() -> void:
+		placed.collection = old_collection
+		placed.bought_day = old_day
+	_commit(revert, -cost)
 	return true
 
 
@@ -328,7 +354,8 @@ func _placement_problem(ghost: PlacedObject, moving: PlacedObject) -> String:
 		for character in world.characters:
 			if rect.has_point(character.get_cell()):
 				return "Un Mouz est dans le passage"
-	if not ghost.definition.actions.is_empty():
+	# Un objet traversable (tapis de yoga) s'utilise en se tenant dessus.
+	if not ghost.definition.actions.is_empty() and ghost.definition.blocks_movement:
 		if _usable_spots(rect, moving).is_empty():
 			return "Aucune place pour l'utiliser"
 	return ""

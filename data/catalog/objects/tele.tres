@@ -2,17 +2,23 @@
 
 [ext_resource type="Script" path="res://scripts/objects/smart_object_definition.gd" id="1_object"]
 [ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="2_action"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tv.svg" id="3_sprite"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tele_nature.svg" id="3_nature"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tele_nature_actif.svg" id="4_nature_actif"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tele_retro.svg" id="5_retro"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tele_retro_actif.svg" id="6_retro_actif"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tele_moderne.svg" id="7_moderne"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tele_moderne_actif.svg" id="8_moderne_actif"]
+[ext_resource type="Resource" path="res://data/actions/regarder_tv.tres" id="9_regarder_tv"]
 
 [resource]
 script = ExtResource("1_object")
 id = &"tele"
 display_name = "Meuble TV"
-sprite = ExtResource("3_sprite")
-color = Color(0.6431, 0.4941, 0.3882, 1)
+sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("3_nature"), &"retro": ExtResource("5_retro"), &"moderne": ExtResource("7_moderne")})
+active_sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("4_nature_actif"), &"retro": ExtResource("6_retro_actif"), &"moderne": ExtResource("8_moderne_actif")})
 size = Vector2i(3, 1)
 blocks_movement = true
-actions = Array[ExtResource("2_action")]([])
+actions = Array[ExtResource("2_action")]([ExtResource("9_regarder_tv")])
 capacity = 1
 price = 600
 category = &"salon"

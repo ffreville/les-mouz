@@ -2,17 +2,20 @@
 
 [ext_resource type="Script" path="res://scripts/objects/smart_object_definition.gd" id="1_object"]
 [ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="2_action"]
-[ext_resource type="Texture2D" path="res://assets/sprites/armoire.svg" id="3_sprite"]
+[ext_resource type="Texture2D" path="res://assets/sprites/armoire_nature.svg" id="3_nature"]
+[ext_resource type="Texture2D" path="res://assets/sprites/armoire_retro.svg" id="4_retro"]
+[ext_resource type="Texture2D" path="res://assets/sprites/armoire_moderne.svg" id="5_moderne"]
+[ext_resource type="Resource" path="res://data/actions/se_changer.tres" id="6_se_changer"]
 
 [resource]
 script = ExtResource("1_object")
 id = &"armoire"
 display_name = "Armoire"
-sprite = ExtResource("3_sprite")
-color = Color(0.6431, 0.4941, 0.3882, 1)
+sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("3_nature"), &"retro": ExtResource("4_retro"), &"moderne": ExtResource("5_moderne")})
+active_sprites = Dictionary[StringName, Texture2D]({})
 size = Vector2i(2, 1)
 blocks_movement = true
-actions = Array[ExtResource("2_action")]([])
+actions = Array[ExtResource("2_action")]([ExtResource("6_se_changer")])
 capacity = 1
 price = 700
 category = &"chambre"

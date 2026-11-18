@@ -2,7 +2,7 @@ class_name ContextMenu
 extends PopupMenu
 ## Menu contextuel générique, ouvert via EventBus.context_menu_requested.
 ## Chaque option : { "label": String, "callback": Callable, "icon": Texture2D (facultatif),
-## "disabled": bool (facultatif, pour une ligne d'information) }.
+## "disabled": bool (facultatif, pour une ligne d'information), "icon_modulate": Color (facultatif) }.
 ## Il s'ouvre à 12 px du clic, avec une pointe tournée vers lui ; il passe à gauche
 ## s'il manque de place à droite. Se ferme d'un clic à côté ou avec Échap.
 
@@ -36,6 +36,8 @@ func _open(title: String, options: Array, screen_position: Vector2) -> void:
 		var icon: Texture2D = options[i].get("icon")
 		if icon != null:
 			add_icon_item(icon, options[i]["label"], i)
+			if options[i].has("icon_modulate"):
+				set_item_icon_modulate(item_count - 1, options[i]["icon_modulate"])
 		else:
 			add_item(options[i]["label"], i)
 		_callbacks.append(options[i].get("callback", func() -> void: pass))

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="128" viewBox="0 0 192 128">
+  <rect x="0" y="0" width="192" height="128" fill="#E8794A" rx="40"/>
+  <rect x="8" y="8" width="176" height="112" fill="none" rx="34" stroke="#E2A93B" stroke-width="3"/>
+  <circle cx="36" cy="34" r="6" fill="#E2A93B"/>
+  <circle cx="36" cy="64" r="6" fill="#E2A93B"/>
+  <circle cx="36" cy="94" r="6" fill="#E2A93B"/>
+  <circle cx="66" cy="34" r="6" fill="#E2A93B"/>
+  <circle cx="66" cy="64" r="6" fill="#E2A93B"/>
+  <circle cx="66" cy="94" r="6" fill="#E2A93B"/>
+  <circle cx="96" cy="34" r="6" fill="#E2A93B"/>
+  <circle cx="96" cy="64" r="6" fill="#E2A93B"/>
+  <circle cx="96" cy="94" r="6" fill="#E2A93B"/>
+  <circle cx="126" cy="34" r="6" fill="#E2A93B"/>
+  <circle cx="126" cy="64" r="6" fill="#E2A93B"/>
+  <circle cx="126" cy="94" r="6" fill="#E2A93B"/>
+  <circle cx="156" cy="34" r="6" fill="#E2A93B"/>
+  <circle cx="156" cy="64" r="6" fill="#E2A93B"/>
+  <circle cx="156" cy="94" r="6" fill="#E2A93B"/>
+</svg>

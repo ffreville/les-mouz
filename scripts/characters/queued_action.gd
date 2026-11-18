@@ -21,6 +21,8 @@ var partner_action: QueuedAction
 var is_social_guest: bool = false
 ## Tentatives pour rejoindre un partenaire qui bouge.
 var approach_attempts: int = 0
+## Objet voisin que l'action fait fonctionner (la télé pour le canapé), pendant qu'elle dure.
+var powered_object: SmartObject
 
 
 static func move_to(cell: Vector2i) -> QueuedAction:

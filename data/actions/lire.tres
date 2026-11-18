@@ -6,8 +6,12 @@
 [resource]
 script = ExtResource("1_action")
 id = &"lire"
-icon = ExtResource("2_icon")
 display_name = "Lire"
+icon = ExtResource("2_icon")
 duration_minutes = 45.0
 need_gains = Dictionary[StringName, float]({&"plaisir": 35.0})
 relationship_gain = 0.0
+shared_need_gains = Dictionary[StringName, float]({})
+shared_relationship_gain = 0.0
+nearby_object_id = &""
+switch = 0

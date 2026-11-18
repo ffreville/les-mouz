@@ -5,7 +5,10 @@ extends RefCounted
 ## `FORMAT_VERSION` augmente à chaque changement du format ; `migrate()` met les anciennes
 ## sauvegardes à jour.
 
-const FORMAT_VERSION := 1
+const FORMAT_VERSION := 2
+## Objets dont l'ancien sprite (format 1) avait la face avant en bas : depuis le format 2,
+## tous les sprites ont la face en haut, on les tourne d'un demi-tour pour garder leur aspect.
+const V1_FACE_DOWN_OBJECTS := ["frigo", "plan_travail", "lit", "tele", "douche", "lavabo"]
 
 
 static func to_data(world: World) -> Dictionary:
@@ -78,8 +81,11 @@ static func migrate(data: Dictionary) -> Dictionary:
 	if version > FORMAT_VERSION:
 		push_warning("Sauvegarde créée par une version plus récente du jeu (format %d)." % version)
 		return {}
-	# Exemple pour plus tard :
-	# if version < 2:
-	#     data["nouvelle_cle"] = valeur_par_defaut
+	if version < 2:
+		# Format 2 : styles d'objets (Nature par défaut) et sprites tous face avant en haut.
+		for entry in data.get("lot", {}).get("objects", []):
+			if entry.get("object", "") in V1_FACE_DOWN_OBJECTS:
+				entry["rotation"] = (int(entry.get("rotation", 0)) + 2) % 4
+			entry["style"] = entry.get("style", "nature")
 	data["version"] = FORMAT_VERSION
 	return data

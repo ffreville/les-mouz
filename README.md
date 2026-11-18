@@ -61,6 +61,8 @@ L'ancienne sauvegarde unique (`user://partie.tres`) est convertie automatiquemen
 
 Le format est décrit dans `scripts/save/world_serializer.gd` (état de la partie) et `scripts/save/lot_serializer.gd` (terrain). Les éléments du catalogue y sont désignés par leur `id` : on peut déplacer ou renommer les fichiers `.tres` sans casser les sauvegardes, mais **il ne faut pas changer l'`id` d'un élément existant**. Un `id` inconnu (élément retiré du catalogue) est ignoré au chargement.
 
+Le format est en version 2 : la version 1 n'avait pas de styles, et six objets y étaient dessinés face avant en bas. La migration leur donne le style Nature et les retourne d'un demi-tour, pour qu'ils gardent leur aspect.
+
 Pour changer le format : augmenter `WorldSerializer.FORMAT_VERSION`, puis compléter `WorldSerializer.migrate()` pour mettre à jour les anciennes sauvegardes (par exemple, ajouter une valeur par défaut à une nouvelle clé). Une sauvegarde d'un format plus récent que le jeu est refusée plutôt que mal lue.
 
 ## Commandes
@@ -161,21 +163,49 @@ Principes à retenir :
 - **Une action** suit ce cycle dans la file : en attente → déplacement → en cours → terminée. Les gains de besoins sont répartis sur toute la durée de l'action.
 - **Les couleurs** de l'interface viennent de l'autoload `Palette`, et le thème Godot est construit par `HudTheme`.
 
+## Le catalogue : 50 objets en trois styles
+
+Le catalogue compte **50 objets** répartis en 7 catégories : Cuisine, Chambre, Salon, Salle de bain, Loisirs, Jardin et Déco. Chaque objet existe dans trois **collections** de style :
+
+| Collection | Clé | Idée |
+|---|---|---|
+| Nature | `nature` | Bois clair, sauge et lin, formes douces |
+| Rétro | `retro` | Teck, moutarde, brique ; formes très arrondies, pieds compas |
+| Moderne | `moderne` | Blanc, ardoise, métal ; lignes nettes |
+
+Un style ne change que l'apparence : même taille, même face avant, mêmes interactions. Dans le catalogue, les **pastilles** sous chaque vignette choisissent le style avant l'achat, et le **filtre** (Toutes / Nature / Rétro / Moderne) l'applique à toutes les vignettes. Un clic sur un objet posé propose aussi de **changer de style** : gratuit le jour de l'achat, puis 25 % du prix (une revente à 75 % suivie d'un rachat au prix plein).
+
+Quelques objets ont un **état « en marche »** : ils changent d'image quand on s'en sert (cuisinière, cheminée, douche, ordinateur…). Les lampes s'allument et s'éteignent, et restent dans cet état. La télé s'allume quand un Mouz la regarde depuis le canapé.
+
+### Ce que les interactions savent faire
+
+Une `ActionDefinition` (dans `data/actions/`) décrit une interaction :
+
+| Champ | Effet |
+|---|---|
+| `display_name`, `icon`, `duration_minutes` | Nom, icône 24 × 24 et durée en minutes de jeu |
+| `need_gains` | Points gagnés par besoin sur toute la durée (négatif pour une perte, par exemple l'énergie en dansant) |
+| `shared_need_gains`, `shared_relationship_gain` | **Activité partagée** : gains en plus quand un autre Mouz utilise le même objet en même temps (échecs, apéro, repas à table, jeux vidéo…). L'autonomie aime rejoindre quelqu'un qui joue déjà |
+| `nearby_object_id`, `nearby_radius` | **Objet voisin requis** : l'action n'est possible que si cet objet est à moins de `nearby_radius` cases (le canapé a besoin d'une télé), et elle le fait fonctionner pendant qu'elle dure |
+| `switch` | **Interrupteur** : allume ou éteint l'objet à la fin de l'action (lampes) |
+| `relationship_gain` | Pour les actions entre deux Mouz (Discuter) |
+
+L'équilibrage des 57 interactions (durées et gains) est un premier jet, à ajuster dans les `.tres`.
+
 ## Ajouter un objet au catalogue
 
-Exemple : un piano avec l'action « Jouer du piano ». Tout se fait dans l'inspecteur de l'éditeur, sans code.
+Exemple : une harpe avec l'action « Jouer de la harpe ». Tout se fait dans l'inspecteur de l'éditeur, sans code.
 
-1. **L'action** : dans le dock *Système de fichiers*, clic droit sur `data/actions/`, puis *Créer nouveau… → Ressource…* et choisir `ActionDefinition`. Enregistrer sous `jouer_piano.tres`, puis remplir :
-   - `display_name` : « Jouer du piano » ;
-   - `icon` : une icône 24 × 24 de `assets/icons/ink/` ;
-   - `duration_minutes` : `45` ;
-   - `need_gains` : ajouter `plaisir` → `40`. Les clés sont les `id` des besoins.
-2. **L'objet** : dans `data/catalog/objects/`, créer une Resource `SmartObjectDefinition` (`piano.tres`) et renseigner :
-   - `id` (unique), `display_name`, `price` et `category` (`cuisine`, `chambre`, `salon`, `salle_de_bain` ou `deco`) ;
-   - `sprite` : un SVG de `assets/sprites/` à la taille de l'objet (32 px par case), dessiné tourné vers le haut. Sans image, un rectangle de `color` est dessiné ;
-   - `size` (en cases), `capacity`, et `jouer_piano.tres` dans `actions`.
+1. **Les images** : un SVG par collection dans `assets/sprites/`, nommé `harpe_nature.svg`, `harpe_retro.svg`, `harpe_moderne.svg`. Taille exacte de l'objet (32 px par case), face avant (le côté où le Mouz se place) **en haut**, dos en bas. Facultatif : `harpe_<collection>_actif.svg` pour l'état « en marche ».
+2. **L'action** : dans le dock *Système de fichiers*, clic droit sur `data/actions/`, puis *Créer nouveau… → Ressource…* et choisir `ActionDefinition`. Enregistrer sous `jouer_harpe.tres`, puis remplir `id`, `display_name`, `icon` (une icône de `assets/icons/ink/`), `duration_minutes` et `need_gains` (par exemple `plaisir` → `40`). Les clés sont les `id` des besoins.
+3. **L'objet** : dans `data/catalog/objects/`, créer une Resource `SmartObjectDefinition` (`harpe.tres`) et renseigner :
+   - `id` (unique, à ne plus changer ensuite : les sauvegardes s'en servent), `display_name`, `price` et `category` (`cuisine`, `chambre`, `salon`, `salle_de_bain`, `loisirs`, `jardin` ou `deco`) ;
+   - `sprites` : une entrée par collection (`nature`, `retro`, `moderne`) vers les SVG ; `active_sprites` de même si l'objet a un état « en marche » ;
+   - `size` (en cases), `capacity` (combien de Mouz à la fois), et `jouer_harpe.tres` dans `actions`.
 
-C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catalog/`. L'objet apparaît dans sa catégorie, s'achète, se pose, ouvre son menu au clic et compte pour l'autonomie. Un objet sans action est décoratif : il bloque le passage mais n'ouvre pas de menu. Mets `blocks_movement` à faux pour un objet au sol qu'on peut traverser.
+C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catalog/`. L'objet apparaît dans sa catégorie avec ses pastilles de style, s'achète, se pose, ouvre son menu au clic et compte pour l'autonomie. Un objet sans action est décoratif. Mets `blocks_movement` à faux pour un objet au sol qu'on peut traverser : on s'en sert alors en se tenant dessus (tapis de yoga).
+
+**Ajouter une collection** : une `CollectionDefinition` dans `data/catalog/collections/` (`id`, `display_name`, `color` de la pastille, `icon`, `order`), puis les sprites `<objet>_<id>.svg` des objets concernés. Un objet sans sprite dans une collection ne la propose simplement pas.
 
 **Ajouter un revêtement de sol** : une `FloorDefinition` dans `data/catalog/floors/` avec une tuile 32 × 32 raccordable (`texture`) et un `price_per_cell`.
 
@@ -205,6 +235,8 @@ C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catal
 | Vitesse de baisse d'un besoin, poids dans l'humeur, seuil critique, valeur de départ | `data/needs/*.tres` (`decay_per_hour`, `mood_weight`, `critical_threshold`, `start_value`) |
 | Durée et gains d'une action | `data/actions/*.tres` (`duration_minutes`, `need_gains`, `relationship_gain`) |
 | Nombre d'utilisateurs simultanés d'un objet | `data/catalog/objects/*.tres` (`capacity`) |
+| Bonus des activités partagées, distance d'un objet voisin | `data/actions/*.tres` (`shared_need_gains`, `shared_relationship_gain`, `nearby_radius`) |
+| Coût d'un changement de style | `LotEditor.restyle_cost()` (prix − valeur de revente) |
 | Rythme du temps, heure de départ, multiplicateurs de vitesse | `data/settings/clock_settings.tres` |
 | Autonomie : fréquence de réflexion, poids de la distance, priorité des besoins bas, score minimal | `data/settings/autonomy_settings.tres` |
 | Vitesse de marche, autonomie par défaut | `data/characters/*.tres` (`walk_speed`, `autonomy_enabled`) |

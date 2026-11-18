@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="32" viewBox="0 0 64 32">
+  <rect x="2" y="10" width="60" height="20" fill="#2E2A3A" rx="1" stroke="#3D3357" stroke-width="2"/>
+  <rect x="4" y="3" width="56" height="8" fill="#FFFFFF" rx="1" stroke="#3D3357" stroke-width="1.5"/>
+  <path d="M8 3V11M12 3V11M16 3V11M20 3V11M24 3V11M28 3V11M32 3V11M36 3V11M40 3V11M44 3V11M48 3V11M52 3V11M56 3V11" fill="none" stroke="#CFC4B4" stroke-width="0.8"/>
+  <rect x="9" y="3" width="2" height="5" fill="#3D3357"/>
+  <rect x="13" y="3" width="2" height="5" fill="#3D3357"/>
+  <rect x="21" y="3" width="2" height="5" fill="#3D3357"/>
+  <rect x="25" y="3" width="2" height="5" fill="#3D3357"/>
+  <rect x="29" y="3" width="2" height="5" fill="#3D3357"/>
+  <rect x="37" y="3" width="2" height="5" fill="#3D3357"/>
+  <rect x="41" y="3" width="2" height="5" fill="#3D3357"/>
+  <rect x="49" y="3" width="2" height="5" fill="#3D3357"/>
+  <rect x="53" y="3" width="2" height="5" fill="#3D3357"/>
+  <rect x="20" y="16" width="24" height="4" fill="#A9B1BC" rx="1" stroke="#3D3357" stroke-width="1"/>
+</svg>
