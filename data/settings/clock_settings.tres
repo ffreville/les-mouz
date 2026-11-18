@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ClockSettings" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/clock_settings.gd" id="1_clock"]
+
+[resource]
+script = ExtResource("1_clock")
+game_minutes_per_second = 4.0
+start_day = 1
+start_hour = 8
+speed_multipliers = Array[float]([0.0, 1.0, 2.0, 3.0])
+speed_labels = Array[String](["Pause", "x1", "x2", "x3"])

@@ -1,0 +1,26 @@
+; Fichier de configuration du projet Godot.
+config_version=5
+
+[application]
+
+config/name="Les Mouz"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[autoload]
+
+GameClock="*res://scripts/core/game_clock.gd"
+EventBus="*res://scripts/core/event_bus.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.12, 0.13, 0.16, 1)
