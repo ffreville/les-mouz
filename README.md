@@ -157,7 +157,6 @@ func _on_action_finished(character: Node, action: RefCounted) -> void:
 
 ## Limites connues de cette première version
 
-- Le menu contextuel n'a pas encore la pointe tournée vers l'objet prévue par le design.
 - Les personnages peuvent se traverser : ils ne bloquent pas la navigation.
 - Deux personnages peuvent viser le même objet. Le premier arrivé le réserve, et l'action du second est annulée ; son autonomie choisit alors autre chose.
 - Pas de sauvegarde ni de chargement.
