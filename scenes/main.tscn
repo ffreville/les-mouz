@@ -8,7 +8,8 @@
 [ext_resource type="Script" path="res://scripts/editor/build_controller.gd" id="18_build"]
 [ext_resource type="Script" path="res://scripts/core/camera_controller.gd" id="19_camera"]
 [ext_resource type="Script" path="res://scripts/editor/buy_controller.gd" id="20_buy"]
-[ext_resource type="Resource" path="res://data/lots/maison_demo.tres" id="3_lot"]
+[ext_resource type="Script" path="res://scripts/core/auto_saver.gd" id="21_save"]
+[ext_resource type="Resource" path="res://data/lots/terrain_vide.tres" id="3_lot"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
 [ext_resource type="Script" path="res://scripts/core/grid_navigation.gd" id="5_nav"]
 [ext_resource type="Script" path="res://scripts/core/selection_manager.gd" id="6_selection"]
@@ -66,6 +67,9 @@ script = ExtResource("18_build")
 [node name="BuyController" type="Node2D" parent="World"]
 z_index = 20
 script = ExtResource("20_buy")
+
+[node name="AutoSaver" type="Node" parent="World"]
+script = ExtResource("21_save")
 
 [node name="Camera" type="Camera2D" parent="World"]
 unique_name_in_owner = true

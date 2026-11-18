@@ -3,8 +3,10 @@ extends Node2D
 ## Assemble le monde : terrain, navigation, objets et personnages.
 ## Sert aussi d'annuaire (liste des objets et des personnages) pour les autres scripts.
 
-## Terrain de départ. Il est copié au lancement : la partie modifie la copie, pas le fichier.
+## Terrain d'une nouvelle partie. Il est copié : la partie modifie la copie, pas le fichier.
 @export var starting_lot: Lot
+## Reprendre et sauvegarder la partie (désactivé par les tests, pour ne pas toucher à la vraie partie).
+@export var use_save: bool = true
 ## Un personnage est créé par fiche, sur les cases de départ du terrain.
 @export var character_profiles: Array[CharacterProfile] = []
 @export var character_scene: PackedScene
@@ -28,11 +30,20 @@ var smart_objects: Array[SmartObject] = []
 @onready var build_controller: BuildController = $BuildController
 @onready var buy_controller: BuyController = $BuyController
 @onready var camera: CameraController = %Camera
+@onready var auto_saver: AutoSaver = $AutoSaver
 
 
 func _ready() -> void:
-	lot = starting_lot.duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL)
+	var saved := SaveSystem.load_game() if use_save else null
+	if saved != null:
+		lot = saved.lot
+		Wallet.set_funds(saved.funds)
+		GameClock.restore(saved.total_minutes)
+	else:
+		lot = starting_lot.duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL)
 	editor.setup(self)
+	if use_save:
+		auto_saver.setup(self)
 	build_controller.setup(editor)
 	buy_controller.setup(editor)
 	camera.set_bounds(Rect2(Vector2.ZERO, Vector2(lot.size * lot.cell_size)))
@@ -43,6 +54,9 @@ func _ready() -> void:
 	if not characters.is_empty():
 		# Différé pour que l'interface soit prête à recevoir le signal de sélection.
 		selection.select.call_deferred(characters[0])
+	# Sur un terrain encore vide, on commence par construire.
+	if lot.walls.is_empty() and lot.objects.is_empty():
+		GameMode.set_mode.call_deferred(GameMode.Mode.BUILD)
 
 
 ## Redessine le terrain, synchronise les objets et recalcule la navigation.
@@ -90,7 +104,8 @@ func _spawn_characters() -> void:
 	for i in character_profiles.size():
 		var character: Character = character_scene.instantiate()
 		characters_root.add_child(character)
-		var spawn := lot.spawn_cells[i % lot.spawn_cells.size()]
+		# Un meuble a pu être posé sur la case de départ : on prend la plus proche qui est libre.
+		var spawn := navigation.nearest_walkable(lot.spawn_cells[i % lot.spawn_cells.size()])
 		character.setup(self, character_profiles[i], spawn)
 		characters.append(character)
 

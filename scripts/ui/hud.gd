@@ -19,6 +19,8 @@ var _selected: Character
 @onready var right_panel: Control = %RightPanel
 @onready var build_panel: BuildPanel = %BuildPanel
 @onready var catalog_panel: CatalogPanel = %CatalogPanel
+@onready var logo: MenuButton = %Logo
+@onready var confirm_panel: ConfirmPanel = %ConfirmPanel
 @onready var clock_panel: Control = %ClockPanel
 @onready var speed_group: Control = %SpeedGroup
 @onready var pause_pill: Control = %PausePill
@@ -34,6 +36,7 @@ func _ready() -> void:
 	EventBus.character_selected.connect(_on_character_selected)
 	GameMode.mode_changed.connect(_on_mode_changed)
 	_on_mode_changed(GameMode.mode)
+	_setup_game_menu()
 
 
 func _on_character_selected(character: Node) -> void:
@@ -68,3 +71,31 @@ func _on_mode_changed(mode: int) -> void:
 	pause_pill.visible = not live
 	build_panel.visible = mode == GameMode.Mode.BUILD
 	catalog_panel.visible = mode == GameMode.Mode.BUY
+
+
+## Le logo ouvre le menu du jeu (Nouvelle partie…). Raccourci : Ctrl+N.
+func _setup_game_menu() -> void:
+	logo.flat = true
+	logo.add_theme_font_override("font", HudTheme.font(HudTheme.BALOO, 800))
+	logo.add_theme_font_size_override("font_size", 24)
+	for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		logo.add_theme_color_override(state, Palette.ENCRE)
+	# Sans marges, pour garder la barre du haut à sa hauteur.
+	for state in ["normal", "hover", "pressed", "focus", "hover_pressed"]:
+		logo.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	var popup := logo.get_popup()
+	popup.add_item("Nouvelle partie…", 0)
+	popup.id_pressed.connect(func(_id: int) -> void: _ask_new_game())
+	confirm_panel.confirmed.connect(func() -> void: SaveSystem.new_game(get_tree()))
+
+
+func _ask_new_game() -> void:
+	confirm_panel.ask("Recommencer sur un terrain vide avec %s ? La maison actuelle sera perdue." \
+			% Palette.format_mz(Wallet.settings.start_funds), "Nouvelle partie")
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	var key := event as InputEventKey
+	if key != null and key.pressed and key.keycode == KEY_N and key.is_command_or_control_pressed():
+		_ask_new_game()
+		get_viewport().set_input_as_handled()

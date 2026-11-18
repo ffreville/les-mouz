@@ -32,7 +32,19 @@ var _last_whole_minute: int = -1
 # Chargé dès la création pour être disponible avant tout autre _ready().
 func _init() -> void:
 	settings = load(SETTINGS_PATH)
+	reset()
+
+
+## Revient au jour et à l'heure de départ (nouvelle partie).
+func reset() -> void:
 	total_minutes = ((settings.start_day - 1) * 24 + settings.start_hour) * 60.0
+	_last_whole_minute = -1
+
+
+## Reprend une partie enregistrée.
+func restore(minutes: float) -> void:
+	total_minutes = minutes
+	_last_whole_minute = -1
 
 
 func _process(delta: float) -> void:

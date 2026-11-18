@@ -44,6 +44,18 @@ func world_to_cell(world_position: Vector2) -> Vector2i:
 	return Vector2i((world_position / cell_size).floor())
 
 
+## La case libre la plus proche de `cell` (elle-même si elle est libre).
+func nearest_walkable(cell: Vector2i) -> Vector2i:
+	if is_walkable(cell):
+		return cell
+	for radius in range(1, maxi(_lot.size.x, _lot.size.y)):
+		for y in range(cell.y - radius, cell.y + radius + 1):
+			for x in range(cell.x - radius, cell.x + radius + 1):
+				if is_walkable(Vector2i(x, y)):
+					return Vector2i(x, y)
+	return cell
+
+
 ## Liste des cases de `from` à `to` (incluses). Vide si aucun chemin.
 func find_path(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
 	var result: Array[Vector2i] = []
