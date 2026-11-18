@@ -48,6 +48,7 @@ assets/
   sprites/             Objets et Mouz vus de dessus (SVG, 32 px par case)
   icons/ink/           Icônes 24 × 24 couleur encre (besoins, actions)
   icons/white/         Mêmes icônes en blanc, teintées par le thème (boutons)
+  fonts/               Baloo 2 (titres) et Nunito (interface), polices variables
 design/                Livrable de Claude Design (référence, ignoré par Godot)
 data/                  Resources (.tres) : tout le contenu et l'équilibrage
   actions/             Actions (Manger, Dormir, Discuter…)
@@ -156,8 +157,11 @@ func _on_action_finished(character: Node, action: RefCounted) -> void:
 
 ## Limites connues de cette première version
 
-- Les polices du design (Baloo 2 et Nunito) ne sont pas encore intégrées : l'interface utilise la police par défaut de Godot.
 - Le menu contextuel n'a pas encore la pointe tournée vers l'objet prévue par le design.
 - Les personnages peuvent se traverser : ils ne bloquent pas la navigation.
 - Deux personnages peuvent viser le même objet. Le premier arrivé le réserve, et l'action du second est annulée ; son autonomie choisit alors autre chose.
 - Pas de sauvegarde ni de chargement.
+
+## Crédits
+
+Polices [Baloo 2](https://fonts.google.com/specimen/Baloo+2) et [Nunito](https://fonts.google.com/specimen/Nunito), sous licence SIL Open Font License 1.1 (textes de licence dans `assets/fonts/`).

@@ -40,6 +40,7 @@ func setup(title: String, icon: Texture2D, color: Color, background: Color, crit
 	top.add_child(_name)
 	_build_tag()
 	top.add_child(_tag)
+	_value.theme_type_variation = &"StrongLabel"
 	_value.add_theme_font_size_override("font_size", 13)
 	_value.custom_minimum_size.x = 24
 	_value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT

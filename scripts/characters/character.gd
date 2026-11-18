@@ -38,6 +38,7 @@ func setup(p_world: World, p_profile: CharacterProfile, cell: Vector2i) -> void:
 	position = world.navigation.cell_to_world(cell)
 	body.texture = profile.sprite
 	name_tag.text = profile.display_name
+	name_tag.add_theme_font_override("font", HudTheme.font(HudTheme.NUNITO, 800))
 	name_tag.visible = is_selected
 	mover.setup(world.navigation, self, profile.walk_speed)
 	needs.setup(self, profile.needs)

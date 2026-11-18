@@ -1,12 +1,19 @@
 class_name HudTheme
 extends RefCounted
 ## Construit le Theme Godot de l'interface à partir de la Palette (design « Maison de poche »).
-## Variantes de type disponibles : SectionTitle, MutedLabel, TitleLabel, BigLabel,
+## Variantes de type disponibles : SectionTitle, MutedLabel, StrongLabel, TitleLabel, BigLabel,
 ## SpeedGroup, IconButton, ToggleChip.
+## Polices : Nunito pour l'interface, Baloo 2 pour les titres (assets/fonts, licence OFL).
+
+const NUNITO := preload("res://assets/fonts/Nunito.ttf")
+const BALOO := preload("res://assets/fonts/Baloo2.ttf")
+
+static var _fonts: Dictionary[String, FontVariation] = {}
 
 
 static func build() -> Theme:
 	var theme := Theme.new()
+	theme.default_font = font(NUNITO, 700)
 	theme.default_font_size = 14
 	_panels(theme)
 	_labels(theme)
@@ -14,6 +21,18 @@ static func build() -> Theme:
 	_popup_menu(theme)
 	_misc(theme)
 	return theme
+
+
+## Police variable à une graisse donnée (400 à 800), chiffres tabulaires. Mise en cache.
+static func font(base: FontFile, weight: int) -> FontVariation:
+	var key := "%s-%d" % [base.resource_path, weight]
+	if not _fonts.has(key):
+		var variation := FontVariation.new()
+		variation.base_font = base
+		variation.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): weight}
+		variation.opentype_features = {TextServerManager.get_primary_interface().name_to_tag("tnum"): 1}
+		_fonts[key] = variation
+	return _fonts[key]
 
 
 ## Boîte arrondie réutilisable.
@@ -43,13 +62,18 @@ static func _panels(theme: Theme) -> void:
 
 static func _labels(theme: Theme) -> void:
 	theme.set_color("font_color", "Label", Palette.ENCRE)
-	for variation in ["SectionTitle", "MutedLabel", "TitleLabel", "BigLabel"]:
+	for variation in ["SectionTitle", "MutedLabel", "StrongLabel", "TitleLabel", "BigLabel"]:
 		theme.set_type_variation(variation, "Label")
 	theme.set_color("font_color", "SectionTitle", Palette.ENCRE_DOUCE)
+	theme.set_font("font", "SectionTitle", font(NUNITO, 800))
 	theme.set_font_size("font_size", "SectionTitle", 12)
 	theme.set_color("font_color", "MutedLabel", Palette.ENCRE_DOUCE)
+	theme.set_font("font", "MutedLabel", font(NUNITO, 600))
 	theme.set_font_size("font_size", "MutedLabel", 12)
+	theme.set_font("font", "StrongLabel", font(NUNITO, 800))
+	theme.set_font("font", "TitleLabel", font(BALOO, 800))
 	theme.set_font_size("font_size", "TitleLabel", 24)
+	theme.set_font("font", "BigLabel", font(BALOO, 700))
 	theme.set_font_size("font_size", "BigLabel", 22)
 
 
@@ -108,6 +132,7 @@ static func _popup_menu(theme: Theme) -> void:
 	theme.set_color("font_disabled_color", "PopupMenu", Palette.ENCRE_DOUCE)
 	theme.set_font_size("font_size", "PopupMenu", 15)
 	theme.set_font_size("font_separator_size", "PopupMenu", 13)
+	theme.set_font("font_separator", "PopupMenu", font(NUNITO, 800))
 	theme.set_constant("v_separation", "PopupMenu", 14)
 	theme.set_constant("h_separation", "PopupMenu", 10)
 	theme.set_constant("item_start_padding", "PopupMenu", 10)

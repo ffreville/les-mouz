@@ -71,6 +71,7 @@ func _make_block(other: Character, value: float) -> Control:
 	var tier := Label.new()
 	tier.text = _tier_text(value)
 	_tiers[other] = tier
+	tier.theme_type_variation = &"StrongLabel"
 	tier.add_theme_font_size_override("font_size", 13)
 	tier.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tier.size_flags_horizontal = Control.SIZE_EXPAND_FILL

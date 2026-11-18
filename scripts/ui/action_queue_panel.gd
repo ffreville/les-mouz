@@ -81,6 +81,7 @@ func _make_row(action: QueuedAction, is_current: bool) -> Control:
 	row.add_child(texts)
 	var title := Label.new()
 	title.text = "Aller ici" if action.is_move_only() else action.definition.display_name
+	title.theme_type_variation = &"StrongLabel"
 	title.clip_text = true
 	texts.add_child(title)
 	var detail := Label.new()
