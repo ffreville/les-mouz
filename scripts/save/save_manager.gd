@@ -136,18 +136,10 @@ func _write_safely(path: String, text: String) -> bool:
 	return DirAccess.rename_absolute(temp, path) == OK
 
 
-## Petite image de la partie (ignorée sans rendu, par exemple en mode headless).
+## Vignette rendue une image plus tard ; la liste des parties est rafraîchie ensuite.
 func _write_thumbnail(world: World, path: String) -> void:
-	if DisplayServer.get_name() == "headless":
-		return
-	var texture := world.get_viewport().get_texture()
-	if texture == null:
-		return
-	var image := texture.get_image()
-	if image == null or image.is_empty():
-		return
-	image.resize(THUMBNAIL_SIZE.x, THUMBNAIL_SIZE.y, Image.INTERPOLATE_BILINEAR)
-	image.save_png(path)
+	if await ThumbnailCapture.capture(world, path, THUMBNAIL_SIZE):
+		slots_changed.emit()
 
 
 # --- Lire et gérer les emplacements --------------------------------------------------
