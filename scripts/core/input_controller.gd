@@ -2,7 +2,7 @@ class_name InputController
 extends Node2D
 ## Traduit les clics dans le monde en ordres pour le personnage sélectionné.
 ## Les clics sur l'interface sont absorbés avant d'arriver ici.
-##  - clic sur un personnage : le sélectionner ;
+##  - clic sur un autre personnage : menu (actions sociales, prendre le contrôle) ;
 ##  - clic sur un objet : menu de ses actions ;
 ##  - clic sur le sol : « Aller ici ».
 
@@ -19,7 +19,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	var character := world.get_character_at(position_in_world)
 	if character != null:
-		world.selection.select(character)
+		if selected == null or character == selected:
+			world.selection.select(character)
+		else:
+			_open_character_menu(selected, character, click.position)
 		return
 	if selected == null:
 		return
@@ -41,3 +44,18 @@ func _open_object_menu(actor: Character, smart_object: SmartObject, screen_posit
 				actor.queue.enqueue(QueuedAction.use_object(action, smart_object)),
 		})
 	EventBus.context_menu_requested.emit(smart_object.get_display_name(), options, screen_position)
+
+
+func _open_character_menu(actor: Character, other: Character, screen_position: Vector2) -> void:
+	var options: Array = []
+	for action in world.social_actions:
+		options.append({
+			"label": action.display_name,
+			"callback": func() -> void:
+				actor.queue.enqueue(QueuedAction.with_character(action, other)),
+		})
+	options.append({
+		"label": "Contrôler %s" % other.get_display_name(),
+		"callback": world.selection.select.bind(other),
+	})
+	EventBus.context_menu_requested.emit(other.get_display_name(), options, screen_position)

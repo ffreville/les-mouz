@@ -79,4 +79,23 @@ func _list_candidates() -> Array[Dictionary]:
 				"definition": definition,
 				"distance": distance,
 			})
+	for other in _character.world.characters:
+		# On ne dérange pas quelqu'un d'occupé (un ordre du joueur, lui, interrompt).
+		if other == _character or _is_busy(other):
+			continue
+		var spot := navigation.closest_reachable(navigation.cells_around(Rect2i(other.get_cell(), Vector2i.ONE)), here)
+		if spot == GridNavigation.NO_CELL:
+			continue
+		var distance := navigation.path_length(here, spot)
+		for definition in _character.world.social_actions:
+			candidates.append({
+				"action": QueuedAction.with_character(definition, other),
+				"definition": definition,
+				"distance": distance,
+			})
 	return candidates
+
+
+func _is_busy(other: Character) -> bool:
+	var action := other.queue.current()
+	return action != null and action.state == QueuedAction.State.RUNNING

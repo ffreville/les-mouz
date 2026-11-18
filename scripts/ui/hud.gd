@@ -8,6 +8,7 @@ var _selected: Character
 @onready var needs_panel: NeedsPanel = %NeedsPanel
 @onready var queue_panel: ActionQueuePanel = %ActionQueuePanel
 @onready var autonomy_check: CheckBox = %AutonomyCheck
+@onready var relationship_panel: RelationshipPanel = %RelationshipPanel
 
 
 func _ready() -> void:
@@ -21,6 +22,7 @@ func _on_character_selected(character: Node) -> void:
 	needs_panel.set_character(_selected)
 	queue_panel.set_character(_selected)
 	autonomy_check.set_pressed_no_signal(_selected.brain.enabled)
+	relationship_panel.set_character(_selected)
 
 
 func _on_autonomy_toggled(pressed: bool) -> void:

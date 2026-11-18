@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/characters/action_queue.gd" id="4_queue"]
 [ext_resource type="Script" path="res://scripts/characters/autonomy_brain.gd" id="5_brain"]
 [ext_resource type="Resource" path="res://data/settings/autonomy_settings.tres" id="6_autonomy"]
+[ext_resource type="Script" path="res://scripts/characters/relationships.gd" id="7_relationships"]
 
 [node name="Character" type="Node2D"]
 z_index = 10
@@ -47,3 +48,6 @@ horizontal_alignment = 1
 [node name="Brain" type="Node" parent="."]
 script = ExtResource("5_brain")
 settings = ExtResource("6_autonomy")
+
+[node name="Relationships" type="Node" parent="."]
+script = ExtResource("7_relationships")

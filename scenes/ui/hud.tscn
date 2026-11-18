@@ -5,6 +5,8 @@
 [ext_resource type="Script" path="res://scripts/ui/needs_panel.gd" id="3_needs"]
 [ext_resource type="Script" path="res://scripts/ui/action_queue_panel.gd" id="4_queue"]
 [ext_resource type="Script" path="res://scripts/ui/context_menu.gd" id="5_menu"]
+[ext_resource type="Script" path="res://scripts/ui/relationship_panel.gd" id="6_relations"]
+[ext_resource type="Script" path="res://scripts/ui/character_switcher.gd" id="7_switcher"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -22,15 +24,27 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 4
 
-[node name="ClockPanel" type="HBoxContainer" parent="TopBar/Margin"]
+[node name="Row" type="HBoxContainer" parent="TopBar/Margin"]
 layout_mode = 2
+
+[node name="ClockPanel" type="HBoxContainer" parent="TopBar/Margin/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
 script = ExtResource("2_clock")
+
+[node name="SwitcherLabel" type="Label" parent="TopBar/Margin/Row"]
+layout_mode = 2
+text = "Contrôler :"
+
+[node name="CharacterSwitcher" type="HBoxContainer" parent="TopBar/Margin/Row"]
+layout_mode = 2
+script = ExtResource("7_switcher")
 
 [node name="LeftPanel" type="PanelContainer" parent="."]
 offset_left = 8.0
 offset_top = 52.0
 offset_right = 240.0
-offset_bottom = 300.0
+offset_bottom = 400.0
 
 [node name="Margin" type="MarginContainer" parent="LeftPanel"]
 layout_mode = 2
@@ -59,6 +73,16 @@ unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "Autonomie"
+
+[node name="RelationsTitle" type="Label" parent="LeftPanel/Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Relations"
+
+[node name="RelationshipPanel" type="VBoxContainer" parent="LeftPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("6_relations")
 
 [node name="RightPanel" type="PanelContainer" parent="."]
 anchors_preset = 1

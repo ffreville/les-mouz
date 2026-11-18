@@ -19,6 +19,7 @@ var is_selected: bool = false:
 @onready var needs: NeedsComponent = $Needs
 @onready var queue: ActionQueue = $Queue
 @onready var brain: AutonomyBrain = $Brain
+@onready var relationships: Relationships = $Relationships
 @onready var name_label: Label = $NameLabel
 @onready var action_label: Label = $ActionLabel
 
@@ -33,6 +34,7 @@ func setup(p_world: World, p_profile: CharacterProfile, cell: Vector2i) -> void:
 	mover.setup(world.navigation, self, profile.walk_speed)
 	needs.setup(self, profile.needs)
 	queue.setup(self)
+	relationships.setup(self)
 	brain.setup(self, profile.autonomy_enabled)
 	queue.changed.connect(_refresh_action_label)
 	_refresh_action_label()

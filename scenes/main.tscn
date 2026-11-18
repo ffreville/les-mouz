@@ -11,15 +11,19 @@
 [ext_resource type="Script" path="res://scripts/characters/character_profile.gd" id="9_profile"]
 [ext_resource type="Resource" path="res://data/characters/lou.tres" id="10_lou"]
 [ext_resource type="PackedScene" path="res://scenes/objects/smart_object.tscn" id="11_object"]
+[ext_resource type="Resource" path="res://data/characters/sam.tres" id="12_sam"]
+[ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="13_action"]
+[ext_resource type="Resource" path="res://data/actions/discuter.tres" id="14_discuter"]
 
 [node name="Main" type="Node2D"]
 
 [node name="World" type="Node2D" parent="."]
 script = ExtResource("1_world")
 layout = ExtResource("3_layout")
-character_profiles = Array[ExtResource("9_profile")]([ExtResource("10_lou")])
+character_profiles = Array[ExtResource("9_profile")]([ExtResource("10_lou"), ExtResource("12_sam")])
 character_scene = ExtResource("8_character")
 smart_object_scene = ExtResource("11_object")
+social_actions = Array[ExtResource("13_action")]([ExtResource("14_discuter")])
 
 [node name="HouseView" type="Node2D" parent="World"]
 script = ExtResource("2_view")

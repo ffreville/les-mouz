@@ -10,4 +10,4 @@ display_name = "Lit"
 color = Color(0.45, 0.35, 0.7, 1)
 size = Vector2i(2, 3)
 actions = Array[ExtResource("2_action")]([ExtResource("3_dormir")])
-capacity = 1
+capacity = 2

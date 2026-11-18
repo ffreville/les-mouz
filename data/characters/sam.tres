@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterProfile" format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/character_profile.gd" id="1_profile"]
+[ext_resource type="Script" path="res://scripts/needs/need_definition.gd" id="2_need"]
+[ext_resource type="Resource" path="res://data/needs/faim.tres" id="3_faim"]
+[ext_resource type="Resource" path="res://data/needs/energie.tres" id="4_energie"]
+[ext_resource type="Resource" path="res://data/needs/hygiene.tres" id="5_hygiene"]
+[ext_resource type="Resource" path="res://data/needs/social.tres" id="6_social"]
+[ext_resource type="Resource" path="res://data/needs/plaisir.tres" id="7_plaisir"]
+
+[resource]
+script = ExtResource("1_profile")
+display_name = "Sam"
+color = Color(0.25, 0.75, 0.7, 1)
+walk_speed = 96.0
+needs = Array[ExtResource("2_need")]([ExtResource("3_faim"), ExtResource("4_energie"), ExtResource("5_hygiene"), ExtResource("6_social"), ExtResource("7_plaisir")])

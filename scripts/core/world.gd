@@ -8,6 +8,8 @@ extends Node2D
 @export var character_profiles: Array[CharacterProfile] = []
 @export var character_scene: PackedScene
 @export var smart_object_scene: PackedScene
+## Actions possibles entre deux personnages (ex. « Discuter »).
+@export var social_actions: Array[ActionDefinition] = []
 
 var characters: Array[Character] = []
 var smart_objects: Array[SmartObject] = []
