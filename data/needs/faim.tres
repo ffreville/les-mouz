@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="NeedDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/needs/need_definition.gd" id="1_need"]
+
+[resource]
+script = ExtResource("1_need")
+id = &"faim"
+display_name = "Faim"
+color = Color(0.95, 0.6, 0.25, 1)
+decay_per_hour = 6.0
+mood_weight = 1.5
+critical_threshold = 20.0
+start_value = 70.0

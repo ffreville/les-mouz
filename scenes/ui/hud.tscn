@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/ui/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://scripts/ui/clock_panel.gd" id="2_clock"]
+[ext_resource type="Script" path="res://scripts/ui/needs_panel.gd" id="3_needs"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -22,3 +23,31 @@ theme_override_constants/margin_bottom = 4
 [node name="ClockPanel" type="HBoxContainer" parent="TopBar/Margin"]
 layout_mode = 2
 script = ExtResource("2_clock")
+
+[node name="LeftPanel" type="PanelContainer" parent="."]
+offset_left = 8.0
+offset_top = 52.0
+offset_right = 240.0
+offset_bottom = 300.0
+
+[node name="Margin" type="MarginContainer" parent="LeftPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="Content" type="VBoxContainer" parent="LeftPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CharacterName" type="Label" parent="LeftPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "—"
+
+[node name="NeedsPanel" type="VBoxContainer" parent="LeftPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("3_needs")

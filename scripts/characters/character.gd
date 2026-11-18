@@ -16,6 +16,7 @@ var is_selected: bool = false:
 		queue_redraw()
 
 @onready var mover: GridMover = $Mover
+@onready var needs: NeedsComponent = $Needs
 @onready var name_label: Label = $NameLabel
 
 
@@ -27,6 +28,7 @@ func setup(p_world: World, p_profile: CharacterProfile, cell: Vector2i) -> void:
 	position = world.navigation.cell_to_world(cell)
 	name_label.text = profile.display_name
 	mover.setup(world.navigation, self, profile.walk_speed)
+	needs.setup(self, profile.needs)
 	queue_redraw()
 
 

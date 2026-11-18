@@ -21,7 +21,8 @@ func _ready() -> void:
 	_build_navigation()
 	_spawn_characters()
 	if not characters.is_empty():
-		selection.select(characters[0])
+		# Différé pour que l'interface soit prête à recevoir le signal de sélection.
+		selection.select.call_deferred(characters[0])
 
 
 func _build_navigation() -> void:

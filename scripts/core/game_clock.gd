@@ -29,7 +29,8 @@ var time_scale: float:
 var _last_whole_minute: int = -1
 
 
-func _ready() -> void:
+# Chargé dès la création pour être disponible avant tout autre _ready().
+func _init() -> void:
 	settings = load(SETTINGS_PATH)
 	total_minutes = ((settings.start_day - 1) * 24 + settings.start_hour) * 60.0
 
