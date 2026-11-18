@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="AutonomySettings" format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/autonomy_settings.gd" id="1_autonomy"]
+
+[resource]
+script = ExtResource("1_autonomy")
+think_interval_minutes = 10.0
+distance_penalty_per_cell = 0.5
+urgency_exponent = 2.0
+min_score = 5.0

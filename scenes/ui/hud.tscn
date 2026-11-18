@@ -54,6 +54,12 @@ unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("3_needs")
 
+[node name="AutonomyCheck" type="CheckBox" parent="LeftPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "Autonomie"
+
 [node name="RightPanel" type="PanelContainer" parent="."]
 anchors_preset = 1
 anchor_left = 1.0
