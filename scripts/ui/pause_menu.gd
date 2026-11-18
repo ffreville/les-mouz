@@ -52,6 +52,11 @@ func _ready() -> void:
 	_build_save_as()
 
 
+# Changer de partie depuis le menu remplace la scène : le menu n'est alors plus ouvert.
+func _exit_tree() -> void:
+	is_open = false
+
+
 func setup(p_world: World) -> void:
 	world = p_world
 
