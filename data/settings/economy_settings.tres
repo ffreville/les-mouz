@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="EconomySettings" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/economy_settings.gd" id="1_economy"]
+
+[resource]
+script = ExtResource("1_economy")
+start_funds = 20000
+refund_same_day = 1.0
+refund_later = 0.75

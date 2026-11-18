@@ -12,6 +12,7 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 GameClock="*res://scripts/core/game_clock.gd"
 EventBus="*res://scripts/core/event_bus.gd"
 Palette="*res://scripts/ui/palette.gd"
+Wallet="*res://scripts/core/wallet.gd"
 
 [display]
 

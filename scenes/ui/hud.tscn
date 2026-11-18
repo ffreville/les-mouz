@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://scripts/ui/character_switcher.gd" id="7_switcher"]
 [ext_resource type="Script" path="res://scripts/ui/speed_controls.gd" id="8_speed"]
 [ext_resource type="Script" path="res://scripts/ui/mouz_header.gd" id="9_header"]
+[ext_resource type="Script" path="res://scripts/ui/funds_display.gd" id="10_funds"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -79,6 +80,10 @@ focus_mode = 0
 theme_type_variation = &"ToggleChip"
 toggle_mode = true
 text = "Autonomie"
+
+[node name="FundsDisplay" type="PanelContainer" parent="Root/TopBar/Row"]
+layout_mode = 2
+script = ExtResource("10_funds")
 
 [node name="LeftColumn" type="VBoxContainer" parent="Root"]
 layout_mode = 0
