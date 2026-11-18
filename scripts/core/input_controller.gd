@@ -13,6 +13,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	var click := event as InputEventMouseButton
 	if click == null or not click.pressed or click.button_index != MOUSE_BUTTON_LEFT:
 		return
+	if not GameMode.is_live():
+		return
 	get_viewport().set_input_as_handled()
 	var position_in_world := get_global_mouse_position()
 	var selected := world.selection.selected

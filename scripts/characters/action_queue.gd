@@ -20,6 +20,7 @@ func setup(character: Character) -> void:
 	_character = character
 	_character.mover.arrived.connect(_on_arrived)
 	GameClock.ticked.connect(_on_ticked)
+	EventBus.lot_changed.connect(_on_lot_changed)
 
 
 func is_empty() -> bool:
@@ -114,6 +115,15 @@ func _destination_for(action: QueuedAction) -> Vector2i:
 	if navigation.are_neighbors(here, partner_cell):
 		return here
 	return navigation.closest_reachable(navigation.cells_next_to(partner_cell), here)
+
+
+## Le terrain a changé : on recalcule le trajet en cours (un mur a pu apparaître).
+func _on_lot_changed() -> void:
+	var action := current()
+	if action != null and action.state == QueuedAction.State.MOVING:
+		_character.mover.stop()
+		action.state = QueuedAction.State.PENDING
+		_begin(action)
 
 
 func _on_arrived() -> void:

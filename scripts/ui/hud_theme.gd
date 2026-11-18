@@ -2,7 +2,7 @@ class_name HudTheme
 extends RefCounted
 ## Construit le Theme Godot de l'interface à partir de la Palette (design « Maison de poche »).
 ## Variantes de type disponibles : SectionTitle, MutedLabel, StrongLabel, TitleLabel, BigLabel,
-## SpeedGroup, IconButton, ToggleChip.
+## SpeedGroup, IconButton, ToggleChip, ModeTab, ToolButton, OptionCard.
 ## Polices : Nunito pour l'interface, Baloo 2 pour les titres (assets/fonts, licence OFL).
 
 const NUNITO := preload("res://assets/fonts/Nunito.ttf")
@@ -101,6 +101,21 @@ static func _buttons(theme: Theme) -> void:
 	theme.set_color("icon_pressed_color", "IconButton", Palette.ENCRE)
 	theme.set_color("icon_hover_pressed_color", "IconButton", Palette.ENCRE)
 
+	# Onglets de mode (Vivre / Construire / Acheter).
+	_button_variation(theme, "ModeTab", 10, Vector4(14, 0, 14, 0))
+	# Outils du mode Construire : icône au-dessus du libellé.
+	_button_variation(theme, "ToolButton", 12, Vector4(4, 6, 4, 4), Palette.PAPIER_2)
+	theme.set_font_size("font_size", "ToolButton", 11)
+	theme.set_font("font", "ToolButton", font(NUNITO, 800))
+	theme.set_constant("icon_max_width", "ToolButton", 22)
+	# Cartes d'option (couleur de mur, sol…) et vignettes du catalogue.
+	theme.set_type_variation("OptionCard", "Button")
+	theme.set_stylebox("normal", "OptionCard", box(Palette.PAPIER_2, 10, Color.TRANSPARENT, 0, 8))
+	theme.set_stylebox("hover", "OptionCard", box(Color.WHITE, 10, accent, 2, 8))
+	theme.set_stylebox("pressed", "OptionCard", box(Palette.ACCENT_DOUX, 10, accent, 2, 8))
+	theme.set_stylebox("hover_pressed", "OptionCard", box(Palette.ACCENT_DOUX, 10, accent, 2, 8))
+	theme.set_stylebox("disabled", "OptionCard", box(Palette.PAPIER_2, 10, Color.TRANSPARENT, 0, 8))
+
 	# Interrupteur « Autonomie » : case vide ou cochée.
 	theme.set_type_variation("ToggleChip", "Button")
 	theme.set_stylebox("normal", "ToggleChip", box(Color.WHITE, 6, Palette.CONTOUR, 2, 6))
@@ -111,6 +126,27 @@ static func _buttons(theme: Theme) -> void:
 	theme.set_color("icon_normal_color", "ToggleChip", Color.TRANSPARENT)
 	theme.set_color("icon_hover_color", "ToggleChip", Color(Palette.ENCRE, 0.25))
 	theme.set_constant("icon_max_width", "ToggleChip", 14)
+
+
+## Variante de bouton : transparente (ou `background`), active en encre, survol blanc à bord accent.
+static func _button_variation(theme: Theme, variation: String, radius: int, padding: Vector4,
+		background := Color.TRANSPARENT) -> void:
+	theme.set_type_variation(variation, "Button")
+	var states := {
+		"normal": box(background, radius),
+		"hover": box(Color.WHITE, radius, Palette.ACCENT, 2),
+		"pressed": box(Palette.CONTOUR, radius),
+		"hover_pressed": box(Palette.CONTOUR, radius, Palette.ACCENT, 2),
+		"disabled": box(background, radius),
+	}
+	for state in states:
+		var style: StyleBoxFlat = states[state]
+		style.content_margin_left = padding.x
+		style.content_margin_top = padding.y
+		style.content_margin_right = padding.z
+		style.content_margin_bottom = padding.w
+		theme.set_stylebox(state, variation, style)
+	theme.set_font("font", variation, font(NUNITO, 800))
 
 
 static func _popup_menu(theme: Theme) -> void:

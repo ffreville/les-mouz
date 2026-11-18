@@ -3,6 +3,10 @@
 [ext_resource type="Script" path="res://scripts/core/world.gd" id="1_world"]
 [ext_resource type="Script" path="res://scripts/core/floor_view.gd" id="2_floor"]
 [ext_resource type="Script" path="res://scripts/core/wall_view.gd" id="15_walls"]
+[ext_resource type="Script" path="res://scripts/editor/grid_overlay.gd" id="16_grid"]
+[ext_resource type="Script" path="res://scripts/editor/lot_editor.gd" id="17_editor"]
+[ext_resource type="Script" path="res://scripts/editor/build_controller.gd" id="18_build"]
+[ext_resource type="Script" path="res://scripts/core/camera_controller.gd" id="19_camera"]
 [ext_resource type="Resource" path="res://data/lots/maison_demo.tres" id="3_lot"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
 [ext_resource type="Script" path="res://scripts/core/grid_navigation.gd" id="5_nav"]
@@ -42,12 +46,25 @@ script = ExtResource("6_selection")
 z_index = 5
 script = ExtResource("15_walls")
 
+[node name="GridOverlay" type="Node2D" parent="World"]
+z_index = 6
+script = ExtResource("16_grid")
+
 [node name="Characters" type="Node2D" parent="World"]
 
 [node name="InputController" type="Node2D" parent="World"]
 script = ExtResource("7_input")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="LotEditor" type="Node" parent="World"]
+script = ExtResource("17_editor")
+
+[node name="BuildController" type="Node2D" parent="World"]
+z_index = 20
+script = ExtResource("18_build")
+
+[node name="Camera" type="Camera2D" parent="World"]
+unique_name_in_owner = true
 position = Vector2(340, 288)
+script = ExtResource("19_camera")
 
 [node name="HUD" parent="." instance=ExtResource("4_hud")]

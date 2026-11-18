@@ -30,6 +30,11 @@ func receive(amount: int) -> void:
 	_change(amount)
 
 
+## Ajoute ou retire un montant sans condition (annulation d'une action de l'éditeur).
+func adjust(delta: int) -> void:
+	_change(delta)
+
+
 ## Remplace le solde (chargement d'une sauvegarde).
 func set_funds(value: int) -> void:
 	_change(value - funds)

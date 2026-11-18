@@ -23,10 +23,17 @@ var smart_objects: Array[SmartObject] = []
 @onready var selection: SelectionManager = $Selection
 @onready var characters_root: Node2D = $Characters
 @onready var objects_root: Node2D = $Objects
+@onready var grid_overlay: GridOverlay = $GridOverlay
+@onready var editor: LotEditor = $LotEditor
+@onready var build_controller: BuildController = $BuildController
+@onready var camera: CameraController = %Camera
 
 
 func _ready() -> void:
 	lot = starting_lot.duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL)
+	editor.setup(self)
+	build_controller.setup(editor)
+	camera.set_bounds(Rect2(Vector2.ZERO, Vector2(lot.size * lot.cell_size)))
 	refresh_lot()
 	_spawn_characters()
 	EventBus.lot_changed.connect(refresh_lot)
@@ -39,6 +46,7 @@ func _ready() -> void:
 func refresh_lot() -> void:
 	floor_view.render(lot)
 	wall_view.render(lot)
+	grid_overlay.render(lot)
 	_sync_objects()
 	_build_navigation()
 

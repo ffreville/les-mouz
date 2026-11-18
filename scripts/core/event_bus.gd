@@ -55,6 +55,15 @@ signal item_bought(item: Resource, price: int)
 @warning_ignore("unused_signal")
 signal item_sold(item: Resource, refund: int)
 
+# --- Éditeur ------------------------------------------------------------------
+
+## L'interface a choisi un outil de construction (`option` : couleur de mur, sol, porte…).
+@warning_ignore("unused_signal")
+signal build_tool_selected(tool: StringName, option: Resource)
+## Aperçu du coût près du pointeur (`cost` négatif = remboursement ; texte vide = masquer).
+@warning_ignore("unused_signal")
+signal cost_preview_changed(text: String, cost: int)
+
 # --- Sélection et interface --------------------------------------------------
 
 ## Le joueur a sélectionné un autre personnage.
