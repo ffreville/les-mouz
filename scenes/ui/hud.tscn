@@ -135,24 +135,7 @@ theme_type_variation = &"ToggleChip"
 toggle_mode = true
 text = "Autonomie"
 
-[node name="RelationPanel" type="PanelContainer" parent="Root/LeftColumn"]
-layout_mode = 2
-
-[node name="Content" type="VBoxContainer" parent="Root/LeftColumn/RelationPanel"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Title" type="Label" parent="Root/LeftColumn/RelationPanel/Content"]
-layout_mode = 2
-theme_type_variation = &"SectionTitle"
-text = "RELATION"
-
-[node name="RelationshipPanel" type="VBoxContainer" parent="Root/LeftColumn/RelationPanel/Content"]
-unique_name_in_owner = true
-layout_mode = 2
-script = ExtResource("6_relations")
-
-[node name="RightPanel" type="PanelContainer" parent="Root"]
+[node name="RightColumn" type="VBoxContainer" parent="Root"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 1
@@ -163,36 +146,58 @@ offset_top = 76.0
 offset_right = -12.0
 offset_bottom = 76.0
 grow_horizontal = 0
+theme_override_constants/separation = 12
 
-[node name="Content" type="VBoxContainer" parent="Root/RightPanel"]
+[node name="RightPanel" type="PanelContainer" parent="Root/RightColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Content" type="VBoxContainer" parent="Root/RightColumn/RightPanel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Header" type="HBoxContainer" parent="Root/RightPanel/Content"]
+[node name="Header" type="HBoxContainer" parent="Root/RightColumn/RightPanel/Content"]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="Root/RightPanel/Content/Header"]
+[node name="Title" type="Label" parent="Root/RightColumn/RightPanel/Content/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"SectionTitle"
 text = "FILE D'ACTIONS"
 
-[node name="QueueCount" type="Label" parent="Root/RightPanel/Content/Header"]
+[node name="QueueCount" type="Label" parent="Root/RightColumn/RightPanel/Content/Header"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"SectionTitle"
 text = "0"
 
-[node name="ActionQueuePanel" type="VBoxContainer" parent="Root/RightPanel/Content"]
+[node name="ActionQueuePanel" type="VBoxContainer" parent="Root/RightColumn/RightPanel/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("4_queue")
 
-[node name="Help" type="Label" parent="Root/RightPanel/Content"]
+[node name="Help" type="Label" parent="Root/RightColumn/RightPanel/Content"]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
-text = "Clique sur un objet ou sur l'autre Mouz pour ajouter une action."
+text = "Clique sur un objet ou sur un autre Mouz pour ajouter une action."
 autowrap_mode = 3
+
+[node name="RelationPanel" type="PanelContainer" parent="Root/RightColumn"]
+layout_mode = 2
+
+[node name="Content" type="VBoxContainer" parent="Root/RightColumn/RelationPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Root/RightColumn/RelationPanel/Content"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+text = "RELATIONS"
+
+[node name="RelationshipPanel" type="VBoxContainer" parent="Root/RightColumn/RelationPanel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("6_relations")
 
 [node name="BuildPanel" type="PanelContainer" parent="Root"]
 unique_name_in_owner = true

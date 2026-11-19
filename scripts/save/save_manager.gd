@@ -38,12 +38,17 @@ func _ready() -> void:
 
 # --- Démarrer une partie -----------------------------------------------------------
 
-## Lance une nouvelle partie sur un terrain vide.
-func start_new_game(game_name: String) -> void:
+## Lance une nouvelle partie : la famille créée emménage sur le terrain choisi (payé d'avance).
+## Sans famille ni terrain, on prend ceux de la scène de jeu (Pépin et Myrtille, terrain vide).
+func start_new_game(game_name: String, family: Family = null, offer: LotOffer = null) -> void:
 	current_slot = _new_slot_id()
 	current_name = game_name.strip_edges() if game_name.strip_edges() != "" else "Nouvelle partie"
 	_pending = {}
-	Wallet.set_funds(Wallet.settings.start_funds)
+	if family != null:
+		_pending["family"] = family.to_dict()
+	if offer != null:
+		_pending["lot_path"] = offer.lot.resource_path
+	Wallet.set_funds(Wallet.settings.start_funds - (offer.price if offer != null else 0))
 	GameClock.reset()
 	GameClock.set_speed(1)
 	GameMode.set_mode(GameMode.Mode.LIVE)

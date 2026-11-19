@@ -1,14 +1,16 @@
 class_name CharacterSwitcher
 extends HBoxContainer
-## Un bouton (portrait + nom) par personnage pour choisir celui que l'on contrôle.
-## Raccourci : Tab passe au personnage suivant.
+## Sélecteur de famille : un portrait de 40 px et le prénom en dessous par Mouz.
+## Le Mouz contrôlé a un anneau accent. Raccourci : Tab passe au suivant.
+
+const PORTRAIT_SIZE := 40.0
 
 var _world: World
-var _buttons: Dictionary[Node, Button] = {}
+var _portraits: Dictionary[Node, MouzPortrait] = {}
 
 
 func _ready() -> void:
-	add_theme_constant_override("separation", 4)
+	add_theme_constant_override("separation", 6)
 	EventBus.character_selected.connect(_on_character_selected)
 
 
@@ -25,24 +27,39 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _on_character_selected(character: Node) -> void:
 	if _world == null:
 		_build(character.world)
-	for other in _buttons:
-		_buttons[other].set_pressed_no_signal(other == character)
+	for other in _portraits:
+		var chosen: bool = other == character
+		_portraits[other].ring_color = Palette.ACCENT if chosen else Palette.TRAIT
+		_portraits[other].ring_width = 3.0 if chosen else 2.0
+		_portraits[other].queue_redraw()
 
 
 func _build(world: World) -> void:
 	_world = world
-	var group := ButtonGroup.new()
 	for character in world.characters:
 		var button := Button.new()
-		button.text = character.get_display_name()
-		button.icon = character.profile.sprite
-		button.toggle_mode = true
-		button.button_group = group
+		button.flat = true
 		button.focus_mode = Control.FOCUS_NONE
 		button.tooltip_text = "Contrôler %s (Tab)" % character.get_display_name()
-		# Le portrait garde ses couleurs, quel que soit l'état du bouton.
-		for state in ["icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_hover_pressed_color"]:
-			button.add_theme_color_override(state, Color.WHITE)
+		button.custom_minimum_size = Vector2(56, 60)
+		var column := VBoxContainer.new()
+		column.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		column.add_theme_constant_override("separation", 0)
+		column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var portrait := MouzPortrait.new(PORTRAIT_SIZE)
+		portrait.appearance = character.profile.appearance
+		portrait.background = character.profile.color.lightened(0.6)
+		portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		column.add_child(portrait)
+		var label := Label.new()
+		label.text = character.get_display_name()
+		label.theme_type_variation = &"StrongLabel"
+		label.add_theme_font_size_override("font_size", 11)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.clip_text = true
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		column.add_child(label)
+		button.add_child(column)
 		button.pressed.connect(world.selection.select.bind(character))
 		add_child(button)
-		_buttons[character] = button
+		_portraits[character] = portrait

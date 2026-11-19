@@ -1,11 +1,11 @@
 class_name WorldSerializer
 extends RefCounted
 ## Convertit l'état d'une partie en données JSON (et inversement) :
-## terrain, argent, heure, vitesse, Mouz (position, besoins, relations, autonomie), caméra.
+## terrain, argent, heure, vitesse, famille, Mouz (position, besoins, relations, autonomie), caméra.
 ## `FORMAT_VERSION` augmente à chaque changement du format ; `migrate()` met les anciennes
 ## sauvegardes à jour.
 
-const FORMAT_VERSION := 2
+const FORMAT_VERSION := 3
 ## Objets dont l'ancien sprite (format 1) avait la face avant en bas : depuis le format 2,
 ## tous les sprites ont la face en haut, on les tourne d'un demi-tour pour garder leur aspect.
 const V1_FACE_DOWN_OBJECTS := ["frigo", "plan_travail", "lit", "tele", "douche", "lavabo"]
@@ -31,6 +31,7 @@ static func to_data(world: World) -> Dictionary:
 		"clock": {"total_minutes": GameClock.total_minutes, "speed": GameClock.speed_index},
 		"funds": Wallet.funds,
 		"lot": LotSerializer.to_data(world.lot),
+		"family": world.family.to_dict(),
 		"characters": characters,
 		"selected": String(selected.profile.id) if selected != null else "",
 		"camera": {"position": [world.camera.position.x, world.camera.position.y], "zoom": world.camera.zoom.x},
@@ -87,5 +88,11 @@ static func migrate(data: Dictionary) -> Dictionary:
 			if entry.get("object", "") in V1_FACE_DOWN_OBJECTS:
 				entry["rotation"] = (int(entry.get("rotation", 0)) + 2) % 4
 			entry["style"] = entry.get("style", "nature")
+	if version < 3:
+		# Format 3 : la famille (prénoms, apparences, liens). Les anciennes parties gardent
+		# Pépin et Myrtille, devenus humains.
+		var profiles: Array[CharacterProfile] = [load("res://data/characters/pepin.tres"),
+				load("res://data/characters/myrtille.tres")]
+		data["family"] = Family.from_profiles(profiles).to_dict()
 	data["version"] = FORMAT_VERSION
 	return data

@@ -8,6 +8,7 @@
 [ext_resource type="Resource" path="res://data/settings/autonomy_settings.tres" id="6_autonomy"]
 [ext_resource type="Script" path="res://scripts/characters/relationships.gd" id="7_relationships"]
 [ext_resource type="Script" path="res://scripts/characters/action_bubble.gd" id="8_bubble"]
+[ext_resource type="Script" path="res://scripts/characters/mouz_body.gd" id="9_body"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_tag"]
 content_margin_left = 6.0
@@ -15,16 +16,16 @@ content_margin_top = 1.0
 content_margin_right = 6.0
 content_margin_bottom = 1.0
 bg_color = Color(0.239, 0.2, 0.341, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="Character" type="Node2D"]
 script = ExtResource("1_character")
 
-[node name="Body" type="Sprite2D" parent="."]
-offset = Vector2(0, -16)
+[node name="Body" type="Node2D" parent="."]
+script = ExtResource("9_body")
 
 [node name="NameTag" type="Label" parent="."]
 z_index = 1
@@ -34,7 +35,7 @@ offset_right = 40.0
 offset_bottom = 38.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.973, 0.933, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 9
 theme_override_styles/normal = SubResource("StyleBox_tag")
 text = "Mouz"
 horizontal_alignment = 1

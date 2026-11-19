@@ -1,7 +1,7 @@
 class_name RelationshipPanel
 extends VBoxContainer
-## Relation du personnage sélectionné avec chacun des autres :
-## portraits, cœur, jauge de -100 à +100 partant du centre, palier en mots.
+## Relation du personnage sélectionné avec chacun des autres : une ligne par membre
+## (portrait, prénom, lien de famille, palier en mots) et une jauge de -100 à +100.
 
 const HEART_ICON := preload("res://assets/icons/white/relation.svg")
 
@@ -40,66 +40,50 @@ func _rebuild() -> void:
 
 func _make_block(other: Character, value: float) -> Control:
 	var block := VBoxContainer.new()
-	block.add_theme_constant_override("separation", 6)
+	block.add_theme_constant_override("separation", 4)
 
-	var faces := HBoxContainer.new()
-	faces.add_child(_portrait(_character))
-	faces.add_child(_spacer())
-	var heart := TextureRect.new()
-	heart.texture = HEART_ICON
-	heart.modulate = Palette.ACCENT
-	heart.custom_minimum_size = Vector2(18, 18)
-	heart.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	heart.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	heart.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	faces.add_child(heart)
-	faces.add_child(_spacer())
-	faces.add_child(_portrait(other, true))
-	block.add_child(faces)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var face := MouzPortrait.new(32)
+	face.appearance = other.profile.appearance
+	face.background = other.profile.color.lightened(0.6)
+	row.add_child(face)
+	var name_label := Label.new()
+	name_label.text = other.get_display_name()
+	name_label.theme_type_variation = &"StrongLabel"
+	name_label.add_theme_font_size_override("font_size", 13)
+	name_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(name_label)
+	var link := _character.world.family.link_label(String(_character.profile.id), String(other.profile.id))
+	if link != "":
+		var heart := TextureRect.new()
+		heart.texture = HEART_ICON
+		heart.modulate = Palette.ACCENT
+		heart.custom_minimum_size = Vector2(14, 14)
+		heart.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		heart.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		heart.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(heart)
+		row.add_child(_small(link))
+	row.add_child(_spacer())
+	var tier := Label.new()
+	tier.text = _tier_text(value)
+	_tiers[other] = tier
+	tier.theme_type_variation = &"StrongLabel"
+	tier.add_theme_font_size_override("font_size", 12)
+	tier.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(tier)
+	block.add_child(row)
 
 	var gauge := NeedGauge.new()
 	gauge.from_center = true
 	gauge.min_value = Relationships.MIN_VALUE
 	gauge.max_value = Relationships.MAX_VALUE
-	gauge.custom_minimum_size.y = 16
+	gauge.custom_minimum_size.y = 12
 	gauge.value = value
 	block.add_child(gauge)
 	_gauges[other] = gauge
-
-	var legend := HBoxContainer.new()
-	legend.add_child(_small("−100"))
-	var tier := Label.new()
-	tier.text = _tier_text(value)
-	_tiers[other] = tier
-	tier.theme_type_variation = &"StrongLabel"
-	tier.add_theme_font_size_override("font_size", 13)
-	tier.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	tier.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	legend.add_child(tier)
-	legend.add_child(_small("+100"))
-	block.add_child(legend)
 	return block
-
-
-## Petit portrait 32 px avec le nom (à droite du portrait, ou à gauche si `mirrored`).
-func _portrait(character: Character, mirrored := false) -> Control:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 6)
-	var face := TextureRect.new()
-	face.texture = character.profile.sprite
-	face.custom_minimum_size = Vector2(32, 32)
-	face.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	face.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	var label := Label.new()
-	label.text = character.get_display_name()
-	label.add_theme_font_size_override("font_size", 13)
-	if mirrored:
-		row.add_child(label)
-		row.add_child(face)
-	else:
-		row.add_child(face)
-		row.add_child(label)
-	return row
 
 
 func _spacer() -> Control:

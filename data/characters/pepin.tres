@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/character_profile.gd" id="1_profile"]
+[ext_resource type="Script" path="res://scripts/characters/mouz_appearance.gd" id="9_look"]
 [ext_resource type="Script" path="res://scripts/needs/need_definition.gd" id="2_need"]
 [ext_resource type="Resource" path="res://data/needs/faim.tres" id="3_faim"]
 [ext_resource type="Resource" path="res://data/needs/energie.tres" id="4_energie"]
@@ -9,11 +10,22 @@
 [ext_resource type="Resource" path="res://data/needs/plaisir.tres" id="7_plaisir"]
 [ext_resource type="Texture2D" path="res://assets/sprites/mouz_pepin.svg" id="8_sprite"]
 
+[sub_resource type="Resource" id="Resource_look"]
+script = ExtResource("9_look")
+sex = &"homme"
+age = &"adulte"
+skin = Color(0.8275, 0.6039, 0.4157, 1)
+hair_style = &"court"
+hair_color = Color(0.4196, 0.2706, 0.1961, 1)
+outfit = &"tshirt"
+outfit_color = Color(0.9098, 0.4745, 0.2902, 1)
+
 [resource]
 script = ExtResource("1_profile")
 id = &"pepin"
 display_name = "Pépin"
 sprite = ExtResource("8_sprite")
+appearance = SubResource("Resource_look")
 color = Color(0.949, 0.6471, 0.4196, 1)
 walk_speed = 96.0
 needs = Array[ExtResource("2_need")]([ExtResource("3_faim"), ExtResource("4_energie"), ExtResource("5_hygiene"), ExtResource("6_social"), ExtResource("7_plaisir")])

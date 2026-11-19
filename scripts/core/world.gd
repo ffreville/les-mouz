@@ -20,6 +20,8 @@ const WALL_MARGIN := 80.0
 ## Le terrain en cours de partie.
 var lot: Lot
 var characters: Array[Character] = []
+## La famille qui vit ici (prénoms, apparences, liens).
+var family: Family
 var smart_objects: Array[SmartObject] = []
 
 @onready var floor_view: FloorView = $FloorView
@@ -38,11 +40,22 @@ var smart_objects: Array[SmartObject] = []
 
 func _ready() -> void:
 	var saved := SaveManager.take_pending() if use_save else {}
-	if not saved.is_empty():
+	# Une partie enregistrée contient son terrain ; une nouvelle partie peut nommer un terrain du catalogue.
+	var is_saved_game := saved.has("lot")
+	if is_saved_game:
 		lot = LotSerializer.from_data(saved["lot"])
 		WorldSerializer.apply_globals(saved)
 	else:
-		lot = starting_lot.duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL)
+		var source: Lot = load(saved["lot_path"]) if saved.has("lot_path") else starting_lot
+		lot = source.duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL)
+		if saved.has("lot_path"):
+			_mark_as_used(lot)
+	var profiles := character_profiles
+	if saved.has("family"):
+		family = Family.from_dict(saved["family"])
+		profiles = family.make_profiles()
+	else:
+		family = Family.from_profiles(character_profiles)
 	editor.setup(self)
 	if use_save:
 		auto_saver.setup(self)
@@ -53,11 +66,13 @@ func _ready() -> void:
 	refresh_lot()
 	# Connecté avant la création des personnages : le monde se met à jour avant leurs files.
 	EventBus.lot_changed.connect(refresh_lot)
-	_spawn_characters()
+	_spawn_characters(profiles)
+	if not is_saved_game:
+		_apply_family_links()
 	if not characters.is_empty():
 		# Différé pour que l'interface soit prête à recevoir le signal de sélection.
 		selection.select.call_deferred(characters[0])
-	if not saved.is_empty():
+	if is_saved_game:
 		WorldSerializer.apply_to_world(self, saved)
 	elif lot.walls.is_empty() and lot.objects.is_empty():
 		# Sur un terrain encore vide, on commence par construire.
@@ -105,14 +120,49 @@ func _build_navigation() -> void:
 	navigation.setup(lot, blocked)
 
 
-func _spawn_characters() -> void:
-	for i in character_profiles.size():
+func _spawn_characters(profiles: Array[CharacterProfile]) -> void:
+	var used := {}
+	for i in profiles.size():
 		var character: Character = character_scene.instantiate()
 		characters_root.add_child(character)
-		# Un meuble a pu être posé sur la case de départ : on prend la plus proche qui est libre.
-		var spawn := navigation.nearest_walkable(lot.spawn_cells[i % lot.spawn_cells.size()])
-		character.setup(self, character_profiles[i], spawn)
+		# Un meuble a pu être posé sur la case de départ : on prend la plus proche qui est libre,
+		# sans mettre deux Mouz sur la même case.
+		var spawn := _free_cell_near(lot.spawn_cells[i % lot.spawn_cells.size()], used)
+		used[spawn] = true
+		character.setup(self, profiles[i], spawn)
 		characters.append(character)
+
+
+func _free_cell_near(start: Vector2i, used: Dictionary) -> Vector2i:
+	var origin := navigation.nearest_walkable(start)
+	for radius in range(0, 6):
+		for y in range(-radius, radius + 1):
+			for x in range(-radius, radius + 1):
+				var cell := origin + Vector2i(x, y)
+				if maxi(absi(x), absi(y)) == radius and not used.has(cell) and navigation.is_walkable(cell):
+					return cell
+	return origin
+
+
+## Relations de départ d'une nouvelle famille, selon les liens choisis à la création.
+func _apply_family_links() -> void:
+	var by_id := {}
+	for character in characters:
+		by_id[String(character.profile.id)] = character
+	for link in family.links:
+		if by_id.has(link["a"]) and by_id.has(link["b"]):
+			by_id[link["a"]].relationships.restore_with(by_id[link["b"]], Family.LINK_START.get(link["kind"], 0.0))
+
+
+## Terrain acheté déjà construit : tout ce qu'il contient se revend comme un achat ancien.
+func _mark_as_used(p_lot: Lot) -> void:
+	var items: Array = []
+	items.append_array(p_lot.walls.values())
+	items.append_array(p_lot.floors.values())
+	items.append_array(p_lot.openings)
+	items.append_array(p_lot.objects)
+	for item in items:
+		item.bought_day = 0
 
 
 ## Le personnage sous cette position (monde), ou null.

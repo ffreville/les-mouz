@@ -5,8 +5,10 @@ extends Resource
 ## Identifiant unique (sert à la sauvegarde).
 @export var id: StringName = &"mouz"
 @export var display_name: String = "Mouz"
-## Image vue de dessus (32 × 32), tournée vers le haut.
+## Ancienne image vue de dessus (plus utilisée depuis les humains en calques).
 @export var sprite: Texture2D
+## Apparence : sexe, âge, peau, cheveux, tenue.
+@export var appearance: MouzAppearance
 @export var color: Color = Color(0.95, 0.55, 0.25)
 ## Vitesse de marche en pixels par seconde réelle, à la vitesse x1.
 @export var walk_speed: float = 96.0

@@ -1,16 +1,13 @@
 class_name TitleScreen
 extends Control
-## Écran d'accueil : Continuer la dernière partie, Nouvelle partie (avec un nom),
+## Écran d'accueil : Continuer la dernière partie, Nouvelle partie (création de la famille),
 ## Charger une partie, Quitter.
 
-const PEPIN := preload("res://assets/sprites/mouz_pepin.svg")
-const MYRTILLE := preload("res://assets/sprites/mouz_myrtille.svg")
 const GRASS := preload("res://assets/floors/herbe.svg")
-const DEFAULT_NAME := "La maison de Pépin et Myrtille"
+const NEW_GAME_SCENE := "res://scenes/new_game.tscn"
+const FACES := ["res://data/characters/myrtille.tres", "res://data/characters/pepin.tres"]
 
 var _menu := VBoxContainer.new()
-var _new_game := VBoxContainer.new()
-var _name_field := LineEdit.new()
 var _load_panel := LoadPanel.new()
 var _main_card := PanelContainer.new()
 
@@ -34,9 +31,7 @@ func _ready() -> void:
 	_main_card.add_child(column)
 	column.add_child(_header())
 	column.add_child(_menu)
-	column.add_child(_new_game)
 	_build_menu()
-	_build_new_game()
 
 	_load_panel.visible = false
 	_load_panel.closed.connect(_show_menu)
@@ -51,12 +46,10 @@ func _header() -> Control:
 	var faces := HBoxContainer.new()
 	faces.alignment = BoxContainer.ALIGNMENT_CENTER
 	faces.add_theme_constant_override("separation", 12)
-	for sprite in [PEPIN, MYRTILLE]:
-		var face := TextureRect.new()
-		face.texture = sprite
-		face.custom_minimum_size = Vector2(56, 56)
-		face.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		face.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	for path in FACES:
+		var face := MouzPortrait.new(56)
+		face.appearance = load(path).appearance
+		face.background = Palette.PAPIER_2
 		faces.add_child(face)
 	header.add_child(faces)
 	var logo := Label.new()
@@ -84,7 +77,7 @@ func _build_menu() -> void:
 		resume.pressed.connect(func() -> void: SaveManager.load_slot(latest))
 		_menu.add_child(resume)
 	var new_game := _button("Nouvelle partie", &"SecondaryButton" if latest != "" else &"PrimaryButton")
-	new_game.pressed.connect(_show_new_game)
+	new_game.pressed.connect(func() -> void: get_tree().change_scene_to_file(NEW_GAME_SCENE))
 	_menu.add_child(new_game)
 	var load_game := _button("Charger une partie", &"SecondaryButton")
 	load_game.disabled = latest == ""
@@ -95,48 +88,10 @@ func _build_menu() -> void:
 	_menu.add_child(quit)
 
 
-func _build_new_game() -> void:
-	_new_game.add_theme_constant_override("separation", 10)
-	var label := Label.new()
-	label.text = "Nom de la partie"
-	label.theme_type_variation = &"StrongLabel"
-	_new_game.add_child(label)
-	_name_field.text = DEFAULT_NAME
-	_name_field.max_length = 40
-	_name_field.text_submitted.connect(func(_text: String) -> void: _start())
-	_new_game.add_child(_name_field)
-	var hint := Label.new()
-	hint.text = "Un terrain vide et %s pour construire." % Palette.format_mz(Wallet.settings.start_funds)
-	hint.theme_type_variation = &"MutedLabel"
-	_new_game.add_child(hint)
-	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_END
-	row.add_theme_constant_override("separation", 8)
-	var back := _button("Retour", &"SecondaryButton")
-	back.pressed.connect(_show_menu)
-	row.add_child(back)
-	var start := _button("Commencer", &"PrimaryButton")
-	start.pressed.connect(_start)
-	row.add_child(start)
-	_new_game.add_child(row)
-
-
-func _start() -> void:
-	SaveManager.start_new_game(_name_field.text)
-
-
 func _show_menu() -> void:
 	_main_card.visible = true
 	_menu.visible = true
-	_new_game.visible = false
 	_load_panel.visible = false
-
-
-func _show_new_game() -> void:
-	_menu.visible = false
-	_new_game.visible = true
-	_name_field.grab_focus()
-	_name_field.select_all()
 
 
 func _show_load() -> void:

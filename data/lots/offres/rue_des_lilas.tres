@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="LotOffer" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/lot_offer.gd" id="1_offer"]
+[ext_resource type="Resource" path="res://data/lots/maison_demo.tres" id="2_lot"]
+[ext_resource type="Texture2D" path="res://assets/terrains/rue_des_lilas.png" id="3_thumb"]
+
+[resource]
+script = ExtResource("1_offer")
+id = &"rue_des_lilas"
+display_name = "Rue des Lilas"
+lot = ExtResource("2_lot")
+price = 15000
+thumbnail = ExtResource("3_thumb")
+order = 1

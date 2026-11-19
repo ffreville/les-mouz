@@ -7,6 +7,7 @@ const WALLS := "res://data/catalog/walls"
 const OPENINGS := "res://data/catalog/openings"
 const OBJECTS := "res://data/catalog/objects"
 const COLLECTIONS := "res://data/catalog/collections"
+const LOT_OFFERS := "res://data/lots/offres"
 
 ## Catégories d'objets, dans l'ordre d'affichage : [identifiant, nom, icône].
 const CATEGORIES := [
@@ -50,13 +51,20 @@ static func collections() -> Array:
 	return items
 
 
+## Terrains proposés pour emménager, dans l'ordre d'affichage.
+static func lot_offers() -> Array:
+	var items: Array = load_folder(LOT_OFFERS).duplicate()
+	items.sort_custom(func(a, b): return a.order < b.order)
+	return items
+
+
 ## Objets d'une catégorie.
 static func objects_in(category: StringName) -> Array:
 	return load_folder(OBJECTS).filter(func(o): return o.category == category)
 
 
 static func _price(item: Resource) -> int:
-	if item is CollectionDefinition:
+	if item is CollectionDefinition or item is LotOffer:
 		return item.order
 	if item is FloorDefinition:
 		return item.price_per_cell

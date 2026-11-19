@@ -2,7 +2,7 @@
 
 Petit jeu de simulation de vie en 2D vue de dessus, inspiré des Sims, fait avec **Godot 4.7** en GDScript.
 
-Deux Mouz, Pépin et Myrtille, arrivent sur un terrain vide avec 20 000 Mz. Tu leur construis une maison (murs, portes, fenêtres, sols), tu achètes et places les meubles, puis tu les regardes vivre. Ils ont des besoins, utilisent des objets « intelligents », discutent entre eux et peuvent agir seuls.
+Tu crées ta famille de Mouz (1 à 4 humains : prénoms, âge, apparence, liens), tu choisis un terrain vide ou une maison meublée, puis tu leur construis une maison (murs, portes, fenêtres, sols), tu achètes et places les meubles et tu les regardes vivre. Ils ont des besoins, utilisent des objets « intelligents », discutent entre eux et peuvent agir seuls.
 
 Les graphismes suivent la direction artistique « Maison de poche » décrite dans [design/README.md](design/README.md) : aplats doux, contour encre, interface couleur papier.
 
@@ -33,7 +33,9 @@ Les graphismes suivent la direction artistique « Maison de poche » décrite da
 Le jeu s'ouvre sur un **écran d'accueil** :
 
 - **Continuer** reprend la dernière partie enregistrée ;
-- **Nouvelle partie** demande un nom, puis démarre sur un terrain vide de 30 × 20 cases, en mode Construire, avec le budget de départ ;
+- **Nouvelle partie** ouvre la création, en deux étapes :
+  1. **La famille** : nom de famille, 1 à 4 membres. Pour chacun : prénom (le dé en tire un), homme ou femme, âge (enfant, ado, adulte, aîné), peau, coupe et couleur des cheveux, tenue et sa couleur, ou « Apparence au hasard ». Entre deux cartes, une pastille fixe leur **lien** (couple, parent, enfant, frères et sœurs, colocs), qui donne leur relation de départ. Il faut au moins un adulte ou un aîné, et un prénom à chacun.
+  2. **Le terrain** : la Prairie des Tilleuls (vide, gratuite), la Rue des Lilas ou le Clos Rétro (maisons meublées, payées sur le budget de départ). On y nomme la partie. Sur un terrain vide, la partie commence en mode Construire ;
 - **Charger une partie** affiche toutes les parties : vignette du terrain, nom, jour, argent, nombre d'objets et date. On peut y **renommer** ou **supprimer** une partie directement sur sa carte ;
 - **Quitter**.
 
@@ -41,7 +43,7 @@ En jeu, **Échap** (ou un clic sur le logo « Les Mouz ») ouvre le **menu** et 
 
 La partie en cours est aussi **sauvegardée automatiquement** : peu après chaque modification du terrain, au retour en mode Vivre, toutes les 2 minutes, avant d'en charger une autre et à la fermeture du jeu.
 
-Une sauvegarde contient tout l'état de la partie : le terrain, l'argent, l'heure et la vitesse, la position, les besoins, les relations et l'autonomie de chaque Mouz, le Mouz sélectionné et la caméra.
+Une sauvegarde contient tout l'état de la partie : le terrain, l'argent, l'heure et la vitesse, la famille (prénoms, apparences, liens), la position, les besoins, les relations et l'autonomie de chaque Mouz, le Mouz sélectionné et la caméra. Les parties d'avant les humains (format 2) retrouvent Pépin et Myrtille, devenus humains.
 
 ### Où sont les fichiers
 
@@ -128,7 +130,8 @@ assets/
                        (`<id>_<collection>_<vue>.svg`)
   murs/                Murs en vue trois quarts : segments et poteaux, pleins et baissés
   ouvertures/          Portes (fermées, ouvertes) et fenêtres en vue trois quarts
-  personnages/         Silhouette provisoire en 4 directions (en attendant les humains)
+  personnages/         Calques des humains (corps, tête, cheveux, ombre) en 3 vues et portraits de face
+  terrains/            Vignettes des terrains proposés à l'emménagement
   floors/              Tuiles de sol 32 × 32 raccordables
   icons/ink/           Icônes 24 × 24 couleur encre
   icons/white/         Mêmes icônes en blanc, teintées par le thème (boutons)
@@ -141,10 +144,13 @@ data/                  Resources (.tres) : tout le contenu et l'équilibrage
   catalog/openings/    Portes et fenêtres (prix)
   actions/             Actions (Manger, Dormir, Discuter…)
   needs/               Besoins (Faim, Énergie…)
-  characters/          Fiches des Mouz (Pépin, Myrtille)
-  lots/                Terrains : terrain_vide (nouvelle partie), maison_demo (exemple)
+  characters/          Modèle de fiche (besoins, vitesse) ; Pépin et Myrtille pour les tests et
+                       les anciennes parties
+  lots/                Terrains : terrain_vide, maison_demo, maison_retro
+  lots/offres/         Terrains proposés à l'emménagement (nom, terrain, prix, vignette)
   settings/            Horloge, autonomie, économie
-scenes/                title.tscn (accueil, scène de démarrage), main.tscn (le jeu), personnage, objet, HUD
+scenes/                title.tscn (accueil, scène de démarrage), new_game.tscn (création de la famille et
+                       choix du terrain), main.tscn (le jeu), personnage, objet, HUD
 scripts/
   core/                Autoloads (GameClock, EventBus, Wallet, GameMode), monde, rendu, navigation,
                        caméra, catalogue, sauvegarde
@@ -152,9 +158,11 @@ scripts/
   editor/              Modes Construire et Acheter : éditeur de terrain, contrôleurs, grille
   needs/               Définition d'un besoin et composant « besoins » d'un personnage
   objects/             Définitions d'action et d'objet, objet posé dans le monde
-  characters/          Personnage, déplacement, file d'actions, autonomie, relations
+  characters/          Personnage, déplacement, file d'actions, autonomie, relations, famille,
+                       apparence (calques à teinter) et corps dessiné en jeu
   save/                Autoload SaveManager, format JSON (terrain, partie), vignettes
-  ui/                  Autoload Palette, thème, panneaux du HUD, écran d'accueil, menu en jeu
+  ui/                  Autoload Palette, thème, panneaux du HUD, portraits, écran d'accueil, menu en jeu
+  ui/creation/         Écran de création : colonne de la famille, aperçu, éditeur, choix du terrain
 ```
 
 Principes à retenir :
@@ -237,7 +245,10 @@ C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catal
 |---|---|
 | Budget de départ, part rendue à la revente (même jour / ensuite) | `data/settings/economy_settings.tres` |
 | Prix des objets, sols, murs, portes et fenêtres | `data/catalog/**/*.tres` (`price`, `price_per_cell`, `price_per_segment`) |
-| Taille du terrain, cases de départ | `data/lots/terrain_vide.tres` (`size`, `spawn_cells`) |
+| Taille du terrain, cases de départ | `data/lots/*.tres` (`size`, `spawn_cells`) |
+| Terrains proposés et leur prix | `data/lots/offres/*.tres` (`lot`, `price`, `order`) |
+| Relation de départ selon le lien de famille | `Family.LINK_START` (`scripts/characters/family.gd`) |
+| Prénoms et noms tirés au dé | `scripts/ui/creation/name_ideas.gd` |
 | Vitesse de baisse d'un besoin, poids dans l'humeur, seuil critique, valeur de départ | `data/needs/*.tres` (`decay_per_hour`, `mood_weight`, `critical_threshold`, `start_value`) |
 | Durée et gains d'une action | `data/actions/*.tres` (`duration_minutes`, `need_gains`, `relationship_gain`) |
 | Nombre d'utilisateurs simultanés d'un objet | `data/catalog/objects/*.tres` (`capacity`) |
@@ -301,7 +312,8 @@ Le jeu passe progressivement en vue trois quarts (brief n° 6, livré par lots ;
 - **Ordre d'affichage** : `World`, `Objects`, `Characters` et `WallView` ont `y_sort_enabled`. Chaque nœud est posé à son point de tri : le bas de l'emprise pour un objet, les pieds pour un personnage, le pied du mur pour un morceau de mur. Ce qui est plus bas à l'écran passe devant.
 - **Murs** (`WallView`) : un Sprite2D par segment, par poteau (forme choisie selon les murs qui partent du nœud) et par ouverture. En murs coupés, un mur horizontal qui cache une pièce est baissé ; les murs verticaux restent pleins. En Construire et Acheter, tout est baissé. Les portes s'ouvrent quand un Mouz est sur l'une des cases qu'elles séparent.
 - **Clics** : `World.get_object_at_point` cherche l'image de l'objet (hauteur comprise), celle de devant en premier.
-- **Lot 1 livré** : murs, portes, fenêtres, 7 objets témoins en Nature (canapé, télé, lit, frigo, table, chaise, plante) et une silhouette provisoire (son haut prend la couleur du Mouz). Les autres objets restent vus de dessus en attendant leur lot.
+- **Lot 1 livré** : murs, portes, fenêtres, 7 objets témoins en Nature (canapé, télé, lit, frigo, table, chaise, plante). Les autres objets restent vus de dessus en attendant leur lot.
+- **Lot 2 livré** : les humains. `MouzAppearance` liste les calques à superposer (ombre, cheveux arrière, pantalon, peau, tenue, contours, tête, cheveux), blancs dans les SVG et teintés par `modulate`. `MouzBody` les dessine en jeu (32 × 64, pieds à 48 px du haut ; `droite` = `gauche` retourné ; tête et cheveux remontent d'1 px en marchant), `MouzPortrait` dessine le portrait de face dans l'interface. Les calques sont importés à l'échelle 2 (portraits à l'échelle 4) pour rester nets.
 
 ## Limites connues
 

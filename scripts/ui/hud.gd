@@ -16,7 +16,7 @@ var _selected: Character
 @onready var queue_count: Label = %QueueCount
 @onready var autonomy_toggle: Button = %AutonomyToggle
 @onready var left_column: Control = %LeftColumn
-@onready var right_panel: Control = %RightPanel
+@onready var right_panel: Control = %RightColumn
 @onready var build_panel: BuildPanel = %BuildPanel
 @onready var catalog_panel: CatalogPanel = %CatalogPanel
 @onready var logo: Button = %Logo

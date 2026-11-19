@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/character_profile.gd" id="1_profile"]
+[ext_resource type="Script" path="res://scripts/characters/mouz_appearance.gd" id="9_look"]
 [ext_resource type="Script" path="res://scripts/needs/need_definition.gd" id="2_need"]
 [ext_resource type="Resource" path="res://data/needs/faim.tres" id="3_faim"]
 [ext_resource type="Resource" path="res://data/needs/energie.tres" id="4_energie"]
@@ -9,11 +10,22 @@
 [ext_resource type="Resource" path="res://data/needs/plaisir.tres" id="7_plaisir"]
 [ext_resource type="Texture2D" path="res://assets/sprites/mouz_myrtille.svg" id="8_sprite"]
 
+[sub_resource type="Resource" id="Resource_look"]
+script = ExtResource("9_look")
+sex = &"femme"
+age = &"adulte"
+skin = Color(0.9529, 0.8039, 0.6902, 1)
+hair_style = &"longs"
+hair_color = Color(0.7843, 0.3922, 0.2314, 1)
+outfit = &"robe"
+outfit_color = Color(0.6392, 0.7098, 0.9255, 1)
+
 [resource]
 script = ExtResource("1_profile")
 id = &"myrtille"
 display_name = "Myrtille"
 sprite = ExtResource("8_sprite")
+appearance = SubResource("Resource_look")
 color = Color(0.6392, 0.7098, 0.9255, 1)
 walk_speed = 96.0
 needs = Array[ExtResource("2_need")]([ExtResource("3_faim"), ExtResource("4_energie"), ExtResource("5_hygiene"), ExtResource("6_social"), ExtResource("7_plaisir")])
