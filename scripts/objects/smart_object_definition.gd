@@ -76,6 +76,11 @@ func get_view(collection: StringName, rotation: int, active := false) -> Array:
 			texture = _find_view(collection, &"gauche", want_active)
 			if texture != null:
 				return [texture, true]
+		# Objet symétrique livré en deux vues (tapis) : de dos, il est comme de face.
+		if view == &"haut":
+			texture = _find_view(collection, &"bas", want_active)
+			if texture != null:
+				return [texture, false]
 	return []
 
 

@@ -965,3 +965,84 @@ Planche : « Lot 3 · Cuisine » sur le canvas (une cuisine par collection, puis
 ### Ordre d'affichage à l'intérieur d'un sprite
 
 Les sprites restent des volumes complets (règle du lot 1). En les dessinant, j'ai appliqué un ordre plus strict : un volume posé sur un autre (micro-ondes sur son meuble, coussin sur une assise) est toujours dessiné après lui. Sinon, l'ordre suit le bas de l'emprise. Pour le jeu, rien ne change : on trie toujours les sprites par le bas de leur emprise.
+
+## Lot 4 · La chambre et la salle de bain
+
+Planche : « Lot 4 · Chambre et salle de bain » sur le canvas (une chambre et une salle de bain par collection, puis les 15 objets dans leurs 4 vues). Planches de contrôle : `apercu_chambre.png` et `apercu_salle_de_bain.png`. Elles remplacent les anciennes planches vue de dessus du même nom.
+
+### Chambre
+
+| Clé | Nom | Emprise | Hauteur | Sprite bas/haut | Sprite gauche/droite | Miroir | En marche |
+|---|---|---|---|---|---|---|---|
+| `lit` | Lit double | 2 × 3 | 34 px | 64 × 130 | 96 × 98 | oui | — |
+| `armoire` | Armoire | 2 × 1 | 63 px | 64 × 95 | 32 × 127 | oui | — |
+| `table_nuit` | Table de nuit | 1 × 1 | 25 px | 32 × 57 | 32 × 57 | oui | — |
+| `bureau` | Bureau | 2 × 1 | 31 px | 64 × 63 | 32 × 95 | non (fichier droite livré) | — |
+| `lit_simple` | Lit simple | 1 × 2 | 34 px | 32 × 98 | 64 × 66 | oui | — |
+| `commode` | Commode | 2 × 1 | 46 px | 64 × 78 | 32 × 110 | non (fichier droite livré) | — |
+| `coiffeuse` | Coiffeuse avec miroir | 2 × 1 | 58 px | 64 × 90 | 32 × 122 | non (fichier droite livré) | — |
+| `lampe_chevet` | Lampe de chevet (sur guéridon) | 1 × 1 | 37 px | 32 × 69 | 32 × 69 | oui | oui |
+
+### Salle de bain
+
+| Clé | Nom | Emprise | Hauteur | Sprite bas/haut | Sprite gauche/droite | Miroir | En marche |
+|---|---|---|---|---|---|---|---|
+| `douche` | Douche | 2 × 2 | 62 px | 64 × 126 | 64 × 126 | non (fichier droite livré) | oui |
+| `baignoire` | Baignoire | 3 × 2 | 27 px | 96 × 91 | 64 × 123 | non (fichier droite livré) | — |
+| `toilettes` | Toilettes | 1 × 1 | 34 px | 32 × 66 | 32 × 66 | oui | — |
+| `lavabo` | Lavabo | 1 × 1 | 35 px | 32 × 67 | 32 × 67 | oui | — |
+| `miroir_mural` | Miroir et meuble | 2 × 1 | 60 px | 64 × 92 | 32 × 124 | non (fichier droite livré) | — |
+| `machine_laver` | Machine à laver | 1 × 1 | 30 px | 32 × 62 | 32 × 62 | oui | oui |
+| `panier_linge` | Panier à linge | 1 × 1 | 22 px | 32 × 54 | 32 × 54 | oui | — |
+
+- **Lit double, Nature** : c'est le témoin du lot 1, inchangé. Le lit simple reprend sa construction avec un seul oreiller. En Rétro, le lit est sur pieds compas avec des pommeaux laiton. En Moderne, il est bas, en ardoise, avec un plaid plié au pied.
+- **Lampe de chevet** : posée seule, elle n'aurait rien sous elle. Je l'ai donc mise sur un petit guéridon, comme le micro-ondes du lot 3 : rond en bois (Nature), sur pieds compas (Rétro), cube blanc (Moderne). Allumée, l'abat-jour devient jaune clair et un halo s'ajoute derrière.
+- **Douche** : receveur au sol, paroi carrelée et pommeau au fond. Nature et Rétro ont un rideau sur le côté gauche, Moderne une paroi vitrée à droite. En marche : jet d'eau et vapeur. Pose-la dos au mur.
+- **Machine à laver** en marche : hublot bleu avec eau qui tourne, voyant vert.
+- **Miroirs** (coiffeuse, miroir et meuble) : de face, on voit le verre et son reflet. De dos, le dos du cadre. De côté, une simple tranche.
+- **Pas de miroir** pour le bureau, la commode, la coiffeuse, la douche, la baignoire et le miroir et meuble : la vue `droite` est livrée.
+
+## Lot 5 · Le salon et la déco
+
+Planche : « Lot 5 · Salon et déco » sur le canvas (un salon par collection, puis les 13 objets). Planches de contrôle : `apercu_salon.png` et `apercu_deco.png`, qui remplacent elles aussi les anciennes.
+
+### Salon
+
+| Clé | Nom | Emprise | Hauteur | Sprite bas/haut | Sprite gauche/droite | Miroir | En marche |
+|---|---|---|---|---|---|---|---|
+| `canape` | Canapé | 3 × 2 | 32 px | 96 × 96 | 64 × 128 | oui | — |
+| `tele` | Meuble TV | 3 × 1 | 44 px | 96 × 76 | 32 × 140 | oui | oui |
+| `bibliotheque` | Bibliothèque | 3 × 1 | 60 px | 96 × 92 | 32 × 156 | oui | — |
+| `lampe_pied` | Lampe sur pied | 1 × 1 | 61 px | 32 × 93 | 32 × 93 | oui | oui |
+| `fauteuil` | Fauteuil | 1 × 1 | 31 px | 32 × 63 | 32 × 63 | oui | — |
+| `table_basse` | Table basse | 2 × 1 | 19 px | 64 × 51 | 32 × 83 | non (fichier droite livré) | — |
+| `cheminee` | Cheminée | 2 × 1 | 64 px | 64 × 96 | 32 × 128 | oui | oui |
+| `console_jeux` | Console de jeux (sur meuble bas) | 1 × 1 | 18 px | 32 × 50 | 32 × 50 | non (fichier droite livré) | — |
+| `chaine_hifi` | Chaîne hi-fi | 1 × 1 | 34 px | 32 × 66 | 32 × 66 | oui | oui |
+
+### Déco
+
+| Clé | Nom | Emprise | Hauteur | Sprite bas/haut | Sprite gauche/droite | Miroir | En marche |
+|---|---|---|---|---|---|---|---|
+| `plante` | Plante en pot | 1 × 1 | 34.0 px | 32 × 66.0 | 32 × 66.0 | oui | — |
+| `tapis` | Tapis | 6 × 4 | 0 px | 192 × 128 | 128 × 192 | plat (voir plus bas) | — |
+| `aquarium` | Aquarium | 2 × 1 | 48 px | 64 × 80 | 32 × 112 | oui | — |
+| `horloge` | Horloge comtoise | 1 × 1 | 64 px | 32 × 96 | 32 × 96 | oui | — |
+
+- **Canapé, meuble TV et plante, Nature** : ce sont les témoins du lot 1, inchangés. Les versions Rétro et Moderne sont nouvelles. Rétro : canapé moutarde sur pieds compas, télé cathodique crème avec antennes sur un buffet en teck. Moderne : canapé bas et anguleux sur pieds métal, écran plat sur un meuble noir.
+- **En marche** : télé (écran allumé et lueur sur le meuble), lampe sur pied (abat-jour ou globe allumé, halo), cheminée (flammes et lueur au sol), chaîne hi-fi (écran allumé et notes de musique au-dessus).
+- **Console de jeux** : posée sur un petit meuble bas, avec ses deux manettes devant. Les manettes n'étant pas symétriques, la vue `droite` est livrée.
+- **Cheminée** : le conduit monte jusqu'à 64 px, la hauteur d'un mur plein. Pose-la contre un mur.
+- **Tapis** : objet plat, sans hauteur. Seules deux vues sont livrées, `bas` et `gauche` (le tapis tourné d'un quart de tour). Comme le motif est symétrique, `haut` = `bas` et `droite` = `gauche` (marqués `identique_a` dans tokens.json). Le jeu le dessine toujours avant tout le reste de la pièce.
+
+### Mur du bas dans les scènes d'exemple
+
+Dans les scènes des lots 4 et 5, le mur du bas de la maison est baissé. Plein, il cachait les deux dernières rangées de meubles. C'est la règle que je propose pour le jeu : le mur le plus proche de la caméra est baissé dès qu'un personnage ou un meuble se trouve derrière lui.
+
+### Fichiers
+
+339 fichiers dans `svg/sprites/`, nommés `<clé>_<collection>_<vue>[_actif].svg`. Les tailles, hauteurs et décalages de chaque vue sont dans `tokens.json`, sous `vue_trois_quarts.objets`.
+
+### Témoins du lot 1 redessinés
+
+Huit fichiers Nature du lot 1 changent : `lit_nature_bas`, `lit_nature_haut`, `tele_nature_bas` (et `_actif`), `tele_nature_gauche` (et `_actif`), `tele_nature_haut_actif` et `canape_nature_gauche`. Les formes, couleurs et tailles ne bougent pas. Seul l'ordre de dessin change, avec la règle « posé dessus, dessiné après » du lot 3. L'ancien ordre cachait l'écran de la télé derrière son meuble, le revers de la couette du lit et les coussins du canapé vu de côté.
