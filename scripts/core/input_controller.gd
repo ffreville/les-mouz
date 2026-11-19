@@ -30,7 +30,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	var cell := world.navigation.world_to_cell(position_in_world)
-	var smart_object := world.get_object_at_cell(cell)
+	var smart_object := world.get_object_at_point(position_in_world)
 	if smart_object != null:
 		if smart_object.has_actions():
 			_open_object_menu(selected, smart_object, click.position)

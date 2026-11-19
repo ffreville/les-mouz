@@ -21,12 +21,13 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [node name="Character" type="Node2D"]
-z_index = 10
 script = ExtResource("1_character")
 
 [node name="Body" type="Sprite2D" parent="."]
+offset = Vector2(0, -16)
 
 [node name="NameTag" type="Label" parent="."]
+z_index = 1
 offset_left = -40.0
 offset_top = 20.0
 offset_right = 40.0
@@ -40,7 +41,7 @@ horizontal_alignment = 1
 
 [node name="Bubble" type="Node2D" parent="."]
 z_index = 1
-position = Vector2(18, -26)
+position = Vector2(18, -52)
 script = ExtResource("8_bubble")
 
 [node name="Mover" type="Node" parent="."]

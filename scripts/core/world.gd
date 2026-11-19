@@ -14,6 +14,9 @@ extends Node2D
 ## Actions possibles entre deux personnages (ex. « Discuter »).
 @export var social_actions: Array[ActionDefinition] = []
 
+## Marge au-dessus du terrain pour la caméra (hauteur des murs).
+const WALL_MARGIN := 80.0
+
 ## Le terrain en cours de partie.
 var lot: Lot
 var characters: Array[Character] = []
@@ -45,7 +48,8 @@ func _ready() -> void:
 		auto_saver.setup(self)
 	build_controller.setup(editor)
 	buy_controller.setup(editor)
-	camera.set_bounds(Rect2(Vector2.ZERO, Vector2(lot.size * lot.cell_size)))
+	# Les murs du haut du terrain montent de 64 px au-dessus de leur ligne.
+	camera.set_bounds(Rect2(Vector2(0, -WALL_MARGIN), Vector2(lot.size * lot.cell_size) + Vector2(0, WALL_MARGIN)))
 	refresh_lot()
 	# Connecté avant la création des personnages : le monde se met à jour avant leurs files.
 	EventBus.lot_changed.connect(refresh_lot)
@@ -63,7 +67,7 @@ func _ready() -> void:
 ## Redessine le terrain, synchronise les objets et recalcule la navigation.
 func refresh_lot() -> void:
 	floor_view.render(lot)
-	wall_view.render(lot)
+	wall_view.render(lot, characters)
 	grid_overlay.render(lot)
 	_sync_objects()
 	_build_navigation()
@@ -117,6 +121,18 @@ func get_character_at(world_position: Vector2) -> Character:
 		if character.contains_point(world_position):
 			return character
 	return null
+
+
+## L'objet solide dont l'image est sous cette position (monde), ou null (les tapis sont ignorés).
+## En vue trois quarts, un meuble dépasse au-dessus de son emprise : on prend celui de devant.
+func get_object_at_point(world_position: Vector2) -> SmartObject:
+	var best: SmartObject = null
+	for smart_object in smart_objects:
+		if not smart_object.definition.blocks_movement or not smart_object.contains_point(world_position):
+			continue
+		if best == null or smart_object.position.y > best.position.y:
+			best = smart_object
+	return best
 
 
 ## L'objet solide qui occupe cette case, ou null (les tapis sont ignorés).

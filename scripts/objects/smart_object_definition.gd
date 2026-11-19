@@ -49,3 +49,44 @@ func get_sprite(collection: StringName, active := false) -> Texture2D:
 
 func has_active_sprite() -> bool:
 	return not active_sprites.is_empty()
+
+
+# --- Vue trois quarts ------------------------------------------------------------------
+
+## Vue dessinée pour chaque rotation : 0 = face avant vers le haut, puis sens horaire.
+const VIEWS: Array[StringName] = [&"haut", &"droite", &"bas", &"gauche"]
+const VIEW_PATH := "res://assets/sprites/%s_%s_%s%s.svg"
+
+## Images en vue trois quarts déjà cherchées (chemin → texture ou null).
+static var _view_cache: Dictionary = {}
+
+
+## Image en vue trois quarts pour une rotation : [texture, retournée], ou [] si l'objet
+## n'a pas encore ses vues (on garde alors l'image vue de dessus).
+## La vue `droite` absente est la vue `gauche` retournée (objets symétriques).
+func get_view(collection: StringName, rotation: int, active := false) -> Array:
+	if collection == &"" or not sprites.has(collection):
+		collection = default_collection()
+	var view := VIEWS[posmod(rotation, 4)]
+	for want_active in ([true, false] if active else [false]):
+		var texture := _find_view(collection, view, want_active)
+		if texture != null:
+			return [texture, false]
+		if view == &"droite":
+			texture = _find_view(collection, &"gauche", want_active)
+			if texture != null:
+				return [texture, true]
+	return []
+
+
+## Image du catalogue : la face avant (vue `bas`), sinon l'image vue de dessus.
+func get_catalog_sprite(collection: StringName) -> Texture2D:
+	var view := get_view(collection, 2)
+	return view[0] if not view.is_empty() else get_sprite(collection)
+
+
+func _find_view(collection: StringName, view: StringName, active: bool) -> Texture2D:
+	var path := VIEW_PATH % [id, collection, view, "_actif" if active else ""]
+	if not _view_cache.has(path):
+		_view_cache[path] = load(path) if ResourceLoader.exists(path) else null
+	return _view_cache[path]

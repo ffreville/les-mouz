@@ -157,6 +157,19 @@ func _on_destination_reached(action: QueuedAction) -> void:
 	_run(action)
 
 
+## Tourne le personnage vers ce qu'il utilise (objet solide ou autre personnage).
+func _face_target(action: QueuedAction) -> void:
+	var target := Vector2.INF
+	if action.target_object != null and action.target_object.definition.blocks_movement:
+		var cs := float(_character.world.lot.cell_size)
+		target = Rect2(Vector2(action.target_object.footprint.position) * cs,
+				Vector2(action.target_object.footprint.size) * cs).get_center()
+	elif action.target_character != null:
+		target = action.target_character.position
+	if target != Vector2.INF and target != _character.position:
+		_character.mover.facing = (target - _character.position).normalized()
+
+
 ## Deuxième phase : l'action commence réellement.
 func _run(action: QueuedAction) -> void:
 	if action.target_object != null and not action.target_object.reserve(_character):
@@ -167,6 +180,7 @@ func _run(action: QueuedAction) -> void:
 		action.powered_object = action.target_object.find_nearby(action.definition, _character.world)
 		if action.powered_object != null:
 			action.powered_object.power_on(_character)
+	_face_target(action)
 	EventBus.action_started.emit(_character, action)
 	if action.is_social() and not action.is_social_guest:
 		_invite_partner(action)

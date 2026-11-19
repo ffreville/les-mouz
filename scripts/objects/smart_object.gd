@@ -23,16 +23,28 @@ func setup(p_placed: PlacedObject, cell_size: int) -> void:
 	footprint = placed.footprint()
 	_cell_size = cell_size
 	name = definition.display_name
-	position = Vector2(footprint.position) * cell_size
+	# Le nœud est posé au bas de l'emprise : c'est ce point qui fixe l'ordre d'affichage.
+	position = Vector2(footprint.position.x, footprint.end.y) * cell_size
 	z_index = FLOOR_OBJECT_Z if not definition.blocks_movement else 0
 	queue_redraw()
 
 
-## Dessine un objet tourné de `rotation` quarts de tour, emprise posée à `origin`.
+## Dessine un objet tourné de `rotation` quarts de tour, emprise posée à `origin` (coin haut-gauche).
+## En vue trois quarts, l'image monte au-dessus de l'emprise : son bas est le bas de l'emprise.
+## Sans vues trois quarts, on dessine à plat l'image vue de dessus, tournée.
 ## Partagé avec l'aperçu de placement de l'éditeur.
 static func draw_definition(canvas: CanvasItem, p_definition: SmartObjectDefinition, rotation: int,
 		origin: Vector2, cell_size: float, modulate := Color.WHITE, collection: StringName = &"",
 		active := false) -> void:
+	var view := p_definition.get_view(collection, rotation, active)
+	if not view.is_empty():
+		var rect := view_rect(p_definition, rotation, origin, cell_size, view[0])
+		if view[1]:
+			# Vue `droite` = vue `gauche` retournée.
+			canvas.draw_set_transform(Vector2(rect.position.x * 2 + rect.size.x, 0), 0.0, Vector2(-1, 1))
+		canvas.draw_texture_rect(view[0], rect, false, modulate)
+		canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
+		return
 	var native := Vector2(p_definition.size) * cell_size
 	var turned := Vector2(native.y, native.x) if rotation % 2 == 1 else native
 	canvas.draw_set_transform(origin + turned / 2, rotation * PI / 2)
@@ -45,6 +57,16 @@ static func draw_definition(canvas: CanvasItem, p_definition: SmartObjectDefinit
 		canvas.draw_rect(area.grow(-3), p_definition.color * modulate)
 		canvas.draw_rect(area.grow(-3), Palette.CONTOUR * modulate, false, 2.0)
 	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
+
+
+## Rectangle de l'image trois quarts : même largeur que l'emprise, posée sur son bas.
+static func view_rect(p_definition: SmartObjectDefinition, rotation: int, origin: Vector2,
+		cell_size: float, texture: Texture2D) -> Rect2:
+	var cells := Vector2(p_definition.size)
+	var turned := Vector2(cells.y, cells.x) if rotation % 2 == 1 else cells
+	var width := turned.x * cell_size
+	var height := texture.get_height() * width / texture.get_width()
+	return Rect2(origin.x, origin.y + turned.y * cell_size - height, width, height)
 
 
 func get_display_name() -> String:
@@ -61,6 +83,25 @@ func has_actions() -> bool:
 
 func occupies(cell: Vector2i) -> bool:
 	return footprint.has_point(cell)
+
+
+## Coin haut-gauche de l'emprise, dans le repère du nœud.
+func _origin() -> Vector2:
+	return Vector2(0, -footprint.size.y * _cell_size)
+
+
+## Zone visible de l'objet à l'écran (monde), hauteur comprise.
+func screen_rect() -> Rect2:
+	var view := definition.get_view(placed.get_collection(), placed.rotation, is_active())
+	var rect := Rect2(_origin(), Vector2(footprint.size) * _cell_size)
+	if not view.is_empty():
+		rect = view_rect(definition, placed.rotation, _origin(), _cell_size, view[0])
+	return Rect2(rect.position + position, rect.size)
+
+
+## Vrai si un clic à cette position (monde) touche l'image de l'objet.
+func contains_point(world_position: Vector2) -> bool:
+	return screen_rect().has_point(world_position)
 
 
 ## « En marche » : utilisé, alimenté à distance ou allumé.
@@ -154,5 +195,5 @@ func power_off(user: Node) -> void:
 
 func _draw() -> void:
 	if placed != null:
-		draw_definition(self, definition, placed.rotation, Vector2.ZERO, _cell_size, Color.WHITE,
+		draw_definition(self, definition, placed.rotation, _origin(), _cell_size, Color.WHITE,
 				placed.get_collection(), is_active())

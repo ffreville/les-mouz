@@ -25,6 +25,7 @@
 [node name="Main" type="Node2D"]
 
 [node name="World" type="Node2D" parent="."]
+y_sort_enabled = true
 script = ExtResource("1_world")
 starting_lot = ExtResource("3_lot")
 character_profiles = Array[ExtResource("9_profile")]([ExtResource("10_pepin"), ExtResource("12_myrtille")])
@@ -43,9 +44,10 @@ script = ExtResource("5_nav")
 script = ExtResource("6_selection")
 
 [node name="Objects" type="Node2D" parent="World"]
+y_sort_enabled = true
 
 [node name="WallView" type="Node2D" parent="World"]
-z_index = 5
+y_sort_enabled = true
 script = ExtResource("15_walls")
 
 [node name="GridOverlay" type="Node2D" parent="World"]
@@ -53,6 +55,7 @@ z_index = 6
 script = ExtResource("16_grid")
 
 [node name="Characters" type="Node2D" parent="World"]
+y_sort_enabled = true
 
 [node name="InputController" type="Node2D" parent="World"]
 script = ExtResource("7_input")

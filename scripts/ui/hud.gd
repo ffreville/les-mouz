@@ -86,3 +86,8 @@ func _setup_game_menu() -> void:
 		logo.add_theme_stylebox_override(state, StyleBoxEmpty.new())
 	logo.pressed.connect(pause_menu.open)
 	pause_menu.message.connect(toast.show_message)
+	GameMode.wall_mode_changed.connect(_on_wall_mode_changed)
+
+
+func _on_wall_mode_changed(wall_mode: int) -> void:
+	toast.show_message("%s (touche V)" % GameMode.WALL_MODE_NAMES[wall_mode])

@@ -88,6 +88,7 @@ Pour changer le format : augmenter `WorldSerializer.FORMAT_VERSION`, puis compl�
 | Boutons Pépin / Myrtille, ou **Tab** | Change de Mouz |
 | Bouton « Autonomie » | Active ou coupe l'autonomie du Mouz sélectionné |
 | Pause / x1 / x2 / x3, ou **Espace** et **1** à **3** | Vitesse du jeu |
+| **V** | Hauteur des murs : coupés (par défaut), baissés, pleins |
 
 Un ordre du joueur remplace toujours les actions choisies par l'autonomie.
 
@@ -123,7 +124,11 @@ Un objet est refusé, avec la raison affichée, s'il sort du terrain, chevauche 
 
 ```
 assets/
-  sprites/             Objets, portes, fenêtres et Mouz vus de dessus (SVG, 32 px par case)
+  sprites/             Objets : vue de dessus (`<id>_<collection>.svg`) et vue trois quarts
+                       (`<id>_<collection>_<vue>.svg`)
+  murs/                Murs en vue trois quarts : segments et poteaux, pleins et baissés
+  ouvertures/          Portes (fermées, ouvertes) et fenêtres en vue trois quarts
+  personnages/         Silhouette provisoire en 4 directions (en attendant les humains)
   floors/              Tuiles de sol 32 × 32 raccordables
   icons/ink/           Icônes 24 × 24 couleur encre
   icons/white/         Mêmes icônes en blanc, teintées par le thème (boutons)
@@ -197,6 +202,7 @@ L'équilibrage des 57 interactions (durées et gains) est un premier jet, à aju
 Exemple : une harpe avec l'action « Jouer de la harpe ». Tout se fait dans l'inspecteur de l'éditeur, sans code.
 
 1. **Les images** : un SVG par collection dans `assets/sprites/`, nommé `harpe_nature.svg`, `harpe_retro.svg`, `harpe_moderne.svg`. Taille exacte de l'objet (32 px par case), face avant (le côté où le Mouz se place) **en haut**, dos en bas. Facultatif : `harpe_<collection>_actif.svg` pour l'état « en marche ».
+   Pour la **vue trois quarts**, ajouter les vues `harpe_<collection>_<vue>.svg` avec `<vue>` = `bas`, `haut`, `gauche` et `droite` (côté vers lequel regarde la face avant). Largeur = emprise × 32 px, hauteur = profondeur × 32 + hauteur de l'objet ; le bas de l'image est le bas de l'emprise. Sans fichier `droite`, le jeu retourne la vue `gauche`. Ces fichiers sont trouvés par leur nom, il n'y a rien à déclarer dans la `.tres`. Tant qu'un objet n'a pas ses vues, il est dessiné à plat avec son image vue de dessus.
 2. **L'action** : dans le dock *Système de fichiers*, clic droit sur `data/actions/`, puis *Créer nouveau… → Ressource…* et choisir `ActionDefinition`. Enregistrer sous `jouer_harpe.tres`, puis remplir `id`, `display_name`, `icon` (une icône de `assets/icons/ink/`), `duration_minutes` et `need_gains` (par exemple `plaisir` → `40`). Les clés sont les `id` des besoins.
 3. **L'objet** : dans `data/catalog/objects/`, créer une Resource `SmartObjectDefinition` (`harpe.tres`) et renseigner :
    - `id` (unique, à ne plus changer ensuite : les sauvegardes s'en servent), `display_name`, `price` et `category` (`cuisine`, `chambre`, `salon`, `salle_de_bain`, `loisirs`, `jardin` ou `deco`) ;
@@ -287,6 +293,15 @@ func _on_item_bought(item: Resource, price: int) -> void:
 ```
 
 Le gestionnaire de sauvegardes a aussi ses signaux : `SaveManager.saved(slot_id)` après chaque enregistrement, et `SaveManager.slots_changed` quand la liste des parties change.
+
+## La vue trois quarts
+
+Le jeu passe progressivement en vue trois quarts (brief n° 6, livré par lots ; règles complètes dans `design/README.md`). La grille reste carrée, les objets montent vers le haut de l'écran.
+
+- **Ordre d'affichage** : `World`, `Objects`, `Characters` et `WallView` ont `y_sort_enabled`. Chaque nœud est posé à son point de tri : le bas de l'emprise pour un objet, les pieds pour un personnage, le pied du mur pour un morceau de mur. Ce qui est plus bas à l'écran passe devant.
+- **Murs** (`WallView`) : un Sprite2D par segment, par poteau (forme choisie selon les murs qui partent du nœud) et par ouverture. En murs coupés, un mur horizontal qui cache une pièce est baissé ; les murs verticaux restent pleins. En Construire et Acheter, tout est baissé. Les portes s'ouvrent quand un Mouz est sur l'une des cases qu'elles séparent.
+- **Clics** : `World.get_object_at_point` cherche l'image de l'objet (hauteur comprise), celle de devant en premier.
+- **Lot 1 livré** : murs, portes, fenêtres, 7 objets témoins en Nature (canapé, télé, lit, frigo, table, chaise, plante) et une silhouette provisoire (son haut prend la couleur du Mouz). Les autres objets restent vus de dessus en attendant leur lot.
 
 ## Limites connues
 

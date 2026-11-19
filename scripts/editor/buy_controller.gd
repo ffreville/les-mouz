@@ -101,7 +101,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func _on_click(screen_position: Vector2) -> void:
 	if _definition == null:
 		var cs := float(editor.lot.cell_size)
-		var placed := editor.object_at(Vector2i((get_global_mouse_position() / cs).floor()))
+		var mouse := get_global_mouse_position()
+		# L'image d'un meuble (qui dépasse au-dessus de sa case) passe avant la case visée.
+		var under := editor.world.get_object_at_point(mouse)
+		var placed := under.placed if under != null else editor.object_at(Vector2i((mouse / cs).floor()))
 		if placed != null:
 			_open_object_menu(placed, screen_position)
 		return

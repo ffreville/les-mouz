@@ -175,7 +175,7 @@ func _make_card(definition: SmartObjectDefinition) -> Button:
 	frame.add_theme_stylebox_override("panel", HudTheme.box(Palette.PAPIER_2, 8, Color.TRANSPARENT, 0, 6))
 	var image := TextureRect.new()
 	image.name = "Image"
-	image.texture = definition.get_sprite(_chosen[definition])
+	image.texture = definition.get_catalog_sprite(_chosen[definition])
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	frame.add_child(image)
@@ -240,7 +240,7 @@ func _make_dots(definition: SmartObjectDefinition, image: TextureRect) -> Contro
 func _choose_collection(definition: SmartObjectDefinition, collection: StringName, image: TextureRect,
 		dots: HBoxContainer) -> void:
 	_chosen[definition] = collection
-	image.texture = definition.get_sprite(collection)
+	image.texture = definition.get_catalog_sprite(collection)
 	for dot in dots.get_children():
 		dot.selected = dot.collection.id == collection
 	# Si l'objet est déjà en main, il change de style aussi.
