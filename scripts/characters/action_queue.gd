@@ -39,6 +39,11 @@ func enqueue(action: QueuedAction) -> void:
 		for other in items.duplicate():
 			if other.is_autonomous:
 				cancel(other)
+	# Un seul déplacement à la fois : le nouveau remplace les précédents.
+	if action.is_move_only():
+		for other in items.duplicate():
+			if other.is_move_only():
+				cancel(other)
 	items.append(action)
 	EventBus.action_queued.emit(_character, action)
 	changed.emit()

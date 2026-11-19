@@ -1,8 +1,9 @@
 class_name CatalogPanel
 extends PanelContainer
 ## Catalogue du mode Acheter : onglets de catégorie (seul l'actif garde son libellé),
-## filtre par collection, et vignettes (image, nom, prix, pastilles de style).
-## Une vignette trop chère est grisée et refuse le clic, mais ses pastilles restent actives.
+## filtre par collection, et une vignette par objet et par collection (image, nom, prix, style).
+## « Toutes » montre chaque objet dans toutes ses collections ; un filtre n'en garde qu'une.
+## Une vignette trop chère est grisée et refuse le clic.
 
 const COIN := preload("res://assets/sprites/piece_mz.svg")
 const CARD_SIZE := Vector2(120, 168)
@@ -16,11 +17,10 @@ var _category: StringName = &"cuisine"
 var _filter: StringName = &""
 var _tab_buttons: Dictionary[StringName, Button] = {}
 var _filter_buttons: Dictionary[StringName, Button] = {}
-var _card_buttons: Dictionary[Resource, Button] = {}
-## Collection affichée sur chaque vignette (choisie avec ses pastilles).
-var _chosen: Dictionary[Resource, StringName] = {}
-## Objet en cours de placement (vignette « choisie »).
-var _selected: Resource
+## Vignettes affichées, par clé « objet|collection ».
+var _card_buttons: Dictionary[String, Button] = {}
+## Vignette de l'objet en cours de placement ("" = aucune).
+var _selected := ""
 
 
 func _ready() -> void:
@@ -116,11 +116,6 @@ func _set_filter(id: StringName) -> void:
 	_filter = id
 	for key in _filter_buttons:
 		_filter_buttons[key].set_pressed_no_signal(key == id)
-	# Le filtre impose sa collection à toutes les vignettes qui l'ont.
-	if id != &"":
-		for definition in _chosen.keys():
-			if definition.sprites.has(id):
-				_chosen[definition] = id
 	_show_category(_category)
 
 
@@ -136,28 +131,33 @@ func _show_category(category: StringName) -> void:
 		child.queue_free()
 	_card_buttons.clear()
 	for definition in Catalog.objects_in(category):
-		if _filter != &"" and not definition.sprites.has(_filter):
-			continue
-		if not _chosen.has(definition) or (_filter != &"" and definition.sprites.has(_filter)):
-			_chosen[definition] = _filter if _filter != &"" else definition.default_collection()
-		var card := _make_card(definition)
-		_cards.add_child(card)
-		_card_buttons[definition] = card
-		card.set_pressed_no_signal(definition == _selected)
+		for collection in Catalog.collections():
+			if not definition.sprites.has(collection.id) or (_filter != &"" and collection.id != _filter):
+				continue
+			var card := _make_card(definition, collection)
+			_cards.add_child(card)
+			var key := _key(definition, collection.id)
+			_card_buttons[key] = card
+			card.set_pressed_no_signal(key == _selected)
 	_refresh_affordability()
 
 
 # --- Vignettes ------------------------------------------------------------------------
 
-func _make_card(definition: SmartObjectDefinition) -> Button:
+static func _key(definition: SmartObjectDefinition, collection: StringName) -> String:
+	return "%s|%s" % [definition.resource_path, collection]
+
+
+func _make_card(definition: SmartObjectDefinition, collection: CollectionDefinition) -> Button:
 	var card := Button.new()
 	card.theme_type_variation = &"OptionCard"
 	card.toggle_mode = true
 	card.focus_mode = Control.FOCUS_NONE
 	card.custom_minimum_size = CARD_SIZE
-	card.tooltip_text = "%s · %s · %d × %d cases" % [definition.display_name,
+	card.tooltip_text = "%s · %s · %s · %d × %d cases" % [definition.display_name, collection.display_name,
 			Palette.format_mz(definition.price), definition.size.x, definition.size.y]
-	card.pressed.connect(_on_card_pressed.bind(definition))
+	card.set_meta("definition", definition)
+	card.pressed.connect(_on_card_pressed.bind(definition, collection.id))
 
 	var column := VBoxContainer.new()
 	column.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -175,7 +175,7 @@ func _make_card(definition: SmartObjectDefinition) -> Button:
 	frame.add_theme_stylebox_override("panel", HudTheme.box(Palette.PAPIER_2, 8, Color.TRANSPARENT, 0, 6))
 	var image := TextureRect.new()
 	image.name = "Image"
-	image.texture = definition.get_catalog_sprite(_chosen[definition])
+	image.texture = definition.get_catalog_sprite(collection.id)
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	frame.add_child(image)
@@ -216,55 +216,49 @@ func _make_card(definition: SmartObjectDefinition) -> Button:
 	line.color = Palette.PAPIER_2
 	line.custom_minimum_size.y = 2
 	column.add_child(line)
-	column.add_child(_make_dots(definition, image))
-	for control in [frame, image, title, row, coin, price, too_expensive, line]:
+	var style := _make_style_row(collection)
+	column.add_child(style)
+	for control in [frame, image, title, row, coin, price, too_expensive, line, style]:
 		control.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return card
 
 
-## Rangée de pastilles : changer de style sans sélectionner la vignette.
-func _make_dots(definition: SmartObjectDefinition, image: TextureRect) -> Control:
-	var dots := HBoxContainer.new()
-	dots.add_theme_constant_override("separation", 0)
-	dots.mouse_filter = Control.MOUSE_FILTER_PASS
-	for collection in Catalog.collections():
-		if not definition.sprites.has(collection.id):
-			continue
-		var dot := CollectionDot.new(collection, DOT_SIZE)
-		dot.selected = collection.id == _chosen[definition]
-		dot.pressed.connect(_choose_collection.bind(definition, collection.id, image, dots))
-		dots.add_child(dot)
-	return dots
+## Pastille et nom de la collection de la vignette.
+func _make_style_row(collection: CollectionDefinition) -> Control:
+	var style := HBoxContainer.new()
+	style.add_theme_constant_override("separation", 4)
+	var dot := CollectionDot.new(collection, 12.0)
+	dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	dot.selected = false
+	style.add_child(dot)
+	var label := Label.new()
+	label.text = collection.display_name
+	label.theme_type_variation = &"MutedLabel"
+	label.add_theme_font_size_override("font_size", 11)
+	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	style.add_child(label)
+	return style
 
 
-func _choose_collection(definition: SmartObjectDefinition, collection: StringName, image: TextureRect,
-		dots: HBoxContainer) -> void:
-	_chosen[definition] = collection
-	image.texture = definition.get_catalog_sprite(collection)
-	for dot in dots.get_children():
-		dot.selected = dot.collection.id == collection
-	# Si l'objet est déjà en main, il change de style aussi.
-	if definition == _selected:
-		EventBus.catalog_item_selected.emit(definition, collection)
-
-
-func _on_card_pressed(definition: SmartObjectDefinition) -> void:
-	_selected = definition
+func _on_card_pressed(definition: SmartObjectDefinition, collection: StringName) -> void:
+	_selected = _key(definition, collection)
 	for key in _card_buttons:
-		_card_buttons[key].set_pressed_no_signal(key == definition)
-	EventBus.catalog_item_selected.emit(definition, _chosen[definition])
+		_card_buttons[key].set_pressed_no_signal(key == _selected)
+	EventBus.catalog_item_selected.emit(definition, collection)
 
 
 func _on_placement_ended() -> void:
-	_selected = null
+	_selected = ""
 	for key in _card_buttons:
 		_card_buttons[key].set_pressed_no_signal(false)
 
 
-## Grise les objets trop chers pour le solde actuel (les pastilles restent actives).
+## Grise les objets trop chers pour le solde actuel.
 func _refresh_affordability() -> void:
-	for definition in _card_buttons:
-		var card := _card_buttons[definition]
+	for key in _card_buttons:
+		var card := _card_buttons[key]
+		var definition: SmartObjectDefinition = card.get_meta("definition")
 		var affordable := Wallet.can_afford(definition.price)
 		card.disabled = not affordable
 		var price: Label = card.find_child("Price", true, false)

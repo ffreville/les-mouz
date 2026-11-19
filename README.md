@@ -83,7 +83,7 @@ Pour changer le format : augmenter `WorldSerializer.FORMAT_VERSION`, puis compl�
 
 | Action | Effet |
 |---|---|
-| Clic sur le sol | Ajoute « Aller ici » à la file du Mouz sélectionné |
+| Clic sur le sol | Ajoute « Aller ici » à la file du Mouz sélectionné (remplace le déplacement déjà prévu) |
 | Clic sur un objet | Menu des actions de l'objet ; l'action choisie s'ajoute à la file |
 | Clic sur l'autre Mouz | Menu : « Discuter » ou « Contrôler » |
 | Clic sur ✕ dans la file | Annule l'action |
@@ -186,7 +186,7 @@ Le catalogue compte **50 objets** répartis en 7 catégories : Cuisine, Chambre,
 | Rétro | `retro` | Teck, moutarde, brique ; formes très arrondies, pieds compas |
 | Moderne | `moderne` | Blanc, ardoise, métal ; lignes nettes |
 
-Un style ne change que l'apparence : même taille, même face avant, mêmes interactions. Dans le catalogue, les **pastilles** sous chaque vignette choisissent le style avant l'achat, et le **filtre** (Toutes / Nature / Rétro / Moderne) l'applique à toutes les vignettes. Un clic sur un objet posé propose aussi de **changer de style** : gratuit le jour de l'achat, puis 25 % du prix (une revente à 75 % suivie d'un rachat au prix plein).
+Un style ne change que l'apparence : même taille, même face avant, mêmes interactions. Dans le catalogue, chaque objet a **une vignette par style** (sa pastille et son nom sous le prix) ; le **filtre** Toutes les montre toutes, Nature / Rétro / Moderne n'en garde qu'une par objet. Un clic sur un objet posé propose aussi de **changer de style** : gratuit le jour de l'achat, puis 25 % du prix (une revente à 75 % suivie d'un rachat au prix plein).
 
 Quelques objets ont un **état « en marche »** : ils changent d'image quand on s'en sert (cuisinière, cheminée, douche, ordinateur…). Les lampes s'allument et s'éteignent, et restent dans cet état. La télé s'allume quand un Mouz la regarde depuis le canapé.
 
@@ -217,7 +217,7 @@ Exemple : une harpe avec l'action « Jouer de la harpe ». Tout se fait dans l'i
    - `sprites` : une entrée par collection (`nature`, `retro`, `moderne`) vers les SVG ; `active_sprites` de même si l'objet a un état « en marche » ;
    - `size` (en cases), `capacity` (combien de Mouz à la fois), et `jouer_harpe.tres` dans `actions`.
 
-C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catalog/`. L'objet apparaît dans sa catégorie avec ses pastilles de style, s'achète, se pose, ouvre son menu au clic et compte pour l'autonomie. Un objet sans action est décoratif. Mets `blocks_movement` à faux pour un objet au sol qu'on peut traverser : on s'en sert alors en se tenant dessus (tapis de yoga).
+C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catalog/`. L'objet apparaît dans sa catégorie, une vignette par style, s'achète, se pose, ouvre son menu au clic et compte pour l'autonomie. Un objet sans action est décoratif. Mets `blocks_movement` à faux pour un objet au sol qu'on peut traverser : on s'en sert alors en se tenant dessus (tapis de yoga).
 
 **Ajouter une collection** : une `CollectionDefinition` dans `data/catalog/collections/` (`id`, `display_name`, `color` de la pastille, `icon`, `order`), puis les sprites `<objet>_<id>.svg` des objets concernés. Un objet sans sprite dans une collection ne la propose simplement pas.
 
