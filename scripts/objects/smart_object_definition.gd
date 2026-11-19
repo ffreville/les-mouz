@@ -56,6 +56,7 @@ func has_active_sprite() -> bool:
 ## Vue dessinée pour chaque rotation : 0 = face avant vers le haut, puis sens horaire.
 const VIEWS: Array[StringName] = [&"haut", &"droite", &"bas", &"gauche"]
 const VIEW_PATH := "res://assets/sprites/%s_%s_%s%s.svg"
+const THUMBNAIL_PATH := "res://assets/vignettes/%s_%s.svg"
 
 ## Images en vue trois quarts déjà cherchées (chemin → texture ou null).
 static var _view_cache: Dictionary = {}
@@ -84,8 +85,14 @@ func get_view(collection: StringName, rotation: int, active := false) -> Array:
 	return []
 
 
-## Image du catalogue : la face avant (vue `bas`), sinon l'image vue de dessus.
+## Image du catalogue : la vignette dessinée pour lui (vue `bas` mise à l'échelle 104 × 72),
+## sinon la face avant, sinon l'image vue de dessus.
 func get_catalog_sprite(collection: StringName) -> Texture2D:
+	if collection == &"" or not sprites.has(collection):
+		collection = default_collection()
+	var thumbnail := THUMBNAIL_PATH % [id, collection]
+	if ResourceLoader.exists(thumbnail):
+		return load(thumbnail)
 	var view := get_view(collection, 2)
 	return view[0] if not view.is_empty() else get_sprite(collection)
 

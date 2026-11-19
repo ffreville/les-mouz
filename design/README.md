@@ -1089,3 +1089,73 @@ Planche : « Lot 6 · Loisirs et jardin » sur le canvas (une pièce de loisirs 
 Un sprite `_actif` a maintenant toujours la même taille que l'objet éteint. La fumée du barbecue et les notes de la chaîne hi-fi tiennent dans une marge déjà réservée en haut de la version éteinte. Le jeu peut donc passer d'un état à l'autre sans recaler l'objet.
 
 Ça change les 9 fichiers de la chaîne hi-fi éteinte du lot 5 : ils passent de 66 à 78 px de haut (hauteur 46 au lieu de 34), comme la version allumée. `tokens.json` est mis à jour. Les autres objets en marche des lots 3 à 5 avaient déjà la même taille dans les deux états.
+
+## Lot 7 · Poses et finitions
+
+Deux planches sur le canvas : « Lot 7 · Poses, places et vignettes » et « Lot 7 · Une maison par collection ». Planches de contrôle : `apercu_poses.png` (les 4 membres dans chaque pose), `apercu_places.png` (chaque objet occupé, dans ses 4 vues et ses 3 collections) et `apercu_maisons.png` (la planche finale).
+
+### Poses
+
+| Pose | Utilisée pour | Fichiers |
+|---|---|---|
+| assis | chaise, fauteuil, canapé, toilettes, table de jeux, salon de jardin | nouveaux calques de corps |
+| en tailleur (`tailleur`) | tapis de yoga | nouveaux calques de corps + ombre plus large |
+| à genoux (`genoux`) | potager | nouveaux calques de corps |
+| allongé | lit, lit simple, baignoire, hamac | aucun : les calques debout « bas », tournés |
+
+- **Fichiers** : 784 calques dans `svg/personnages/`, même découpage qu'au lot 2. Le nom est `corps_<sexe>_<âge>_<tenue>_<direction>_<pose>_<calque>.svg`, avec `pose` = `assis`, `tailleur` ou `genoux`, et `direction` = `bas`, `haut` ou `gauche` (`droite` = miroir). L'ombre de la pose en tailleur, plus large, est dans `ombre_<sexe>_<âge>_tailleur.svg`.
+- **Tête et cheveux** : ils gardent leurs fichiers du lot 2. Le jeu les descend de `tete_dy` px (tableau ci-dessous).
+- **Point d'ancrage** : toujours (16, 48) dans l'image 32 × 64. Pour ces trois poses, c'est le sol sous les hanches, et non plus sous les pieds. Assis, les pieds dépassent vers l'avant. En tailleur, les jambes croisées sont devant. À genoux, les tibias partent vers l'arrière.
+- **Allongé** : je n'ai pas fait de nouveaux calques. Une personne allongée sur le dos, vue d'au-dessus, a la même silhouette que debout vue de face. Le jeu prend donc les calques debout « bas » (sans ombre) et les tourne autour du centre de la tête (`pivot`) : 0°, 90°, 180° ou 270°, dans le sens horaire.
+
+| Âge | Hauteur des hanches assis | `tete_dy` assis | `tete_dy` tailleur | `tete_dy` genoux | Pivot allongé (y) |
+|---|---|---|---|---|---|
+| enfant | 3 px | 4 | 6 | 4 | 23.6 |
+| ado | 6 px | 6 | 11 | 6 | 14.0 |
+| adulte | 8 px | 7 | 14 | 7 | 8.5 |
+| aine | 7 px | 7 | 13 | 7 | 10.3 |
+
+### Places sur les objets
+
+| Clé | Objet | Pose | Places |
+|---|---|---|---|
+| `chaise` | Chaise | assis | 1 |
+| `fauteuil` | Fauteuil | assis | 1 |
+| `canape` | Canapé | assis | 3 |
+| `toilettes` | Toilettes | assis | 1 |
+| `table_jeux` | Table de jeux | assis | 2 |
+| `salon_jardin` | Salon de jardin | assis | 2 |
+| `lit` | Lit double | allongé | 2 |
+| `lit_simple` | Lit simple | allongé | 1 |
+| `baignoire` | Baignoire | allongé | 1 |
+| `hamac` | Hamac | allongé | 1 |
+| `tapis_yoga` | Tapis de yoga | en tailleur | 1 |
+| `potager` | Potager | à genoux | 1 |
+
+`tokens.json` › `vue_trois_quarts.places` › `<clé>` › `<collection>` › `<vue>` donne une liste, une entrée par place :
+
+- `pose`, et `direction` du personnage dans cette vue. Par exemple, sur la chaise vue de dos, le personnage est en direction `haut`.
+- `decalage` : position du coin haut-gauche de l'image 32 × 64 du personnage, par rapport au coin haut-gauche du sprite de l'objet, **par âge**. Un enfant assis a les hanches plus bas qu'un adulte.
+- pour `allonge` : `rotation`, `tete` (où poser le pivot, dans le sprite de l'objet) et `pivot` par âge.
+- `devant` : nom du calque de premier plan, ou `null`.
+
+Exemple, chaise Nature vue de face : `{"pose": "assis", "direction": "bas", "decalage": {"enfant": [0, -8], "ado": [0, -5], "adulte": [0, -3], "aine": [0, -4]}, "devant": null}`.
+
+### Calques de premier plan (`_devant_<n>`)
+
+Un objet est un seul sprite. Mais quand quelqu'un s'y installe, une partie de l'objet doit passer devant lui : le dossier d'une chaise vue de dos, la couette d'un lit, la table quand on est assis derrière, l'eau du bain. Pour ça, j'ai livré 126 calques `svg/sprites/<clé>_<collection>_<vue>_devant_<n>.svg` (`n` = numéro de la place, à partir de 1). Ils ont la même taille que le sprite de l'objet et se posent au même endroit.
+
+Ordre d'affichage : **sprite de l'objet → personnage → calque devant**. L'ensemble se trie comme l'objet seul.
+
+- **Lits** : la couette et son revers sont toujours devant. Seule la tête dépasse, sur l'oreiller.
+- **Baignoire** : de l'eau translucide (82 %) couvre le corps sous les épaules.
+- **Hamac** : rien devant, on est allongé sur la toile.
+- **Objets en miroir** : la vue `droite` reprend la vue `gauche` retournée, comme pour les sprites. Les décalages sont recalculés (`miroir_de` dans tokens.json) et le calque devant `gauche` se retourne avec.
+
+### Vignettes du catalogue
+
+Elles passent à la vue bas : 150 fichiers `svg/vignettes/<clé>_<collection>.svg`, 104 × 72 (la taille de l'image de la vignette), fond transparent. L'objet est centré et mis à l'échelle pour tenir dans 96 × 64, sans dépasser ×2. Comme les sprites sont hauts, la plupart restent entre ×0,7 et ×1. Seules la table basse et la console de jeux sont agrandies (×1,25). Les plus grands sont réduits : lit et douche ×0,5, tapis ×0,5, arbre ×0,42. L'échelle de chaque objet est dans `tokens.json` › `vignettes_catalogue.echelle`.
+
+### Planche finale
+
+Une maison par collection, sur 22 × 15 cases : salon, cuisine, chambre des parents, chambre des enfants, salle de bain et jardin. Le mur du fond est plein, les autres sont baissés. La famille de 4 est installée avec les règles ci-dessus : Léa sur le canapé, Samir à table, Théo à l'ordinateur, Nina dans son lit. Les lampes, la télé, la cuisinière et l'ordinateur sont allumés.

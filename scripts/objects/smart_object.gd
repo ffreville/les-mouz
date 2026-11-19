@@ -13,6 +13,8 @@ var definition: SmartObjectDefinition
 var footprint: Rect2i
 var _cell_size: float
 var _users: Array[Node] = []
+## Place occupée par chaque utilisateur (0, 1, 2…) : chacun garde la sienne jusqu'à ce qu'il parte.
+var _seats: Dictionary[Node, int] = {}
 ## Personnages qui font fonctionner l'objet à distance (la télé pour le canapé).
 var _powered_by: Array[Node] = []
 
@@ -99,6 +101,20 @@ func screen_rect() -> Rect2:
 	return Rect2(rect.position + position, rect.size)
 
 
+## Rectangle du sprite trois quarts dans le repère du nœud (vide sans vue trois quarts).
+func sprite_rect_local() -> Rect2:
+	var view := definition.get_view(placed.get_collection(), placed.rotation, is_active())
+	if view.is_empty():
+		return Rect2()
+	return view_rect(definition, placed.rotation, _origin(), _cell_size, view[0])
+
+
+## Place que prend ce Mouz sur l'objet, {} s'il n'y en a pas.
+func place_for(character: Node) -> Dictionary:
+	return SeatPlaces.find(definition.id, placed.get_collection(),
+			SmartObjectDefinition.VIEWS[posmod(placed.rotation, 4)], _seats.get(character, -1))
+
+
 ## Vrai si un clic à cette position (monde) touche l'image de l'objet.
 func contains_point(world_position: Vector2) -> bool:
 	return screen_rect().has_point(world_position)
@@ -172,12 +188,17 @@ func reserve(user: Node) -> bool:
 		return false
 	if user not in _users:
 		_users.append(user)
+		var seat := 0
+		while seat in _seats.values():
+			seat += 1
+		_seats[user] = seat
 		queue_redraw()
 	return true
 
 
 func release(user: Node) -> void:
 	_users.erase(user)
+	_seats.erase(user)
 	queue_redraw()
 
 

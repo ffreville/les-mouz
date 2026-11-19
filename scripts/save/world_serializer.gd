@@ -20,7 +20,7 @@ static func to_data(world: World) -> Dictionary:
 				relationships[String(other.profile.id)] = character.relationships.get_value(other)
 		characters.append({
 			"profile": String(character.profile.id),
-			"position": [character.position.x, character.position.y],
+			"position": [character.standing_position().x, character.standing_position().y],
 			"needs": character.needs.snapshot(),
 			"relationships": relationships,
 			"autonomy": character.brain.enabled,

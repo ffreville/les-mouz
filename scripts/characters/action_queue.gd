@@ -186,6 +186,8 @@ func _run(action: QueuedAction) -> void:
 		if action.powered_object != null:
 			action.powered_object.power_on(_character)
 	_face_target(action)
+	if action.target_object != null:
+		_character.sit_on(action.target_object)
 	EventBus.action_started.emit(_character, action)
 	if action.is_social() and not action.is_social_guest:
 		_invite_partner(action)
@@ -254,6 +256,7 @@ func _finish(action: QueuedAction) -> void:
 ## Arrête le déplacement et libère l'objet éventuellement réservé.
 func _stop(action: QueuedAction) -> void:
 	_character.mover.stop()
+	_character.stand_up()
 	if action.target_object != null:
 		action.target_object.release(_character)
 	if action.powered_object != null:

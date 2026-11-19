@@ -1,0 +1,5508 @@
+{
+ "places": {
+  "chaise": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -8
+       ],
+       "ado": [
+        0,
+        -5
+       ],
+       "adulte": [
+        0,
+        -3
+       ],
+       "aine": [
+        0,
+        -4
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -14
+       ],
+       "ado": [
+        0,
+        -11
+       ],
+       "adulte": [
+        0,
+        -9
+       ],
+       "aine": [
+        0,
+        -10
+       ]
+      },
+      "devant": "chaise_nature_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        -3,
+        -11
+       ],
+       "ado": [
+        -3,
+        -8
+       ],
+       "adulte": [
+        -3,
+        -6
+       ],
+       "aine": [
+        -3,
+        -7
+       ]
+      },
+      "devant": "chaise_nature_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        3,
+        -11
+       ],
+       "ado": [
+        3,
+        -8
+       ],
+       "adulte": [
+        3,
+        -6
+       ],
+       "aine": [
+        3,
+        -7
+       ]
+      },
+      "devant": "chaise_nature_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -10
+       ],
+       "ado": [
+        0,
+        -7
+       ],
+       "adulte": [
+        0,
+        -5
+       ],
+       "aine": [
+        0,
+        -6
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -16
+       ],
+       "ado": [
+        0,
+        -13
+       ],
+       "adulte": [
+        0,
+        -11
+       ],
+       "aine": [
+        0,
+        -12
+       ]
+      },
+      "devant": "chaise_retro_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        -3,
+        -13
+       ],
+       "ado": [
+        -3,
+        -10
+       ],
+       "adulte": [
+        -3,
+        -8
+       ],
+       "aine": [
+        -3,
+        -9
+       ]
+      },
+      "devant": "chaise_retro_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        3,
+        -13
+       ],
+       "ado": [
+        3,
+        -10
+       ],
+       "adulte": [
+        3,
+        -8
+       ],
+       "aine": [
+        3,
+        -9
+       ]
+      },
+      "devant": "chaise_retro_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -8
+       ],
+       "ado": [
+        0,
+        -5
+       ],
+       "adulte": [
+        0,
+        -3
+       ],
+       "aine": [
+        0,
+        -4
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -14
+       ],
+       "ado": [
+        0,
+        -11
+       ],
+       "adulte": [
+        0,
+        -9
+       ],
+       "aine": [
+        0,
+        -10
+       ]
+      },
+      "devant": "chaise_moderne_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        -3,
+        -11
+       ],
+       "ado": [
+        -3,
+        -8
+       ],
+       "adulte": [
+        -3,
+        -6
+       ],
+       "aine": [
+        -3,
+        -7
+       ]
+      },
+      "devant": "chaise_moderne_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        3,
+        -11
+       ],
+       "ado": [
+        3,
+        -8
+       ],
+       "adulte": [
+        3,
+        -6
+       ],
+       "aine": [
+        3,
+        -7
+       ]
+      },
+      "devant": "chaise_moderne_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   }
+  },
+  "fauteuil": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -10
+       ],
+       "ado": [
+        0,
+        -7
+       ],
+       "adulte": [
+        0,
+        -5
+       ],
+       "aine": [
+        0,
+        -6
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -16
+       ],
+       "ado": [
+        0,
+        -13
+       ],
+       "adulte": [
+        0,
+        -11
+       ],
+       "aine": [
+        0,
+        -12
+       ]
+      },
+      "devant": "fauteuil_nature_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        -3,
+        -13
+       ],
+       "ado": [
+        -3,
+        -10
+       ],
+       "adulte": [
+        -3,
+        -8
+       ],
+       "aine": [
+        -3,
+        -9
+       ]
+      },
+      "devant": "fauteuil_nature_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        3,
+        -13
+       ],
+       "ado": [
+        3,
+        -10
+       ],
+       "adulte": [
+        3,
+        -8
+       ],
+       "aine": [
+        3,
+        -9
+       ]
+      },
+      "devant": "fauteuil_nature_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -10
+       ],
+       "ado": [
+        0,
+        -7
+       ],
+       "adulte": [
+        0,
+        -5
+       ],
+       "aine": [
+        0,
+        -6
+       ]
+      },
+      "devant": "fauteuil_retro_bas_devant_1.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -16
+       ],
+       "ado": [
+        0,
+        -13
+       ],
+       "adulte": [
+        0,
+        -11
+       ],
+       "aine": [
+        0,
+        -12
+       ]
+      },
+      "devant": "fauteuil_retro_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        -3,
+        -13
+       ],
+       "ado": [
+        -3,
+        -10
+       ],
+       "adulte": [
+        -3,
+        -8
+       ],
+       "aine": [
+        -3,
+        -9
+       ]
+      },
+      "devant": "fauteuil_retro_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        3,
+        -13
+       ],
+       "ado": [
+        3,
+        -10
+       ],
+       "adulte": [
+        3,
+        -8
+       ],
+       "aine": [
+        3,
+        -9
+       ]
+      },
+      "devant": "fauteuil_retro_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -10
+       ],
+       "ado": [
+        0,
+        -7
+       ],
+       "adulte": [
+        0,
+        -5
+       ],
+       "aine": [
+        0,
+        -6
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -16
+       ],
+       "ado": [
+        0,
+        -13
+       ],
+       "adulte": [
+        0,
+        -11
+       ],
+       "aine": [
+        0,
+        -12
+       ]
+      },
+      "devant": "fauteuil_moderne_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        -3,
+        -13
+       ],
+       "ado": [
+        -3,
+        -10
+       ],
+       "adulte": [
+        -3,
+        -8
+       ],
+       "aine": [
+        -3,
+        -9
+       ]
+      },
+      "devant": "fauteuil_moderne_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        3,
+        -13
+       ],
+       "ado": [
+        3,
+        -10
+       ],
+       "adulte": [
+        3,
+        -8
+       ],
+       "aine": [
+        3,
+        -9
+       ]
+      },
+      "devant": "fauteuil_moderne_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   }
+  },
+  "canape": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        10,
+        2.5
+       ],
+       "ado": [
+        10,
+        5.5
+       ],
+       "adulte": [
+        10,
+        7.5
+       ],
+       "aine": [
+        10,
+        6.5
+       ]
+      },
+      "devant": "canape_nature_bas_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        32,
+        2.5
+       ],
+       "ado": [
+        32,
+        5.5
+       ],
+       "adulte": [
+        32,
+        7.5
+       ],
+       "aine": [
+        32,
+        6.5
+       ]
+      },
+      "devant": "canape_nature_bas_devant_2.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        54,
+        2.5
+       ],
+       "ado": [
+        54,
+        5.5
+       ],
+       "adulte": [
+        54,
+        7.5
+       ],
+       "aine": [
+        54,
+        6.5
+       ]
+      },
+      "devant": "canape_nature_bas_devant_3.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        54,
+        -5.5
+       ],
+       "ado": [
+        54,
+        -2.5
+       ],
+       "adulte": [
+        54,
+        -0.5
+       ],
+       "aine": [
+        54,
+        -1.5
+       ]
+      },
+      "devant": "canape_nature_haut_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        32,
+        -5.5
+       ],
+       "ado": [
+        32,
+        -2.5
+       ],
+       "adulte": [
+        32,
+        -0.5
+       ],
+       "aine": [
+        32,
+        -1.5
+       ]
+      },
+      "devant": "canape_nature_haut_devant_2.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        10,
+        -5.5
+       ],
+       "ado": [
+        10,
+        -2.5
+       ],
+       "adulte": [
+        10,
+        -0.5
+       ],
+       "aine": [
+        10,
+        -1.5
+       ]
+      },
+      "devant": "canape_nature_haut_devant_3.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        12,
+        36.5
+       ],
+       "ado": [
+        12,
+        39.5
+       ],
+       "adulte": [
+        12,
+        41.5
+       ],
+       "aine": [
+        12,
+        40.5
+       ]
+      },
+      "devant": "canape_nature_gauche_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        12,
+        14.5
+       ],
+       "ado": [
+        12,
+        17.5
+       ],
+       "adulte": [
+        12,
+        19.5
+       ],
+       "aine": [
+        12,
+        18.5
+       ]
+      },
+      "devant": "canape_nature_gauche_devant_2.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        12,
+        -7.5
+       ],
+       "ado": [
+        12,
+        -4.5
+       ],
+       "adulte": [
+        12,
+        -2.5
+       ],
+       "aine": [
+        12,
+        -3.5
+       ]
+      },
+      "devant": "canape_nature_gauche_devant_3.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        20,
+        36.5
+       ],
+       "ado": [
+        20,
+        39.5
+       ],
+       "adulte": [
+        20,
+        41.5
+       ],
+       "aine": [
+        20,
+        40.5
+       ]
+      },
+      "devant": "canape_nature_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        20,
+        14.5
+       ],
+       "ado": [
+        20,
+        17.5
+       ],
+       "adulte": [
+        20,
+        19.5
+       ],
+       "aine": [
+        20,
+        18.5
+       ]
+      },
+      "devant": "canape_nature_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        20,
+        -7.5
+       ],
+       "ado": [
+        20,
+        -4.5
+       ],
+       "adulte": [
+        20,
+        -2.5
+       ],
+       "aine": [
+        20,
+        -3.5
+       ]
+      },
+      "devant": "canape_nature_gauche_devant_3.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        10,
+        2.5
+       ],
+       "ado": [
+        10,
+        5.5
+       ],
+       "adulte": [
+        10,
+        7.5
+       ],
+       "aine": [
+        10,
+        6.5
+       ]
+      },
+      "devant": "canape_retro_bas_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        32,
+        2.5
+       ],
+       "ado": [
+        32,
+        5.5
+       ],
+       "adulte": [
+        32,
+        7.5
+       ],
+       "aine": [
+        32,
+        6.5
+       ]
+      },
+      "devant": "canape_retro_bas_devant_2.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        54,
+        2.5
+       ],
+       "ado": [
+        54,
+        5.5
+       ],
+       "adulte": [
+        54,
+        7.5
+       ],
+       "aine": [
+        54,
+        6.5
+       ]
+      },
+      "devant": "canape_retro_bas_devant_3.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        54,
+        -5.5
+       ],
+       "ado": [
+        54,
+        -2.5
+       ],
+       "adulte": [
+        54,
+        -0.5
+       ],
+       "aine": [
+        54,
+        -1.5
+       ]
+      },
+      "devant": "canape_retro_haut_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        32,
+        -5.5
+       ],
+       "ado": [
+        32,
+        -2.5
+       ],
+       "adulte": [
+        32,
+        -0.5
+       ],
+       "aine": [
+        32,
+        -1.5
+       ]
+      },
+      "devant": "canape_retro_haut_devant_2.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        10,
+        -5.5
+       ],
+       "ado": [
+        10,
+        -2.5
+       ],
+       "adulte": [
+        10,
+        -0.5
+       ],
+       "aine": [
+        10,
+        -1.5
+       ]
+      },
+      "devant": "canape_retro_haut_devant_3.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        12,
+        36.5
+       ],
+       "ado": [
+        12,
+        39.5
+       ],
+       "adulte": [
+        12,
+        41.5
+       ],
+       "aine": [
+        12,
+        40.5
+       ]
+      },
+      "devant": "canape_retro_gauche_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        12,
+        14.5
+       ],
+       "ado": [
+        12,
+        17.5
+       ],
+       "adulte": [
+        12,
+        19.5
+       ],
+       "aine": [
+        12,
+        18.5
+       ]
+      },
+      "devant": "canape_retro_gauche_devant_2.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        12,
+        -7.5
+       ],
+       "ado": [
+        12,
+        -4.5
+       ],
+       "adulte": [
+        12,
+        -2.5
+       ],
+       "aine": [
+        12,
+        -3.5
+       ]
+      },
+      "devant": "canape_retro_gauche_devant_3.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        20,
+        36.5
+       ],
+       "ado": [
+        20,
+        39.5
+       ],
+       "adulte": [
+        20,
+        41.5
+       ],
+       "aine": [
+        20,
+        40.5
+       ]
+      },
+      "devant": "canape_retro_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        20,
+        14.5
+       ],
+       "ado": [
+        20,
+        17.5
+       ],
+       "adulte": [
+        20,
+        19.5
+       ],
+       "aine": [
+        20,
+        18.5
+       ]
+      },
+      "devant": "canape_retro_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        20,
+        -7.5
+       ],
+       "ado": [
+        20,
+        -4.5
+       ],
+       "adulte": [
+        20,
+        -2.5
+       ],
+       "aine": [
+        20,
+        -3.5
+       ]
+      },
+      "devant": "canape_retro_gauche_devant_3.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        10,
+        -0.5
+       ],
+       "ado": [
+        10,
+        2.5
+       ],
+       "adulte": [
+        10,
+        4.5
+       ],
+       "aine": [
+        10,
+        3.5
+       ]
+      },
+      "devant": "canape_moderne_bas_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        32,
+        -0.5
+       ],
+       "ado": [
+        32,
+        2.5
+       ],
+       "adulte": [
+        32,
+        4.5
+       ],
+       "aine": [
+        32,
+        3.5
+       ]
+      },
+      "devant": "canape_moderne_bas_devant_2.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        54,
+        -0.5
+       ],
+       "ado": [
+        54,
+        2.5
+       ],
+       "adulte": [
+        54,
+        4.5
+       ],
+       "aine": [
+        54,
+        3.5
+       ]
+      },
+      "devant": "canape_moderne_bas_devant_3.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        54,
+        -8.5
+       ],
+       "ado": [
+        54,
+        -5.5
+       ],
+       "adulte": [
+        54,
+        -3.5
+       ],
+       "aine": [
+        54,
+        -4.5
+       ]
+      },
+      "devant": "canape_moderne_haut_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        32,
+        -8.5
+       ],
+       "ado": [
+        32,
+        -5.5
+       ],
+       "adulte": [
+        32,
+        -3.5
+       ],
+       "aine": [
+        32,
+        -4.5
+       ]
+      },
+      "devant": "canape_moderne_haut_devant_2.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        10,
+        -8.5
+       ],
+       "ado": [
+        10,
+        -5.5
+       ],
+       "adulte": [
+        10,
+        -3.5
+       ],
+       "aine": [
+        10,
+        -4.5
+       ]
+      },
+      "devant": "canape_moderne_haut_devant_3.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        12,
+        33.5
+       ],
+       "ado": [
+        12,
+        36.5
+       ],
+       "adulte": [
+        12,
+        38.5
+       ],
+       "aine": [
+        12,
+        37.5
+       ]
+      },
+      "devant": "canape_moderne_gauche_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        12,
+        11.5
+       ],
+       "ado": [
+        12,
+        14.5
+       ],
+       "adulte": [
+        12,
+        16.5
+       ],
+       "aine": [
+        12,
+        15.5
+       ]
+      },
+      "devant": "canape_moderne_gauche_devant_2.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        12,
+        -10.5
+       ],
+       "ado": [
+        12,
+        -7.5
+       ],
+       "adulte": [
+        12,
+        -5.5
+       ],
+       "aine": [
+        12,
+        -6.5
+       ]
+      },
+      "devant": "canape_moderne_gauche_devant_3.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        20,
+        33.5
+       ],
+       "ado": [
+        20,
+        36.5
+       ],
+       "adulte": [
+        20,
+        38.5
+       ],
+       "aine": [
+        20,
+        37.5
+       ]
+      },
+      "devant": "canape_moderne_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        20,
+        11.5
+       ],
+       "ado": [
+        20,
+        14.5
+       ],
+       "adulte": [
+        20,
+        16.5
+       ],
+       "aine": [
+        20,
+        15.5
+       ]
+      },
+      "devant": "canape_moderne_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        20,
+        -10.5
+       ],
+       "ado": [
+        20,
+        -7.5
+       ],
+       "adulte": [
+        20,
+        -5.5
+       ],
+       "aine": [
+        20,
+        -6.5
+       ]
+      },
+      "devant": "canape_moderne_gauche_devant_3.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   }
+  },
+  "toilettes": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -8
+       ],
+       "ado": [
+        0,
+        -5
+       ],
+       "adulte": [
+        0,
+        -3
+       ],
+       "aine": [
+        0,
+        -4
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -12
+       ],
+       "ado": [
+        0,
+        -9
+       ],
+       "adulte": [
+        0,
+        -7
+       ],
+       "aine": [
+        0,
+        -8
+       ]
+      },
+      "devant": "toilettes_nature_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        -2,
+        -10
+       ],
+       "ado": [
+        -2,
+        -7
+       ],
+       "adulte": [
+        -2,
+        -5
+       ],
+       "aine": [
+        -2,
+        -6
+       ]
+      },
+      "devant": "toilettes_nature_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        2,
+        -10
+       ],
+       "ado": [
+        2,
+        -7
+       ],
+       "adulte": [
+        2,
+        -5
+       ],
+       "aine": [
+        2,
+        -6
+       ]
+      },
+      "devant": "toilettes_nature_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -8
+       ],
+       "ado": [
+        0,
+        -5
+       ],
+       "adulte": [
+        0,
+        -3
+       ],
+       "aine": [
+        0,
+        -4
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -12
+       ],
+       "ado": [
+        0,
+        -9
+       ],
+       "adulte": [
+        0,
+        -7
+       ],
+       "aine": [
+        0,
+        -8
+       ]
+      },
+      "devant": "toilettes_retro_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        -2,
+        -10
+       ],
+       "ado": [
+        -2,
+        -7
+       ],
+       "adulte": [
+        -2,
+        -5
+       ],
+       "aine": [
+        -2,
+        -6
+       ]
+      },
+      "devant": "toilettes_retro_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        2,
+        -10
+       ],
+       "ado": [
+        2,
+        -7
+       ],
+       "adulte": [
+        2,
+        -5
+       ],
+       "aine": [
+        2,
+        -6
+       ]
+      },
+      "devant": "toilettes_retro_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -7
+       ],
+       "ado": [
+        0,
+        -4
+       ],
+       "adulte": [
+        0,
+        -2
+       ],
+       "aine": [
+        0,
+        -3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -11
+       ],
+       "ado": [
+        0,
+        -8
+       ],
+       "adulte": [
+        0,
+        -6
+       ],
+       "aine": [
+        0,
+        -7
+       ]
+      },
+      "devant": "toilettes_moderne_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        -2,
+        -9
+       ],
+       "ado": [
+        -2,
+        -6
+       ],
+       "adulte": [
+        -2,
+        -4
+       ],
+       "aine": [
+        -2,
+        -5
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        2,
+        -9
+       ],
+       "ado": [
+        2,
+        -6
+       ],
+       "adulte": [
+        2,
+        -4
+       ],
+       "aine": [
+        2,
+        -5
+       ]
+      },
+      "devant": null,
+      "miroir_de": "gauche"
+     }
+    ]
+   }
+  },
+  "table_jeux": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        30
+       ],
+       "ado": [
+        16,
+        33
+       ],
+       "adulte": [
+        16,
+        35
+       ],
+       "aine": [
+        16,
+        34
+       ]
+      },
+      "devant": null
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -22
+       ],
+       "ado": [
+        16,
+        -19
+       ],
+       "adulte": [
+        16,
+        -17
+       ],
+       "aine": [
+        16,
+        -18
+       ]
+      },
+      "devant": "table_jeux_nature_bas_devant_2.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -22
+       ],
+       "ado": [
+        16,
+        -19
+       ],
+       "adulte": [
+        16,
+        -17
+       ],
+       "aine": [
+        16,
+        -18
+       ]
+      },
+      "devant": "table_jeux_nature_haut_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        30
+       ],
+       "ado": [
+        16,
+        33
+       ],
+       "adulte": [
+        16,
+        35
+       ],
+       "aine": [
+        16,
+        34
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -10,
+        4
+       ],
+       "ado": [
+        -10,
+        7
+       ],
+       "adulte": [
+        -10,
+        9
+       ],
+       "aine": [
+        -10,
+        8
+       ]
+      },
+      "devant": "table_jeux_nature_gauche_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        42,
+        4
+       ],
+       "ado": [
+        42,
+        7
+       ],
+       "adulte": [
+        42,
+        9
+       ],
+       "aine": [
+        42,
+        8
+       ]
+      },
+      "devant": "table_jeux_nature_gauche_devant_2.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        42,
+        4
+       ],
+       "ado": [
+        42,
+        7
+       ],
+       "adulte": [
+        42,
+        9
+       ],
+       "aine": [
+        42,
+        8
+       ]
+      },
+      "devant": "table_jeux_nature_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -10,
+        4
+       ],
+       "ado": [
+        -10,
+        7
+       ],
+       "adulte": [
+        -10,
+        9
+       ],
+       "aine": [
+        -10,
+        8
+       ]
+      },
+      "devant": "table_jeux_nature_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        29
+       ],
+       "ado": [
+        16,
+        32
+       ],
+       "adulte": [
+        16,
+        34
+       ],
+       "aine": [
+        16,
+        33
+       ]
+      },
+      "devant": null
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -23
+       ],
+       "ado": [
+        16,
+        -20
+       ],
+       "adulte": [
+        16,
+        -18
+       ],
+       "aine": [
+        16,
+        -19
+       ]
+      },
+      "devant": "table_jeux_retro_bas_devant_2.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -23
+       ],
+       "ado": [
+        16,
+        -20
+       ],
+       "adulte": [
+        16,
+        -18
+       ],
+       "aine": [
+        16,
+        -19
+       ]
+      },
+      "devant": "table_jeux_retro_haut_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        29
+       ],
+       "ado": [
+        16,
+        32
+       ],
+       "adulte": [
+        16,
+        34
+       ],
+       "aine": [
+        16,
+        33
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -10,
+        3
+       ],
+       "ado": [
+        -10,
+        6
+       ],
+       "adulte": [
+        -10,
+        8
+       ],
+       "aine": [
+        -10,
+        7
+       ]
+      },
+      "devant": "table_jeux_retro_gauche_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        42,
+        3
+       ],
+       "ado": [
+        42,
+        6
+       ],
+       "adulte": [
+        42,
+        8
+       ],
+       "aine": [
+        42,
+        7
+       ]
+      },
+      "devant": "table_jeux_retro_gauche_devant_2.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        42,
+        3
+       ],
+       "ado": [
+        42,
+        6
+       ],
+       "adulte": [
+        42,
+        8
+       ],
+       "aine": [
+        42,
+        7
+       ]
+      },
+      "devant": "table_jeux_retro_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -10,
+        3
+       ],
+       "ado": [
+        -10,
+        6
+       ],
+       "adulte": [
+        -10,
+        8
+       ],
+       "aine": [
+        -10,
+        7
+       ]
+      },
+      "devant": "table_jeux_retro_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        30
+       ],
+       "ado": [
+        16,
+        33
+       ],
+       "adulte": [
+        16,
+        35
+       ],
+       "aine": [
+        16,
+        34
+       ]
+      },
+      "devant": null
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -22
+       ],
+       "ado": [
+        16,
+        -19
+       ],
+       "adulte": [
+        16,
+        -17
+       ],
+       "aine": [
+        16,
+        -18
+       ]
+      },
+      "devant": "table_jeux_moderne_bas_devant_2.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -22
+       ],
+       "ado": [
+        16,
+        -19
+       ],
+       "adulte": [
+        16,
+        -17
+       ],
+       "aine": [
+        16,
+        -18
+       ]
+      },
+      "devant": "table_jeux_moderne_haut_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        30
+       ],
+       "ado": [
+        16,
+        33
+       ],
+       "adulte": [
+        16,
+        35
+       ],
+       "aine": [
+        16,
+        34
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -10,
+        4
+       ],
+       "ado": [
+        -10,
+        7
+       ],
+       "adulte": [
+        -10,
+        9
+       ],
+       "aine": [
+        -10,
+        8
+       ]
+      },
+      "devant": "table_jeux_moderne_gauche_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        42,
+        4
+       ],
+       "ado": [
+        42,
+        7
+       ],
+       "adulte": [
+        42,
+        9
+       ],
+       "aine": [
+        42,
+        8
+       ]
+      },
+      "devant": "table_jeux_moderne_gauche_devant_2.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        42,
+        4
+       ],
+       "ado": [
+        42,
+        7
+       ],
+       "adulte": [
+        42,
+        9
+       ],
+       "aine": [
+        42,
+        8
+       ]
+      },
+      "devant": "table_jeux_moderne_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -10,
+        4
+       ],
+       "ado": [
+        -10,
+        7
+       ],
+       "adulte": [
+        -10,
+        9
+       ],
+       "aine": [
+        -10,
+        8
+       ]
+      },
+      "devant": "table_jeux_moderne_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   }
+  },
+  "salon_jardin": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        23.5
+       ],
+       "ado": [
+        16,
+        26.5
+       ],
+       "adulte": [
+        16,
+        28.5
+       ],
+       "aine": [
+        16,
+        27.5
+       ]
+      },
+      "devant": "salon_jardin_nature_bas_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -22.5
+       ],
+       "ado": [
+        16,
+        -19.5
+       ],
+       "adulte": [
+        16,
+        -17.5
+       ],
+       "aine": [
+        16,
+        -18.5
+       ]
+      },
+      "devant": "salon_jardin_nature_bas_devant_2.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -22.5
+       ],
+       "ado": [
+        16,
+        -19.5
+       ],
+       "adulte": [
+        16,
+        -17.5
+       ],
+       "aine": [
+        16,
+        -18.5
+       ]
+      },
+      "devant": "salon_jardin_nature_haut_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        23.5
+       ],
+       "ado": [
+        16,
+        26.5
+       ],
+       "adulte": [
+        16,
+        28.5
+       ],
+       "aine": [
+        16,
+        27.5
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -7,
+        0.5
+       ],
+       "ado": [
+        -7,
+        3.5
+       ],
+       "adulte": [
+        -7,
+        5.5
+       ],
+       "aine": [
+        -7,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_nature_gauche_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        39,
+        0.5
+       ],
+       "ado": [
+        39,
+        3.5
+       ],
+       "adulte": [
+        39,
+        5.5
+       ],
+       "aine": [
+        39,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_nature_gauche_devant_2.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        39,
+        0.5
+       ],
+       "ado": [
+        39,
+        3.5
+       ],
+       "adulte": [
+        39,
+        5.5
+       ],
+       "aine": [
+        39,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_nature_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -7,
+        0.5
+       ],
+       "ado": [
+        -7,
+        3.5
+       ],
+       "adulte": [
+        -7,
+        5.5
+       ],
+       "aine": [
+        -7,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_nature_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        23.5
+       ],
+       "ado": [
+        16,
+        26.5
+       ],
+       "adulte": [
+        16,
+        28.5
+       ],
+       "aine": [
+        16,
+        27.5
+       ]
+      },
+      "devant": "salon_jardin_retro_bas_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -22.5
+       ],
+       "ado": [
+        16,
+        -19.5
+       ],
+       "adulte": [
+        16,
+        -17.5
+       ],
+       "aine": [
+        16,
+        -18.5
+       ]
+      },
+      "devant": "salon_jardin_retro_bas_devant_2.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -22.5
+       ],
+       "ado": [
+        16,
+        -19.5
+       ],
+       "adulte": [
+        16,
+        -17.5
+       ],
+       "aine": [
+        16,
+        -18.5
+       ]
+      },
+      "devant": "salon_jardin_retro_haut_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        23.5
+       ],
+       "ado": [
+        16,
+        26.5
+       ],
+       "adulte": [
+        16,
+        28.5
+       ],
+       "aine": [
+        16,
+        27.5
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -7,
+        0.5
+       ],
+       "ado": [
+        -7,
+        3.5
+       ],
+       "adulte": [
+        -7,
+        5.5
+       ],
+       "aine": [
+        -7,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_retro_gauche_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        39,
+        0.5
+       ],
+       "ado": [
+        39,
+        3.5
+       ],
+       "adulte": [
+        39,
+        5.5
+       ],
+       "aine": [
+        39,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_retro_gauche_devant_2.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        39,
+        0.5
+       ],
+       "ado": [
+        39,
+        3.5
+       ],
+       "adulte": [
+        39,
+        5.5
+       ],
+       "aine": [
+        39,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_retro_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -7,
+        0.5
+       ],
+       "ado": [
+        -7,
+        3.5
+       ],
+       "adulte": [
+        -7,
+        5.5
+       ],
+       "aine": [
+        -7,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_retro_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        23.5
+       ],
+       "ado": [
+        16,
+        26.5
+       ],
+       "adulte": [
+        16,
+        28.5
+       ],
+       "aine": [
+        16,
+        27.5
+       ]
+      },
+      "devant": "salon_jardin_moderne_bas_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -22.5
+       ],
+       "ado": [
+        16,
+        -19.5
+       ],
+       "adulte": [
+        16,
+        -17.5
+       ],
+       "aine": [
+        16,
+        -18.5
+       ]
+      },
+      "devant": "salon_jardin_moderne_bas_devant_2.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "assis",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -22.5
+       ],
+       "ado": [
+        16,
+        -19.5
+       ],
+       "adulte": [
+        16,
+        -17.5
+       ],
+       "aine": [
+        16,
+        -18.5
+       ]
+      },
+      "devant": "salon_jardin_moderne_haut_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        23.5
+       ],
+       "ado": [
+        16,
+        26.5
+       ],
+       "adulte": [
+        16,
+        28.5
+       ],
+       "aine": [
+        16,
+        27.5
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -7,
+        0.5
+       ],
+       "ado": [
+        -7,
+        3.5
+       ],
+       "adulte": [
+        -7,
+        5.5
+       ],
+       "aine": [
+        -7,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_moderne_gauche_devant_1.svg"
+     },
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        39,
+        0.5
+       ],
+       "ado": [
+        39,
+        3.5
+       ],
+       "adulte": [
+        39,
+        5.5
+       ],
+       "aine": [
+        39,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_moderne_gauche_devant_2.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "assis",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        39,
+        0.5
+       ],
+       "ado": [
+        39,
+        3.5
+       ],
+       "adulte": [
+        39,
+        5.5
+       ],
+       "aine": [
+        39,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_moderne_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "assis",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -7,
+        0.5
+       ],
+       "ado": [
+        -7,
+        3.5
+       ],
+       "adulte": [
+        -7,
+        5.5
+       ],
+       "aine": [
+        -7,
+        4.5
+       ]
+      },
+      "devant": "salon_jardin_moderne_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   }
+  },
+  "lit": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       19,
+       36
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_nature_bas_devant_1.svg"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       45,
+       36
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_nature_bas_devant_2.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       45,
+       92
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_nature_haut_devant_1.svg"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       19,
+       92
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_nature_haut_devant_2.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       76,
+       61
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_nature_gauche_devant_1.svg"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       76,
+       35
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_nature_gauche_devant_2.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       20,
+       61
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_nature_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       20,
+       35
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_nature_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       19,
+       43
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_retro_bas_devant_1.svg"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       45,
+       43
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_retro_bas_devant_2.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       45,
+       99
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_retro_haut_devant_1.svg"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       19,
+       99
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_retro_haut_devant_2.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       76,
+       68
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_retro_gauche_devant_1.svg"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       76,
+       42
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_retro_gauche_devant_2.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       20,
+       68
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_retro_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       20,
+       42
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_retro_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       19,
+       32
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_moderne_bas_devant_1.svg"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       45,
+       32
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_moderne_bas_devant_2.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       45,
+       88
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_moderne_haut_devant_1.svg"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       19,
+       88
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_moderne_haut_devant_2.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       76,
+       57
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_moderne_gauche_devant_1.svg"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       76,
+       31
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_moderne_gauche_devant_2.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       20,
+       57
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_moderne_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     },
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       20,
+       31
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_moderne_gauche_devant_2.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   }
+  },
+  "lit_simple": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       16,
+       36
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_nature_bas_devant_1.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       16,
+       60
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_nature_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       44,
+       32
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_nature_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       20,
+       32
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_nature_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       16,
+       43
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_retro_bas_devant_1.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       16,
+       67
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_retro_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       44,
+       39
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_retro_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       20,
+       39
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_retro_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       16,
+       32
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_moderne_bas_devant_1.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       16,
+       56
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_moderne_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       44,
+       28
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_moderne_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       20,
+       28
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "lit_simple_moderne_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   }
+  },
+  "baignoire": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       22,
+       47
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_nature_bas_devant_1.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       74,
+       47
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_nature_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       32,
+       89
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_nature_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       32,
+       37
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_nature_droite_devant_1.svg"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       22,
+       47
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_retro_bas_devant_1.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       74,
+       47
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_retro_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       32,
+       89
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_retro_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       32,
+       37
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_retro_droite_devant_1.svg"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       22,
+       47
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_moderne_bas_devant_1.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       74,
+       47
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_moderne_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       32,
+       89
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_moderne_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       32,
+       37
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": "baignoire_moderne_droite_devant_1.svg"
+     }
+    ]
+   }
+  },
+  "hamac": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       24,
+       38.5
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       72,
+       37.5
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       15.5,
+       94
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       16.5,
+       94
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null,
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       24,
+       38.5
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       72,
+       37.5
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       15.5,
+       94
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       16.5,
+       94
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null,
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       24,
+       38.5
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       72,
+       37.5
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       15.5,
+       94
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       16.5,
+       94
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null,
+      "miroir_de": "gauche"
+     }
+    ]
+   }
+  },
+  "tapis_yoga": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "tailleur",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -4.5
+       ],
+       "ado": [
+        0,
+        -4.5
+       ],
+       "adulte": [
+        0,
+        -4.5
+       ],
+       "aine": [
+        0,
+        -4.5
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "tailleur",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -16.5
+       ],
+       "ado": [
+        0,
+        -16.5
+       ],
+       "adulte": [
+        0,
+        -16.5
+       ],
+       "aine": [
+        0,
+        -16.5
+       ]
+      },
+      "devant": "tapis_yoga_nature_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "tailleur",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        10,
+        -26.5
+       ],
+       "ado": [
+        10,
+        -26.5
+       ],
+       "adulte": [
+        10,
+        -26.5
+       ],
+       "aine": [
+        10,
+        -26.5
+       ]
+      },
+      "devant": "tapis_yoga_nature_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "tailleur",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        22,
+        -26.5
+       ],
+       "ado": [
+        22,
+        -26.5
+       ],
+       "adulte": [
+        22,
+        -26.5
+       ],
+       "aine": [
+        22,
+        -26.5
+       ]
+      },
+      "devant": "tapis_yoga_nature_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "tailleur",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -4.5
+       ],
+       "ado": [
+        0,
+        -4.5
+       ],
+       "adulte": [
+        0,
+        -4.5
+       ],
+       "aine": [
+        0,
+        -4.5
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "tailleur",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -16.5
+       ],
+       "ado": [
+        0,
+        -16.5
+       ],
+       "adulte": [
+        0,
+        -16.5
+       ],
+       "aine": [
+        0,
+        -16.5
+       ]
+      },
+      "devant": "tapis_yoga_retro_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "tailleur",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        10,
+        -26.5
+       ],
+       "ado": [
+        10,
+        -26.5
+       ],
+       "adulte": [
+        10,
+        -26.5
+       ],
+       "aine": [
+        10,
+        -26.5
+       ]
+      },
+      "devant": "tapis_yoga_retro_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "tailleur",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        22,
+        -26.5
+       ],
+       "ado": [
+        22,
+        -26.5
+       ],
+       "adulte": [
+        22,
+        -26.5
+       ],
+       "aine": [
+        22,
+        -26.5
+       ]
+      },
+      "devant": "tapis_yoga_retro_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "tailleur",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        0,
+        -4.5
+       ],
+       "ado": [
+        0,
+        -4.5
+       ],
+       "adulte": [
+        0,
+        -4.5
+       ],
+       "aine": [
+        0,
+        -4.5
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "tailleur",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        0,
+        -16.5
+       ],
+       "ado": [
+        0,
+        -16.5
+       ],
+       "adulte": [
+        0,
+        -16.5
+       ],
+       "aine": [
+        0,
+        -16.5
+       ]
+      },
+      "devant": "tapis_yoga_moderne_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "tailleur",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        10,
+        -26.5
+       ],
+       "ado": [
+        10,
+        -26.5
+       ],
+       "adulte": [
+        10,
+        -26.5
+       ],
+       "aine": [
+        10,
+        -26.5
+       ]
+      },
+      "devant": "tapis_yoga_moderne_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "tailleur",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        22,
+        -26.5
+       ],
+       "ado": [
+        22,
+        -26.5
+       ],
+       "adulte": [
+        22,
+        -26.5
+       ],
+       "aine": [
+        22,
+        -26.5
+       ]
+      },
+      "devant": "tapis_yoga_moderne_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   }
+  },
+  "potager": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "genoux",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        51
+       ],
+       "ado": [
+        16,
+        51
+       ],
+       "adulte": [
+        16,
+        51
+       ],
+       "aine": [
+        16,
+        51
+       ]
+      },
+      "devant": "potager_nature_bas_devant_1.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "genoux",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -27
+       ],
+       "ado": [
+        16,
+        -27
+       ],
+       "adulte": [
+        16,
+        -27
+       ],
+       "aine": [
+        16,
+        -27
+       ]
+      },
+      "devant": "potager_nature_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "genoux",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -23,
+        12
+       ],
+       "ado": [
+        -23,
+        12
+       ],
+       "adulte": [
+        -23,
+        12
+       ],
+       "aine": [
+        -23,
+        12
+       ]
+      },
+      "devant": "potager_nature_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "genoux",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        55,
+        12
+       ],
+       "ado": [
+        55,
+        12
+       ],
+       "adulte": [
+        55,
+        12
+       ],
+       "aine": [
+        55,
+        12
+       ]
+      },
+      "devant": "potager_nature_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "genoux",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        51
+       ],
+       "ado": [
+        16,
+        51
+       ],
+       "adulte": [
+        16,
+        51
+       ],
+       "aine": [
+        16,
+        51
+       ]
+      },
+      "devant": "potager_retro_bas_devant_1.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "genoux",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -27
+       ],
+       "ado": [
+        16,
+        -27
+       ],
+       "adulte": [
+        16,
+        -27
+       ],
+       "aine": [
+        16,
+        -27
+       ]
+      },
+      "devant": "potager_retro_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "genoux",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -23,
+        12
+       ],
+       "ado": [
+        -23,
+        12
+       ],
+       "adulte": [
+        -23,
+        12
+       ],
+       "aine": [
+        -23,
+        12
+       ]
+      },
+      "devant": "potager_retro_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "genoux",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        55,
+        12
+       ],
+       "ado": [
+        55,
+        12
+       ],
+       "adulte": [
+        55,
+        12
+       ],
+       "aine": [
+        55,
+        12
+       ]
+      },
+      "devant": "potager_retro_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "genoux",
+      "direction": "haut",
+      "decalage": {
+       "enfant": [
+        16,
+        51
+       ],
+       "ado": [
+        16,
+        51
+       ],
+       "adulte": [
+        16,
+        51
+       ],
+       "aine": [
+        16,
+        51
+       ]
+      },
+      "devant": "potager_moderne_bas_devant_1.svg"
+     }
+    ],
+    "haut": [
+     {
+      "pose": "genoux",
+      "direction": "bas",
+      "decalage": {
+       "enfant": [
+        16,
+        -27
+       ],
+       "ado": [
+        16,
+        -27
+       ],
+       "adulte": [
+        16,
+        -27
+       ],
+       "aine": [
+        16,
+        -27
+       ]
+      },
+      "devant": "potager_moderne_haut_devant_1.svg"
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "genoux",
+      "direction": "droite",
+      "decalage": {
+       "enfant": [
+        -23,
+        12
+       ],
+       "ado": [
+        -23,
+        12
+       ],
+       "adulte": [
+        -23,
+        12
+       ],
+       "aine": [
+        -23,
+        12
+       ]
+      },
+      "devant": "potager_moderne_gauche_devant_1.svg"
+     }
+    ],
+    "droite": [
+     {
+      "pose": "genoux",
+      "direction": "gauche",
+      "decalage": {
+       "enfant": [
+        55,
+        12
+       ],
+       "ado": [
+        55,
+        12
+       ],
+       "adulte": [
+        55,
+        12
+       ],
+       "aine": [
+        55,
+        12
+       ]
+      },
+      "devant": "potager_moderne_gauche_devant_1.svg",
+      "miroir_de": "gauche"
+     }
+    ]
+   }
+  }
+ },
+ "tete_dy": {
+  "assis": {
+   "enfant": 4,
+   "ado": 6,
+   "adulte": 7,
+   "aine": 7
+  },
+  "tailleur": {
+   "enfant": 6,
+   "ado": 11,
+   "adulte": 14,
+   "aine": 13
+  },
+  "genoux": {
+   "enfant": 4,
+   "ado": 6,
+   "adulte": 7,
+   "aine": 7
+  }
+ }
+}
