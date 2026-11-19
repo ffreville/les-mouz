@@ -314,6 +314,7 @@ Le jeu passe progressivement en vue trois quarts (brief n° 6, livré par lots ;
 - **Clics** : `World.get_object_at_point` cherche l'image de l'objet (hauteur comprise), celle de devant en premier.
 - **Lot 1 livré** : murs, portes, fenêtres, 7 objets témoins en Nature (canapé, télé, lit, frigo, table, chaise, plante). Les autres objets restent vus de dessus en attendant leur lot.
 - **Lot 2 livré** : les humains. `MouzAppearance` liste les calques à superposer (ombre, cheveux arrière, pantalon, peau, tenue, contours, tête, cheveux), blancs dans les SVG et teintés par `modulate`. `MouzBody` les dessine en jeu (32 × 64, pieds à 48 px du haut ; `droite` = `gauche` retourné ; tête et cheveux remontent d'1 px en marchant), `MouzPortrait` dessine le portrait de face dans l'interface. Les calques sont importés à l'échelle 2 (portraits à l'échelle 4) pour rester nets.
+- **Lot 3 livré** : la cuisine complète dans les trois collections (frigo, cuisinière, évier, plan de travail, table, chaise, micro-ondes, machine à café, lave-vaisselle, poubelle). Cuisinière, micro-ondes, machine à café et lave-vaisselle ont des vues « en marche » (`_actif`). L'évier et le plan de travail, asymétriques, ont leur propre vue `droite`. Micro-ondes et machine à café sont dessinés posés sur un petit meuble bas.
 
 ## Limites connues
 

@@ -927,3 +927,41 @@ Tout est dessiné avec la famille d'humains et la vue trois quarts.
 ## Icônes
 
 `sauvegarder`, `charger`, `renommer`, `supprimer`, `menu`, `quitter`, `continuer`, en versions encre et blanc.
+
+## Lot 3 · La cuisine
+
+Planche : « Lot 3 · Cuisine » sur le canvas (une cuisine par collection, puis les 10 objets dans leurs 4 vues). Planche de contrôle : `apercu_cuisine.png`. Elle remplace l'ancienne planche vue de dessus du même nom.
+
+133 fichiers dans `svg/sprites/`, nommés `<clé>_<collection>_<vue>[_actif].svg`. Les vues Nature du frigo, de la table et de la chaise, livrées au lot 1, sont redessinées avec le même moteur. Elles sont identiques en forme et en taille.
+
+| Clé | Nom | Emprise | Hauteur | Sprite bas/haut | Sprite gauche/droite | Miroir | En marche |
+|---|---|---|---|---|---|---|---|
+| `frigo` | Frigo | 1 × 1 | 60 px | 32 × 92 | 32 × 92 | oui | — |
+| `cuisiniere` | Cuisinière | 1 × 1 | 34 px | 32 × 66 | 32 × 66 | oui | oui |
+| `evier` | Évier | 2 × 1 | 37 px | 64 × 69 | 32 × 101 | non (fichier droite livré) | — |
+| `plan_travail` | Plan de travail | 3 × 1 | 27 px | 96 × 59 | 32 × 123 | non (fichier droite livré) | — |
+| `table` | Table | 2 × 2 | 27 px | 64 × 91 | 64 × 91 | oui | — |
+| `chaise` | Chaise | 1 × 1 | 34 px | 32 × 66 | 32 × 66 | oui | — |
+| `micro_ondes` | Micro-ondes (sur meuble bas) | 1 × 1 | 42 px | 32 × 74 | 32 × 74 | oui | oui |
+| `machine_cafe` | Machine à café (sur meuble bas) | 1 × 1 | 45 px | 32 × 77 | 32 × 77 | oui | oui |
+| `lave_vaisselle` | Lave-vaisselle | 1 × 1 | 27 px | 32 × 59 | 32 × 59 | oui | oui |
+| `poubelle` | Poubelle | 1 × 1 | 23 px | 32 × 55 | 32 × 55 | oui | — |
+
+- **Miroir** : la plupart des objets sont symétriques, donc `droite` = `gauche` retourné. L'évier (cuve à gauche, égouttoir à droite) et le plan de travail (planche, bol, fruits) ne le sont pas : leur fichier `droite` est livré.
+- **Micro-ondes et machine à café** : une case seule n'a pas de plan de travail. Je les ai donc posés sur un petit meuble bas de 27 px, assorti à la collection. Le micro-ondes monte à 42 px, la machine à café à 45 px.
+- **En marche** (`_actif`, dans toutes les vues livrées) : cuisinière (feux rouges, porte du four orange), micro-ondes (vitre allumée et plat qui tourne), machine à café (voyant bleu et vapeur au-dessus de la tasse), lave-vaisselle (voyant vert).
+- **Places à table** : les deux couverts restent face à face dans les 4 vues, en Nature (rectangulaire), en Rétro (ronde, pieds compas) et en Moderne (plateau blanc, pieds métal fins).
+
+### Ce qui distingue les collections en trois quarts
+
+| | Nature | Rétro | Moderne |
+|---|---|---|---|
+| Caissons | bois clair, poignées en bois | teck, boutons laiton ronds | blanc, poignées-barres métal |
+| Plans de travail | lin `#EDE3D3` | crème `#F3E3C3` | ardoise `#4A5568` |
+| Électroménager | crème, aimant feuille | crème et teal, bandeau brique | gris clair et noir, écran |
+| Coins | rayon ×1 | rayon ×1,8 | rayon ×0,35 |
+| Sièges | bois et coussin lin | assise ronde moutarde, pieds compas | coque blanche, dossier ardoise, pieds métal |
+
+### Ordre d'affichage à l'intérieur d'un sprite
+
+Les sprites restent des volumes complets (règle du lot 1). En les dessinant, j'ai appliqué un ordre plus strict : un volume posé sur un autre (micro-ondes sur son meuble, coussin sur une assise) est toujours dessiné après lui. Sinon, l'ordre suit le bas de l'emprise. Pour le jeu, rien ne change : on trie toujours les sprites par le bas de leur emprise.
