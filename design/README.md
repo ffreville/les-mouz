@@ -630,3 +630,140 @@ Avec 10 catégories, seul l'onglet actif garde son libellé (padding 0 12). Les 
 - « Changer de style » : icône `peindre` 20 + Nunito 15/700 ; en dessous, décalées de 30 px, les pastilles 22 px et le coût aligné à droite ; une ligne d'explication 11/700 encre douce.
 - Coût suggéré : **gratuit le jour de l'achat**, puis **25 % du prix** (revente à 75 % + rachat au prix plein). « Gratuit » en `#0B6E52` ; montant avec pièce 12 + Nunito 12/800 ; s'il manque de l'argent, le montant passe en `#B3261E` et la pastille est refusée.
 - Le changement se fait au clic sur une pastille, avec la variation du solde habituelle.
+
+---
+
+# Vue trois quarts (brief n° 6)
+
+Planches : colonne « Vue trois quarts · lot 1 » du canvas (scène salon + chambre, règles et pièces). Planche de contrôle : `apercu_vue34_lot1.png`.
+
+Les sprites vus de dessus restent en place tant que leur remplaçant n'est pas livré.
+
+## Lot 1 · Les règles de la vue
+
+### Projection
+
+Un point du monde (x, y) au sol, à la hauteur z, s'affiche en **(x, y − z)**. Le sol reste une grille de cases carrées de 32 px, sans déformation, et le terrain fait toujours 30 × 20 cases. Le dessus d'un volume garde sa vraie profondeur et sa face avant (tournée vers le bas de l'écran) garde sa vraie hauteur. On ne voit jamais les faces gauche, droite ou arrière d'un volume, seulement son dessus et sa face du bas.
+
+Repère : **1 m ≈ 32 px**. Les faces avant sont plus foncées que les dessus (même teinte, 14 % plus sombre), toujours en aplat.
+
+### Hauteurs retenues
+
+| Élément | Hauteur |
+|---|---|
+| Tapis, tapis de yoga | 0 |
+| Table basse | 18 |
+| Lit (matelas et couette) | 20, tête de lit 34 |
+| Baignoire | 20 |
+| Table, bureau, plan de travail | 27 |
+| Chaise | assise 16, dossier 34 |
+| Canapé, fauteuil | assise 20, dossier 30 à 32 |
+| Meuble TV | 18, écran jusqu'à 44 |
+| Plante en pot | 34 (pot 13) |
+| Frigo, armoire, bibliothèque | 60 |
+| Mur plein / baissé | 64 / 12 |
+| Adulte debout | 48 |
+
+### Taille et ancrage d'un sprite
+
+- Largeur = emprise × 32 ; hauteur = profondeur de l'emprise × 32 + hauteur de l'objet. Ex. : canapé 3 × 2 et 32 px de haut → 96 × 96 ; armoire 2 × 1 et 60 px → 64 × 92.
+- **Ancrage** : le bas de l'image est le bas de l'emprise (décalage 0 pour tous les objets). On pose l'image en `(x_emprise, bas_emprise − hauteur_image)`.
+- **Ombre** : ombre découpée `#2B2440` à 16 %, sans flou, au pied de chaque volume posé au sol, décalée de 3 px vers la droite (bande de 7 px). Elle est dans le sprite. Les objets laissent 2 px de marge dans leur emprise pour qu'elle se voie.
+
+### Ordre d'affichage
+
+Le jeu dessine du haut vers le bas de l'écran, selon le **bas de l'emprise** (les pieds pour un personnage) : ce qui est plus bas passe devant. Les tapis restent toujours dessous. Chaque sprite est un volume complet : il ne compte pas sur ce qui sera devant ou derrière lui.
+
+### Les 4 vues
+
+| Vue | Face avant tournée vers | On voit |
+|---|---|---|
+| `bas` | le bas de l'écran | la face avant (vue du catalogue) |
+| `haut` | le haut | le dos |
+| `gauche` | la gauche | le côté gauche de l'objet |
+| `droite` | la droite | le côté droit ; si `miroir: true`, c'est `gauche` retourné |
+
+Une emprise 2 × 1 en `bas`/`haut` devient 1 × 2 en `gauche`/`droite`. Nommage : `<clé>_<collection>_<vue>.svg`, état en marche `<clé>_<collection>_<vue>_actif.svg`.
+
+## Lot 1 · Les murs
+
+Un mur fait 8 px d'épaisseur, posé à cheval sur une ligne de la grille (4 px de chaque côté).
+
+- **Mur horizontal** : on voit son dessus (bande de 8 px, remontée de la hauteur du mur) et sa face (64 px, ou 12 px baissé).
+- **Mur vertical** : on ne voit que son dessus, une bande de 8 px de large remontée de 64 px, et sa tranche en bas, qui est la face du poteau du bout.
+
+### Couleurs
+
+La face tournée vers l'intérieur d'une pièce prend la couleur du style. La face tournée vers l'extérieur est un enduit clair avec un soubassement de la couleur du style : de dehors, la maison se lit d'un coup d'œil et les styles restent reconnaissables.
+
+| Style | Dessus | Face intérieure | Plinthe (6 px) | Face extérieure |
+|---|---|---|---|---|
+| prune | `#898099` | `#5B4E72` | `#473D59` | `#EFE6D6` + soubassement `#5B4E72` |
+| brique | `#B8897D` | `#9C5B4A` | `#7A473A` | `#EFE6D6` + soubassement `#9C5B4A` |
+| sauge | `#809A8F` | `#4F7363` | `#3E5A4D` | `#EFE6D6` + soubassement `#4F7363` |
+| ardoise | `#758498` | `#3F5470` | `#314257` | `#EFE6D6` + soubassement `#3F5470` |
+
+### Les pièces (`svg/murs/`)
+
+Le mur se monte avec des morceaux entre les nœuds de la grille et un poteau à chaque nœud. Les traits de contour ne sont dessinés que sur le bord extérieur de l'ensemble, donc les raccords ne montrent aucune couture.
+
+| Pièce | Taille plein / baissé | Où la poser (nœud en X, Y) | Tri |
+|---|---|---|---|
+| `mur_<style>_<plein\|baisse>_h_<int\|ext>` | 24 × 72 / 24 × 20 | segment entre (X, Y) et (X + 32, Y) : en (X + 4, Y + 4 − hauteur de l'image) | Y + 4 |
+| `mur_<style>_<plein\|baisse>_v` | 8 × 88 / 8 × 36 | segment entre (X, Y) et (X, Y + 32) : en (X − 4, Y + 4 − hauteur du mur) | Y + 28 |
+| `poteau_<style>_<plein\|baisse>_<masque>[_<int\|ext>]` | 8 × 72 / 8 × 20 | nœud (X, Y) : en (X − 4, Y + 4 − hauteur de l'image) | Y + 4 |
+
+- **Masque du poteau** : les lettres `n`, `e`, `s`, `o` des directions où un mur part du nœud, dans cet ordre (`ne`, `neso`, `eo`…), ou `seul`. Les 16 combinaisons couvrent tous les raccords : angle (`es`, `so`, `ne`, `no`), T (`eso`, `neo`, `nes`, `nso`), croix (`neso`), bout (`e`, `o`, `n`, `s`), ligne droite (`eo`, `ns`).
+- **Face** : un poteau sans mur vers le bas (`s` absent) montre sa face, en version `_int` ou `_ext`. Prends `_int` si l'une des deux cases sous le nœud est dans une pièce. Pour un segment horizontal, prends `_int` si la case juste en dessous est dans une pièce.
+- **Mur baissé** : mêmes pièces, même placement, avec une hauteur de mur de 12 px. On l'utilise en mode Construire et pour voir l'intérieur des pièces.
+
+## Lot 1 · Portes et fenêtres (`svg/ouvertures/`)
+
+Ce sont des calques posés **par-dessus** le morceau de mur correspondant (même position, dessinés juste après lui). Ils ne dépendent pas du style du mur.
+
+| Fichier | Taille plein / baissé | Contenu |
+|---|---|---|
+| `<porte>_h_plein.svg` | 24 × 72 | porte fermée dans la face, linteau de 14 px au-dessus |
+| `<porte>_h_plein_ouverte.svg` | 24 × 72 | passage sombre, battant rabattu à gauche, seuil |
+| `<porte>_h_baisse[_ouverte].svg` | 24 × 20 | seuil et battant à 12 px |
+| `<porte>_v_plein[_ouverte].svg` | 8 × 88 | repère sur la bande du dessus : seuil et battant |
+| `<porte>_v_baisse[_ouverte].svg` | 8 × 36 | seuil, battant fermé (5 px) ou ouvert (toute la longueur) |
+| `fenetre_h_plein.svg` | 24 × 72 | cadre crème, vitrage `#9FD3F2`, meneau, appui |
+| `fenetre_large_h_plein.svg` | 56 × 72 | sur deux segments, couvre le poteau du milieu |
+| `fenetre[_large]_h_baisse.svg` | 24 (56) × 20 | vitrage posé sur le dessus du mur baissé |
+| `fenetre[_large]_v_<plein\|baisse>.svg` | 8 × 88 (120) / 8 × 36 (68) | vitrage dans la bande du dessus |
+
+Les portes sont **fermées par défaut** : une porte ouverte en permanence encombre la face du mur. Le jeu affiche `_ouverte` le temps qu'un Mouz passe. Dans un mur vertical plein, une porte est cachée par le mur, comme en vrai. On la repère donc à son seuil et à son battant dessinés sur la bande du dessus, et elle se lit pleinement en mur baissé.
+
+## Lot 1 · Sols
+
+Les 9 sols existants restent valables tels quels. Les objets ont maintenant un contour encre, une face avant plus sombre et une ombre au pied, donc ils se détachent assez de tous les sols, y compris le béton et le lino. Je n'ai rien changé.
+
+## Lot 1 · Objets témoins (collection Nature)
+
+Tous symétriques gauche/droite : `miroir: true`, on livre `bas`, `haut` et `gauche`, et `droite` est `gauche` retourné.
+
+| Clé | Nom | Emprise | Hauteur | Sprite bas/haut | Sprite gauche/droite | Miroir |
+|---|---|---|---|---|---|---|
+| `canape` | Canapé | 3 × 2 | 32 px | 96 × 96 | 64 × 128 | oui |
+| `tele` | Meuble TV | 3 × 1 | 44 px | 96 × 76 | 32 × 140 | oui |
+| `lit` | Lit double | 2 × 3 | 34 px | 64 × 130 | 96 × 98 | oui |
+| `frigo` | Frigo | 1 × 1 | 60 px | 32 × 92 | 32 × 92 | oui |
+| `table` | Table | 2 × 2 | 27 px | 64 × 91 | 64 × 91 | oui |
+| `chaise` | Chaise | 1 × 1 | 34 px | 32 × 66 | 32 × 66 | oui |
+| `plante` | Plante en pot | 1 × 1 | 34.0 px | 32 × 66.0 | 32 × 66.0 | oui |
+
+- `tele_nature_<vue>_actif.svg` : écran allumé et reflet sur le meuble (vues bas, haut, gauche).
+- La table et ses deux couverts restent face à face dans les 4 vues. Le lit a sa tête contre le mur (en haut en vue `bas`). Le canapé en vue `haut` montre son dos : c'est le cas habituel quand il regarde une télé placée plus haut dans la pièce.
+
+## Lot 1 · Personnage provisoire
+
+Un adulte simple, uniquement pour juger des proportions : 48 px de haut, dans une image de **32 × 64**. Ses pieds sont au centre de sa case, 16 px au-dessus du bas de l'image. On pose l'image en `(x_case, bas_case − 64)` et on le trie selon ses pieds (`bas_case − 16`).
+
+Fichiers : `svg/personnages/provisoire_<bas|haut|gauche>[_marche_1|_marche_2].svg`. La vue `droite` est le miroir de `gauche`. La marche fait alterner jambes et bras, avec un rebond de 1 px.
+
+## À vérifier dans le jeu avant le lot 2
+
+- Le tri par bas d'emprise : le personnage doit passer derrière la table quand il est au-dessus, devant quand il est en dessous, et disparaître derrière le mur du bas quand il le longe (visible en mur baissé).
+- La lisibilité des portes dans les murs verticaux pleins.
+- La place du personnage dans sa case (pieds au centre) par rapport aux meubles.
