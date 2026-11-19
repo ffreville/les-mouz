@@ -767,3 +767,163 @@ Fichiers : `svg/personnages/provisoire_<bas|haut|gauche>[_marche_1|_marche_2].sv
 - Le tri par bas d'emprise : le personnage doit passer derrière la table quand il est au-dessus, devant quand il est en dessous, et disparaître derrière le mur du bas quand il le longe (visible en mur baissé).
 - La lisibilité des portes dans les murs verticaux pleins.
 - La place du personnage dans sa case (pieds au centre) par rapport aux meubles.
+
+## Lot 2 · Les humains
+
+Planches : colonne « Vue trois quarts · lot 2 » du canvas. Planches de contrôle : `apercu_personnages.png` (âge × sexe × directions, trois jeux de couleurs) et `apercu_creation_famille.png` (les écrans de création et le choix du terrain).
+
+Les Mouz sont maintenant des humains, aux proportions du personnage provisoire validé au lot 1.
+
+### Cadre et ancrage
+
+- Chaque calque est une image **32 × 64**, toutes superposées sans décalage. Les pieds sont à y = 48, au centre de la case. On pose l'image en `(x_case, bas_case − 64)` et on trie selon les pieds (`bas_case − 16`).
+- Hauteurs : enfant 32 px, ado 42, adulte 48, aîné 46 (épaules un peu voûtées, tête légèrement en avant de profil).
+- Directions livrées : `bas`, `haut`, `gauche`. `droite` est `gauche` retourné (miroir horizontal de l'ensemble des calques).
+- Poses : debout, `_marche_1`, `_marche_2`. Les calques du corps sont dessinés pour chaque pose. Les têtes et les cheveux n'existent qu'en une version par direction : en marche, le jeu les **remonte de 1 px**.
+
+### Les calques, dans l'ordre d'empilement
+
+| # | Fichier | Couleur |
+|---|---|---|
+| 1 | `ombre_<sexe>_<age>.svg` | fixe |
+| 2 | `cheveux_<coupe>_<age>_<dir>_arriere.svg` puis `…_arriere_contour.svg` | cheveux / encre |
+| 3 | `corps_<sexe>_<age>_<tenue>_<dir>[_marche_n]_pantalon.svg` | pantalon (absent avec la robe) |
+| 4 | `corps_…_peau.svg` (bras, mains, jambes sous la robe) | peau |
+| 5 | `corps_…_tenue.svg` | tenue |
+| 6 | `corps_…_contour.svg` (traits, chaussures, plis, encolure) | fixe |
+| 7 | `tete_<age>_<dir>.svg` | peau |
+| 8 | `tete_<age>_<dir>_contour.svg` (yeux, bouche, joues, nez, rides de l'aîné) | fixe |
+| 9 | `cheveux_<coupe>_<age>_<dir>.svg` | cheveux |
+| 10 | `cheveux_<coupe>_<age>_<dir>_contour.svg` | fixe |
+
+- Les zones à teinter sont en blanc pur `#FFFFFF`. Le jeu les colore par `modulate`.
+- Le **pantalon** a son propre calque. Par défaut, je propose de le teinter en ardoise `#4A5568`, ce qui va avec toutes les tenues. Tu peux aussi lui donner une deuxième couleur de tenue plus tard.
+- `_arriere` n'existe qu'en vue `bas` (cheveux longs, chignon, couettes, queue, boucles et afro, qui passent derrière la tête). De dos et de profil, tout est dans le calque de devant.
+- `<tenue>` : `tshirt`, `pull`, `robe`. Les trois formes existent pour les deux sexes.
+
+### Coupes
+
+11 coupes, toutes disponibles à tous les âges pour qu'un Mouz garde sa coupe en vieillissant. Seule exception : `degarni` n'existe qu'à partir d'adulte. Si un enfant ou un ado en hérite, le jeu prend `court`.
+
+| Coupe | Suggérée pour |
+|---|---|
+| `court`, `rase`, `degarni` | hommes |
+| `longs`, `carre`, `chignon`, `couettes` | femmes |
+| `meche`, `boucles`, `afro`, `queue` | les deux |
+
+L'écran de création propose d'abord les coupes suggérées pour le sexe choisi (7 ou 8), avec un lien « Toutes les coupes (11) ».
+
+### Palettes (`tokens.json` → `personnages.palettes`)
+
+- **Peau** (8, de très claire à très foncée) : porcelaine `#FBE3D2`, claire `#F3CDB0`, doree `#E5B48C`, miel `#D39A6A`, caramel `#B77B4E`, cannelle `#97603A`, cacao `#764528`, ebene `#5A3420`.
+- **Cheveux** (8) : noir `#3B2F35`, brun `#6B4532`, blond `#E2C178`, roux `#C8643B`, gris `#A8A6AE`, blanc `#EEECE6`, rose `#E58FB5`, bleu `#6FA8DC`. Pour les aînés, le tirage au hasard prend gris ou blanc.
+- **Tenue** (10, prises dans la palette du jeu) : orange `#E8794A`, moutarde `#E2A93B`, sauge `#8DB596`, canard `#6FA3A0`, bleu `#3E9BD6`, pervenche `#A3B5EC`, prune `#C46BA0`, brique `#B85C45`, ardoise `#4A5568`, creme `#F3E3C3`.
+
+### Portraits (`portrait_*`, 64 × 64, de face)
+
+Même découpage et mêmes couleurs que le sprite, pour qu'on fasse le lien : `portrait_cheveux_<coupe>_<age>_arriere` (+ contour), `portrait_corps_<sexe>_<age>_<tenue>_peau`, `_tenue`, `_contour`, `portrait_tete_<age>` (+ contour avec le visage), `portrait_cheveux_<coupe>_<age>` (+ contour). Tailles d'affichage : 64 (panneau du personnage), 48 (carte de membre), 40 (sélecteur), 32 (relations), 220 (création).
+
+### En jeu
+
+- **Sélection** : ellipse au sol sous les pieds (rayons 13 × 6,5), fond accent à 18 %, trait 2,5 px accent en tirets 6/4, dessinée avant le personnage.
+- **Étiquette de nom** : au-dessus de la tête (8 px au-dessus du haut de l'image), Nunito 9/800 sur `#3D3357`, rayon 6.
+- **Sélecteur de famille** : en haut du panneau du personnage, portraits de 40 px avec le prénom en dessous. Le membre choisi a un anneau accent.
+- **Relations** : une ligne par membre, portrait de 32 px, lien (« Couple », « Sa fille ») et barre de −100 à +100.
+
+## Lot 2 · Créer la famille
+
+Parcours : Accueil → Nouvelle partie → **Créer la famille** → **Choisir le terrain** → jeu.
+
+### Écran de création (1280 × 720)
+
+- **Barre du haut** : logo, « Nouvelle partie », étapes « 1 Famille — 2 Terrain » (étape faite : rond vert `#0B6E52` avec une coche).
+- **Colonne de gauche** (308 de large) : nom de famille avec bouton dé (« Sert aussi de nom à la partie »), compteur « n / 4 », cartes de membre, emplacement « Ajouter un membre » tant qu'il reste de la place, puis le message de règle s'il y a lieu.
+- **Aperçu** (360 de large) : portrait de 220 px dans un rond, prénom (Baloo 2 30/800), « Nom · Sexe · Âge », sprite ×2 qui marche sur du parquet, et les 4 directions à taille réelle.
+- **Éditeur** (564 de large), en deux colonnes :
+  - prénom + dé, interrupteur homme/femme, âge (4 boutons), « Apparence au hasard » ;
+  - pastilles de peau, coupes (vignettes 58 × 58 avec le portrait du membre), couleur des cheveux, tenue (3 vignettes avec le sprite), couleur de la tenue.
+- **Barre du bas** : Retour (secondaire) ; à droite, la raison du blocage en `#B3261E` s'il y en a une, puis « Choisir le terrain » (principal, inactif tant que ça bloque).
+
+### Règles et erreurs
+
+- 1 à 4 membres. On ne peut pas retirer le dernier (pas de ✕ sur sa carte).
+- **Au moins un adulte ou un aîné.** Sinon, un bandeau rouge doux dans la colonne de gauche, « Il faut au moins un adulte ou un aîné dans la famille. », et le bouton reste inactif avec « Ajoute un adulte ou un aîné. ».
+- **Prénom vide** : le champ passe en erreur (« Écris un prénom ou tire-en un au hasard. »), la carte montre « Prénom manquant » avec un bord rouge, et le bouton reste inactif avec « Donne un prénom à chaque membre. ».
+- **Liens entre membres** (facultatif) : une petite pastille entre deux cartes, « Couple ▾ » (couple, parent, enfant, fratrie, colocs). Elle fixe la relation de départ. Elle reste discrète et n'alourdit pas l'écran. Sans lien choisi, la relation part de 0.
+
+### Composants
+
+Les mesures sont dans la planche « Composants création » et dans `tokens.json` → `composants` :
+- **Carte de membre** : 276 × 72, rayon 14, portrait 48. Choisie : fond `#FDE7DB`, bord 3 px accent. Erreur : bord `#B3261E`. Vide : bord en tirets.
+- **Champ de texte** : 44 de haut, rayon 10. Focus : bord accent + halo 3 px. Erreur : bord et message rouges.
+- **Bouton dé** : 44 × 44, fond `#F6EBDD`.
+- **Interrupteur homme/femme** et **sélecteur d'âge** : groupe fond `#F6EBDD`, padding 4, rayon 12. Actif : `#3D3357`.
+- **Pastilles de couleur** : 26 px (20 pour la tenue). Choisie : anneau 2 px papier + 2 px encre. Chacune porte un nom (infobulle, lecteur d'écran).
+- **Vignette de coupe** : 58 × 58. Indisponible pour l'âge : grisée, « dès adulte ».
+- **Boutons** : principal, secondaire, destructif, inactif (44 de haut, rayon 12).
+- **Carte de terrain** : 388 de large, vignette 16:9, nom Baloo 2 22/700, étiquette « Terrain vide » ou « Maison meublée », taille et prix. Choisie : fond `#FDE7DB`, bord 3 px accent.
+
+### Choisir le terrain
+
+- En haut : portraits de la famille en ligne (44 px, qui se chevauchent de 10 px), « Famille Lambert » et les prénoms, le champ **Nom de la partie** (prérempli « La maison des Lambert ») et le budget.
+- 3 cartes de terrain côte à côte, puis en bas : Retour et « Emménager » (principal), avec le solde restant après l'achat.
+- J'ai mis le nom de la partie ici, et plus sur l'accueil. On le connaît maintenant grâce au nom de famille, et on le valide au moment d'emménager.
+
+### Icônes
+
+`homme`, `femme`, `enfant`, `ado`, `adulte`, `aine`, `hasard` (dé), `ajouter_membre`, `retirer`, `famille`, `terrain`, `emmenager`, en versions encre et blanc.
+
+## Plus tard : robot et IA (idées, pas de sprites)
+
+- **Vieillir** : les calques gardent les mêmes clés d'un âge à l'autre (coupe, tenue, couleurs). Passer d'une tranche à la suivante ne change que `<age>` dans les noms de fichiers, et les cheveux grisent seulement si le joueur le choisit. Dans le panneau du personnage, une petite jauge d'âge sous le nom (« Adulte · 12 jours avant Aîné »).
+- **Devenir un robot** : on garde la silhouette et les calques. La peau est teintée en métal (`#A9B1BC`), un calque fixe `robot_<age>_<dir>.svg` ajoute des rivets, une antenne et des articulations, et les yeux deviennent deux points lumineux `#9FD3F2`. Dans l'écran de création, cela pourrait devenir une 5e tranche d'âge, « Robot » (icône d'écrou), qui n'apparaît qu'une fois débloquée. Dans le panneau du personnage, la barre d'humeur garde sa place et une jauge « Révision » (icône de clé, couleur métal) s'ajoute sous les besoins. En retard de révision, elle passe en état critique avec les mêmes hachures.
+- **Devenir l'IA de la maison** : plus de sprite. Le portrait devient un visage simple fait de deux yeux et d'un sourire en `#9FD3F2` sur un écran rond ardoise. Le Mouz reste dans le sélecteur de famille avec ce portrait. En jeu, sa présence se voit sur les objets qu'il pilote : un petit voyant bleu au coin du sprite et un halo pointillé bleu (même forme que l'anneau de sélection) quand il agit. Son panneau remplace les besoins par une liste de « routines » (allumer, régler, surveiller), chacune avec l'icône de l'objet. Dans l'écran de création, il n'apparaît pas au début : on y accède depuis le panneau d'un membre (« Transférer dans la maison »).
+
+---
+
+# Parties et sauvegardes (brief n° 3)
+
+Planches : colonne « Parties et sauvegardes » du canvas (accueil sans partie et avec une partie, charger une partie dans tous ses états, menu en jeu, sauvegarder sous, messages de réussite et d'échec, composants, icônes). Planche de contrôle : `apercu_parties.png`.
+
+Tout est dessiné avec la famille d'humains et la vue trois quarts.
+
+## Accueil
+
+- **Sans partie** : une petite scène de jardin vivante en fond (herbe, plantes, la famille qui se promène en vue trois quarts). Au centre, une carte de 440 px : portraits de la famille en ligne (56 px, chevauchement de 12 px), logo « Les Mouz » en Baloo 2 60/800, « Une maison de poche à construire », puis « Nouvelle partie » (principal). « Charger une partie » est inactif, avec « Aucune partie enregistrée pour l'instant. » en dessous, et il y a aussi « Quitter » (discret).
+- **Avec une partie** : en fond, la vignette de la dernière partie **en grand** (la maison vue en trois quarts, à l'échelle 2) sous un voile `#2B2440` à 38 %. Le premier bouton devient « Continuer : La maison des Lambert » (principal, icône `continuer`), avec « Jour 3 · 18:40 · enregistrée il y a 5 min » juste en dessous. Viennent ensuite Nouvelle partie, Charger une partie (secondaires) et Quitter (discret). C'est ma proposition pour rendre l'accueil plus vivant : on retrouve sa maison avant même de cliquer.
+- **Nouvelle partie** mène maintenant à la création de famille (lot 2 du brief n° 6). Le champ « Nom de la partie » quitte l'accueil pour l'écran Choisir le terrain : il y est prérempli à partir du nom de famille (« La maison des Lambert »).
+
+## Charger une partie
+
+- Barre de titre (940 × 52) : Retour, « Charger une partie » (Baloo 2 24/800), nombre de parties à droite. Dessous, la liste dans un panneau de 940 px.
+- **Carte de partie** (916 de large, padding 12 14 12 12, rayon 14, écart 16) :
+  - vignette 160 × 90 (image source 320 × 180), rayon 10 ;
+  - nom Baloo 2 20/700 ; infos « Jour 3 · 18:40 · 18 800 Mz · 13 objets » en 13/700 avec les icônes horloge et pièce ; « Enregistrée il y a 5 min » en 12/600 ;
+  - boutons de 36 de haut : Charger (principal), Renommer (secondaire), Supprimer (icône seule, `aria-label`, trait rouge).
+- **En cours** : bord 3 px accent et étiquette « En cours ».
+- **Renommage** : le nom devient un champ de 300 × 38 en focus, et les boutons deviennent OK / Annuler. Entrée valide, Échap annule. Si le nom est vide, OK reste inactif et le champ passe en erreur.
+- **Suppression** : la carte passe sur fond `#F9D9D6` avec un bord `#B3261E`, puis « Supprimer définitivement ? », Supprimer (destructif) et Garder.
+- **Partie abîmée** (la sauvegarde ne se lit plus) : vignette hachurée avec une alerte, étiquette « Abîmée », « Cette sauvegarde ne se lit plus. » en `#B3261E`. Si le jeu a gardé une copie de secours, on propose « Restaurer la copie » (je suggère de garder une copie `.bak` à chaque sauvegarde). Sinon, seulement Supprimer.
+- **Liste vide** : une illustration (terrain et panneau), « Aucune partie enregistrée », une phrase d'aide et « Nouvelle partie ».
+
+## Menu en jeu
+
+- Un voile `#2B2440` à 55 % sur le jeu, et une carte de 376 px au centre : nom de la partie (Baloo 2 24/800), « Jour 3 · 18:40 · 18 800 Mz ».
+- Boutons de 320 de large : Reprendre (principal, raccourci « Échap »), Sauvegarder (« Ctrl S »), Sauvegarder sous…, Charger une partie…, puis un séparateur, et Menu principal et Quitter le jeu en boutons discrets.
+- **Sauvegarder sous…** : la carte affiche le champ « Nom de la copie » (prérempli « … (copie) », en focus) avec l'aide « La partie en cours reste ouverte. », puis Retour / Enregistrer.
+- **Raccourci** : petite pastille à droite du bouton, 11/800, padding 1 × 6, rayon 6, bord 1,5 px de la couleur du texte.
+
+## Message de confirmation
+
+- En bas au centre, à 24 px du bord : fond blanc, bord 2 px, rayon 14, padding 10 × 14, ombre découpée, `role="status"`.
+- **Succès** (« Partie enregistrée », « Copie enregistrée : nom ») : rond de 24 px `#0B6E52` avec une coche. Il reste 2 s et arrive en glissant de 8 px vers le haut.
+- **Échec** (« La sauvegarde a échoué ») : rond `#B3261E` avec une alerte, la raison en 12/600 (« Disque plein ou dossier protégé. ») et un bouton « Réessayer ». Je propose qu'il reste 6 s ou jusqu'au clic : en 2 s, on n'a pas le temps de lire et de réagir.
+
+## Composants communs
+
+- **Champ de texte** : 44 de haut, rayon 10, bord 2 px `#E3D5C0`. Focus : bord accent + halo 3 px accent à 25 %. Erreur : bord `#B3261E` et message 12/700 avec l'icône alerte (« Le nom ne peut pas être vide. »).
+- **Boutons** : principal (`#3D3357`, texte `#FFF8EE`), secondaire (bord 2 px `#E3D5C0`), destructif (`#B3261E`, texte blanc), discret (sans bord), inactif (`#E3D5C0`, texte `#5E5675`). Tous font 44 de haut (36 dans les cartes de partie), avec un rayon de 12.
+
+## Icônes
+
+`sauvegarder`, `charger`, `renommer`, `supprimer`, `menu`, `quitter`, `continuer`, en versions encre et blanc.
