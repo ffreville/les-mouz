@@ -1,15 +1,17 @@
 # Brief n° 5 pour Claude Design : « Les Mouz », des humains et l'écran de création de famille
 
-Même direction artistique « Maison de poche » que les lots précédents (maquettes : https://claude.ai/artifact/UXdkDt3fTCFtjiGrQ62zEE, référence complète dans `design/README.md`). Mêmes règles : vue strictement de dessus, aplats, contour encre 2 px `#3D3357` (détails 1,5 px), pas de dégradé, grille de 32 px par case, Baloo 2 + Nunito, ombre découpée, jamais la couleur seule pour porter une information.
+Même direction artistique « Maison de poche » que les lots précédents (maquettes : https://claude.ai/artifact/UXdkDt3fTCFtjiGrQ62zEE, référence complète dans `design/README.md`). > **Ce brief est le lot 2 du brief n° 6** : le jeu passe en vue trois quarts (`docs/brief-claude-design-6.md`). Les personnages se dessinent donc selon les règles de cette vue, validées au lot 1.
+
+Mêmes règles : aplats, contour encre 2 px `#3D3357` (détails 1,5 px), pas de dégradé, grille de 32 px par case, Baloo 2 + Nunito, ombre découpée, jamais la couleur seule pour porter une information.
 
 Deux grands changements :
 
 1. **Les Mouz deviennent des humains.** Les petites boules à oreilles disparaissent. « Mouz » reste le nom qu'on donne aux habitants du jeu, mais ce sont maintenant des personnes : hommes et femmes, de plusieurs âges.
 2. **Le joueur crée sa famille** avant de choisir son terrain. La famille compte de 1 à 4 personnes, avec un nom de famille et un prénom pour chacun.
 
-## 1. Les personnages, vus de dessus
+## 1. Les personnages, en vue trois quarts
 
-Dans le jeu, un personnage tient dans **une case de 32 × 32**. Le sprite est dessiné **tourné vers le haut**, et le jeu le fait pivoter selon la direction de marche. À cette taille, on voit surtout le dessus de la tête (cheveux), les épaules et les bras. Il faut qu'on reconnaisse d'un coup d'œil qui est qui, même petit et tourné.
+Dans le jeu, un personnage se tient sur **une case de 32 × 32** et monte vers le haut de l'écran (un adulte fait environ 48 px de haut, à confirmer au lot 1). Il est dessiné dans **4 directions** : `bas` (face à nous), `haut` (de dos), `gauche` et `droite` (`droite` peut être le miroir de `gauche`). On doit reconnaître d'un coup d'œil qui est qui, dans chaque direction.
 
 ### Des calques à assembler
 
@@ -25,22 +27,22 @@ Le joueur choisit l'apparence de chacun : les sprites doivent donc être **déco
 - Les zones à colorer sont dessinées en **blanc pur** (`#FFFFFF`), chacune dans son propre fichier, pour que le jeu les teinte. Le contour encre et les petits détails fixes (ombre découpée, plis) sont dans un fichier séparé, posé par-dessus.
 - Propose les **palettes de choix** : 6 à 8 teintes de peau (de très claire à très foncée), 8 couleurs de cheveux (dont gris et blanc pour les aînés, et 2 couleurs fantaisie), 10 couleurs de tenue prises dans la palette du jeu.
 - Si une seule tenue par sexe et par âge suffit, garde-la simple ; si tu as le temps, 2 ou 3 formes de tenue (t-shirt, robe, salopette, veste…).
-- Une **marche** légère est bienvenue : 2 images où les bras et les pieds alternent, nommées `_marche_1` et `_marche_2`.
+- Chaque calque existe dans les 4 directions, debout et en **marche** (2 images où les bras et les pieds alternent), nommées `_<direction>`, `_<direction>_marche_1` et `_<direction>_marche_2`.
 
 ### Les tranches d'âge
 
-| Clé | Tranche | Taille dans la case |
+| Clé | Tranche | Hauteur à l'écran |
 |---|---|---|
-| `enfant` | Enfant | nettement plus petit, environ 22 px |
-| `ado` | Adolescent | environ 27 px |
-| `adulte` | Adulte | toute la case, environ 30 px |
-| `aine` | Aîné | comme l'adulte, épaules un peu voûtées |
+| `enfant` | Enfant | environ 32 px |
+| `ado` | Adolescent | environ 42 px |
+| `adulte` | Adulte | environ 48 px |
+| `aine` | Aîné | environ 46 px, épaules un peu voûtées |
 
 Pas de bébé pour l'instant. Propose une limite simple si besoin, par exemple « il faut au moins un adulte ou un aîné dans la famille », et montre l'état d'erreur correspondant.
 
 ### Les portraits
 
-L'interface affiche des portraits (panneau du personnage en 64 px, sélecteur de personnage et panneau de relation en 32 px, écran de création en grand). Pour eux, une **vue de face, tête et épaules**, construite avec les mêmes calques et les mêmes couleurs que le sprite vu de dessus, pour qu'on fasse le lien. Fichiers séparés : `portrait_*`.
+L'interface affiche des portraits (panneau du personnage en 64 px, sélecteur de personnage et panneau de relation en 32 px, écran de création en grand). Pour eux, une **vue de face, tête et épaules**, plus grande et plus détaillée que le sprite, avec les mêmes couleurs, pour qu'on fasse le lien. Fichiers séparés : `portrait_*`.
 
 ## 2. L'écran de création de famille
 
@@ -56,7 +58,7 @@ Ce que l'écran doit permettre :
   - **tranche d'âge** (enfant, ado, adulte, aîné) ;
   - **apparence** : peau, coupe de cheveux, couleur des cheveux, tenue, couleur de la tenue ;
   - un bouton **« Au hasard »** qui tire toute l'apparence d'un coup.
-- Un grand **aperçu** du membre choisi : son portrait, et à côté le sprite vu de dessus, à taille réelle ×2, qui tourne lentement ou marche sur place.
+- Un grand **aperçu** du membre choisi : son portrait, et à côté le sprite du jeu, à taille réelle ×2, qui marche sur place en passant par ses 4 directions.
 - Si tu le juges utile, le **lien** entre deux membres (couple, parent et enfant, frères et sœurs, colocataires). Il fixerait la relation de départ. Dis-moi si ça alourdit trop l'écran.
 - Boutons **Retour** et **Choisir le terrain** (principal, désactivé tant qu'un prénom est vide, avec la raison affichée).
 
@@ -83,7 +85,7 @@ Dans le README, une demi-page d'**idées visuelles** pour ces trois cas suffit :
   - `tete_<age>.svg` ;
   - `cheveux_<coupe>_<age>.svg` ;
   - `portrait_…` sur le même principe.
-- Un tableau des **ancrages** dans le README : où se pose chaque calque dans la case, dans quel ordre on les empile.
+- Un tableau des **ancrages** dans le README : où se pose chaque calque par rapport à la case, pour chaque direction, et dans quel ordre on les empile (la coiffure passe derrière la tête en vue `haut`, par exemple).
 - Les palettes de peau, cheveux et tenues dans `tokens.json`.
 
 ### Interface
