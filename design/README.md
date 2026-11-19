@@ -1046,3 +1046,46 @@ Dans les scènes des lots 4 et 5, le mur du bas de la maison est baissé. Plein,
 ### Témoins du lot 1 redessinés
 
 Huit fichiers Nature du lot 1 changent : `lit_nature_bas`, `lit_nature_haut`, `tele_nature_bas` (et `_actif`), `tele_nature_gauche` (et `_actif`), `tele_nature_haut_actif` et `canape_nature_gauche`. Les formes, couleurs et tailles ne bougent pas. Seul l'ordre de dessin change, avec la règle « posé dessus, dessiné après » du lot 3. L'ancien ordre cachait l'écran de la télé derrière son meuble, le revers de la couette du lit et les coussins du canapé vu de côté.
+
+## Lot 6 · Les loisirs et le jardin
+
+Planche : « Lot 6 · Loisirs et jardin » sur le canvas (une pièce de loisirs et un jardin par collection, puis les 12 objets dans leurs 4 vues). Planches de contrôle : `apercu_loisirs.png` et `apercu_jardin.png`. Elles remplacent les anciennes planches vue de dessus.
+
+135 fichiers dans `svg/sprites/`, même nommage que les lots précédents.
+
+### Loisirs
+
+| Clé | Nom | Emprise | Hauteur | Sprite bas/haut | Sprite gauche/droite | Miroir | En marche |
+|---|---|---|---|---|---|---|---|
+| `ordinateur` | Ordinateur (sur bureau) | 2 × 1 | 50 px | 64 × 82 | 32 × 114 | non (fichier droite livré) | oui |
+| `piano` | Piano | 2 × 1 | 52 px | 64 × 84 | 32 × 116 | oui | — |
+| `chevalet` | Chevalet de peinture | 1 × 1 | 48 px | 32 × 80 | 32 × 80 | oui | — |
+| `tapis_yoga` | Tapis de yoga | 1 × 2 | 6 px | 32 × 70 | 64 × 38 | oui | — |
+| `table_jeux` | Table de jeux | 2 × 2 | 32 px | 64 × 96 | 64 × 96 | oui | — |
+| `telescope` | Télescope | 1 × 1 | 48 px | 32 × 80 | 32 × 80 | non (fichier droite livré) | — |
+
+### Jardin
+
+| Clé | Nom | Emprise | Hauteur | Sprite bas/haut | Sprite gauche/droite | Miroir | En marche |
+|---|---|---|---|---|---|---|---|
+| `barbecue` | Barbecue | 1 × 1 | 48 px | 32 × 80 | 32 × 80 | oui | oui |
+| `hamac` | Hamac | 3 × 1 | 38 px | 96 × 70 | 32 × 134 | oui | — |
+| `balancoire` | Balançoire | 2 × 1 | 48 px | 64 × 80 | 32 × 112 | oui | — |
+| `potager` | Potager | 2 × 2 | 28 px | 64 × 92 | 64 × 92 | oui | — |
+| `salon_jardin` | Salon de jardin | 2 × 2 | 28 px | 64 × 92 | 64 × 92 | oui | — |
+| `arbre` | Arbre | 2 × 2 | 82 px | 64 × 146 | 64 × 146 | oui | — |
+
+- **Ordinateur** : comme le micro-ondes au lot 3, il est livré avec son bureau. La tour est posée à gauche, l'écran au fond, le clavier et la souris devant. En Rétro, c'est un écran cathodique crème. Allumé : écran bleu avec fenêtres, voyant vert sur la tour. Comme la tour est d'un seul côté, la vue `droite` est livrée.
+- **Table de jeux** : deux chaises face à face, chacune avec son dossier côté extérieur. Le dossier de la chaise du fond dépasse de la table, donc les deux places restent visibles dans les 4 vues.
+- **Salon de jardin** : même principe, une chaise devant, une derrière. Table ronde en Nature et Rétro, carrée en Moderne.
+- **Tapis de yoga** : à plat, avec un bout roulé de 6 px au fond. Ce bout change d'une vue à l'autre, donc les 4 vues sont livrées. Il se trie comme les tapis : toujours dessous.
+- **Pieds, cordes et tubes** (chevalet, télescope, barbecue, balançoire, hamac) : ils sont dessinés comme des segments entre deux points de l'objet, et non comme des boîtes. Chaque vue garde ainsi les bons angles : le chevalet penche vers le fond, le télescope vise le ciel derrière.
+- **Hamac** : la toile pend entre les deux poteaux, 10 px de creux au milieu. Vu de côté, on la voit de bout.
+- **Arbre** : 2 × 2 cases, le plus grand objet du jeu. Nature : feuillu rond. Rétro : arbre fruitier avec oranges. Moderne : cyprès étroit. Son ombre au sol est plus large que son emprise.
+- **Barbecue** en marche : braises et viande sur la grille, fumée au-dessus.
+
+### En marche : même taille de sprite
+
+Un sprite `_actif` a maintenant toujours la même taille que l'objet éteint. La fumée du barbecue et les notes de la chaîne hi-fi tiennent dans une marge déjà réservée en haut de la version éteinte. Le jeu peut donc passer d'un état à l'autre sans recaler l'objet.
+
+Ça change les 9 fichiers de la chaîne hi-fi éteinte du lot 5 : ils passent de 66 à 78 px de haut (hauteur 46 au lieu de 34), comme la version allumée. `tokens.json` est mis à jour. Les autres objets en marche des lots 3 à 5 avaient déjà la même taille dans les deux états.
