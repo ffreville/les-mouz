@@ -4,7 +4,12 @@ extends Control
 ## Menu principal, Quitter. Le temps est arrêté tant que le menu est ouvert.
 ## Ctrl+S sauvegarde directement, même menu fermé.
 
-signal message(text: String)
+## Résultat à annoncer : texte, réussite ou échec (avec une action pour réessayer).
+signal message(text: String, ok: bool, retry: Callable)
+
+const CARD_WIDTH := 376.0
+const BUTTON_WIDTH := 320.0
+const COIN := preload("res://assets/sprites/piece_mz.svg")
 
 ## Vrai quand un menu en jeu est ouvert (les raccourcis de vitesse sont alors ignorés).
 static var is_open := false
@@ -18,6 +23,7 @@ var _save_as := VBoxContainer.new()
 var _name_field := LineEdit.new()
 var _load_panel := LoadPanel.new()
 var _speed_before := 1
+var _save_as_button: Button
 
 
 func _ready() -> void:
@@ -25,23 +31,25 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var veil := ColorRect.new()
-	veil.color = Color(Palette.ENCRE, 0.35)
+	veil.color = Color(Palette.ENCRE, 0.55)
 	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(veil)
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
-	_card.custom_minimum_size.x = 360
+	_card.custom_minimum_size.x = CARD_WIDTH
 	center.add_child(_card)
 	_load_panel.visible = false
 	_load_panel.closed.connect(_show_buttons)
 	center.add_child(_load_panel)
 
 	var column := VBoxContainer.new()
-	column.add_theme_constant_override("separation", 14)
+	column.add_theme_constant_override("separation", 12)
 	_card.add_child(column)
-	_title.theme_type_variation = &"BigLabel"
+	_title.add_theme_font_override("font", HudTheme.font(HudTheme.BALOO, 800))
+	_title.add_theme_font_size_override("font_size", 24)
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(_title)
 	_subtitle.theme_type_variation = &"MutedLabel"
 	_subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -63,12 +71,18 @@ func setup(p_world: World) -> void:
 
 func _build_buttons() -> void:
 	_buttons.add_theme_constant_override("separation", 8)
-	_add(_buttons, "Reprendre", &"PrimaryButton", close)
-	_add(_buttons, "Sauvegarder  (Ctrl+S)", &"SecondaryButton", _on_save_pressed)
-	_add(_buttons, "Sauvegarder sous…", &"SecondaryButton", _show_save_as)
-	_add(_buttons, "Charger une partie…", &"SecondaryButton", _show_load)
-	_add(_buttons, "Menu principal", &"SecondaryButton", _on_title_pressed)
-	_add(_buttons, "Quitter le jeu", &"SecondaryButton", _on_quit_pressed)
+	_buttons.alignment = BoxContainer.ALIGNMENT_CENTER
+	_add(_buttons, "Reprendre", &"PrimaryButton", close, "continuer", "Échap")
+	_add(_buttons, "Sauvegarder", &"SecondaryButton", _on_save_pressed, "sauvegarder", "Ctrl S")
+	_add(_buttons, "Sauvegarder sous…", &"SecondaryButton", _show_save_as, "sauvegarder")
+	_add(_buttons, "Charger une partie…", &"SecondaryButton", _show_load, "charger")
+	var line := ColorRect.new()
+	line.color = Palette.TRAIT
+	line.custom_minimum_size = Vector2(BUTTON_WIDTH, 2)
+	line.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_buttons.add_child(line)
+	_add(_buttons, "Menu principal", &"QuietButton", _on_title_pressed, "menu")
+	_add(_buttons, "Quitter le jeu", &"QuietButton", _on_quit_pressed, "quitter")
 
 
 func _on_save_pressed() -> void:
@@ -88,30 +102,71 @@ func _on_quit_pressed() -> void:
 
 
 func _build_save_as() -> void:
-	_save_as.add_theme_constant_override("separation", 10)
+	_save_as.add_theme_constant_override("separation", 8)
 	var label := Label.new()
-	label.text = "Nom de la copie"
-	label.theme_type_variation = &"StrongLabel"
+	label.text = "NOM DE LA COPIE"
+	label.theme_type_variation = &"SectionTitle"
 	_save_as.add_child(label)
 	_name_field.max_length = 40
 	_name_field.text_submitted.connect(func(_text: String) -> void: _confirm_save_as())
+	_name_field.text_changed.connect(_on_copy_name_changed)
 	_save_as.add_child(_name_field)
+	var hint := Label.new()
+	hint.text = "La partie en cours reste ouverte."
+	hint.theme_type_variation = &"MutedLabel"
+	_save_as.add_child(hint)
 	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_END
 	row.add_theme_constant_override("separation", 8)
 	_save_as.add_child(row)
 	_add(row, "Retour", &"SecondaryButton", _show_buttons)
-	_add(row, "Enregistrer", &"PrimaryButton", _confirm_save_as)
+	_save_as_button = _add(row, "Enregistrer", &"PrimaryButton", _confirm_save_as, "sauvegarder")
+	for button in row.get_children():
+		button.custom_minimum_size.x = 0
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 
-func _add(parent: Control, text: String, variation: StringName, action: Callable) -> void:
+## Bouton de 320 px, avec une icône et une petite pastille de raccourci à droite.
+func _add(parent: Control, text: String, variation: StringName, action: Callable, icon := "",
+		shortcut := "") -> Button:
 	var button := Button.new()
 	button.text = text
 	button.theme_type_variation = variation
 	button.focus_mode = Control.FOCUS_NONE
-	button.custom_minimum_size.y = 42
+	button.custom_minimum_size = Vector2(BUTTON_WIDTH, 44)
+	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	if icon != "":
+		button.icon = load("res://assets/icons/white/%s.svg" % icon)
 	button.pressed.connect(action)
+	if shortcut != "":
+		var light := variation == &"PrimaryButton"
+		var pill := Label.new()
+		pill.text = shortcut
+		pill.add_theme_font_override("font", HudTheme.font(HudTheme.NUNITO, 800))
+		pill.add_theme_font_size_override("font_size", 11)
+		var ink := Palette.PAPIER if light else Palette.ENCRE
+		pill.add_theme_color_override("font_color", ink)
+		var style := HudTheme.box(Color.TRANSPARENT, 6, ink, 1)
+		style.border_width_left = 2
+		style.border_width_right = 2
+		style.border_width_top = 2
+		style.border_width_bottom = 2
+		style.content_margin_left = 6
+		style.content_margin_right = 6
+		style.content_margin_top = 1
+		style.content_margin_bottom = 1
+		pill.add_theme_stylebox_override("normal", style)
+		pill.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
+		pill.offset_left = -64
+		pill.offset_right = -14
+		pill.offset_top = -11
+		pill.offset_bottom = 11
+		pill.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		pill.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+		pill.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		pill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		button.add_child(pill)
 	parent.add_child(button)
+	return button
 
 
 # --- Ouvrir et fermer ------------------------------------------------------------
@@ -154,6 +209,7 @@ func _show_save_as() -> void:
 	_buttons.visible = false
 	_save_as.visible = true
 	_name_field.text = (SaveManager.current_name + " (copie)") if SaveManager.current_name != "" else "Ma partie"
+	_on_copy_name_changed(_name_field.text)
 	_name_field.grab_focus()
 	_name_field.select_all()
 
@@ -177,13 +233,24 @@ func save_now(announce := true) -> void:
 	else:
 		ok = SaveManager.save_current(world)
 	if announce:
-		message.emit("Partie enregistrée" if ok else "La sauvegarde a échoué")
+		message.emit("Partie enregistrée" if ok else "La sauvegarde a échoué", ok, save_now)
 
 
 func _confirm_save_as() -> void:
+	if _name_field.text.strip_edges() == "":
+		return
 	var ok := SaveManager.save_as(world, _name_field.text)
-	message.emit(("Copie enregistrée : " + SaveManager.current_name) if ok else "La sauvegarde a échoué")
+	message.emit(("Copie enregistrée : " + SaveManager.current_name) if ok else "La sauvegarde a échoué",
+			ok, _confirm_save_as)
 	close()
+
+
+## Un nom vide : le champ passe en erreur et « Enregistrer » est inactif.
+func _on_copy_name_changed(text: String) -> void:
+	var empty := text.strip_edges() == ""
+	_save_as_button.disabled = empty
+	var style := HudTheme._padded(HudTheme.box(Color.WHITE, 10, Palette.CRITIQUE if empty else Palette.TRAIT, 2), 12, 8)
+	_name_field.add_theme_stylebox_override("normal", style)
 
 
 # --- Clavier -----------------------------------------------------------------------

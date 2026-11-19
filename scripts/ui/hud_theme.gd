@@ -129,6 +129,32 @@ static func _buttons(theme: Theme) -> void:
 	theme.set_font("font", "PrimaryButton", font(NUNITO, 800))
 	theme.set_font_size("font_size", "PrimaryButton", 15)
 
+	# Bouton destructif (Supprimer définitivement).
+	theme.set_type_variation("DangerButton", "Button")
+	for state in ["normal", "pressed", "hover_pressed"]:
+		theme.set_stylebox(state, "DangerButton", _padded(box(Palette.CRITIQUE, 12), 16, 10))
+	theme.set_stylebox("hover", "DangerButton", _padded(box(Palette.CRITIQUE.darkened(0.15), 12), 16, 10))
+	theme.set_stylebox("focus", "DangerButton", StyleBoxEmpty.new())
+	for state in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color",
+			"icon_normal_color", "icon_hover_color", "icon_pressed_color"]:
+		theme.set_color(state, "DangerButton", Color.WHITE)
+	theme.set_font("font", "DangerButton", font(NUNITO, 800))
+	theme.set_font_size("font_size", "DangerButton", 15)
+	# Bouton discret (Quitter, Menu principal) : sans fond ni bord.
+	_button_variation(theme, "QuietButton", 12, Vector4(16, 10, 16, 10))
+	theme.set_stylebox("hover", "QuietButton", _padded(box(Palette.PAPIER_2, 12), 16, 10))
+	theme.set_stylebox("hover_pressed", "QuietButton", _padded(box(Palette.PAPIER_2, 12), 16, 10))
+	theme.set_font_size("font_size", "QuietButton", 15)
+	theme.set_color("font_hover_color", "QuietButton", Palette.ENCRE)
+	theme.set_color("icon_hover_color", "QuietButton", Palette.ENCRE)
+	# Les boutons secondaires des écrans gardent un bord, comme dans les maquettes.
+	theme.set_stylebox("normal", "SecondaryButton", _padded(box(Color.WHITE, 12, Palette.TRAIT, 2), 16, 10))
+	for variation in ["PrimaryButton", "SecondaryButton", "DangerButton", "QuietButton"]:
+		theme.set_constant("icon_max_width", variation, 18)
+		theme.set_color("font_disabled_color", variation, Palette.ENCRE_DOUCE)
+		theme.set_color("icon_disabled_color", variation, Color(Palette.ENCRE_DOUCE, 0.6))
+	theme.set_stylebox("disabled", "SecondaryButton", _padded(box(Palette.PISTE, 12), 16, 10))
+
 	# Cartes d'option (couleur de mur, sol…) et vignettes du catalogue.
 	theme.set_type_variation("OptionCard", "Button")
 	theme.set_stylebox("normal", "OptionCard", box(Palette.PAPIER_2, 10, Color.TRANSPARENT, 0, 8))
@@ -213,6 +239,7 @@ static func _misc(theme: Theme) -> void:
 	theme.set_color("font_placeholder_color", "LineEdit", Palette.ENCRE_DOUCE)
 	theme.set_color("caret_color", "LineEdit", Palette.ENCRE)
 	theme.set_color("selection_color", "LineEdit", Palette.ACCENT_DOUX)
+	theme.set_color("font_selected_color", "LineEdit", Palette.ENCRE)
 	theme.set_font_size("font_size", "LineEdit", 15)
 	theme.set_stylebox("background", "ProgressBar", box(Palette.PISTE, 2))
 	theme.set_stylebox("fill", "ProgressBar", box(Palette.ACCENT, 2))

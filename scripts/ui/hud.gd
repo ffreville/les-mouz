@@ -85,9 +85,17 @@ func _setup_game_menu() -> void:
 	for state in ["normal", "hover", "pressed", "focus", "hover_pressed"]:
 		logo.add_theme_stylebox_override(state, StyleBoxEmpty.new())
 	logo.pressed.connect(pause_menu.open)
-	pause_menu.message.connect(toast.show_message)
+	pause_menu.message.connect(_on_save_message)
 	GameMode.wall_mode_changed.connect(_on_wall_mode_changed)
 
 
 func _on_wall_mode_changed(wall_mode: int) -> void:
 	toast.show_message("%s (touche V)" % GameMode.WALL_MODE_NAMES[wall_mode])
+
+
+## Résultat d'une sauvegarde : réussite (2 s) ou échec avec « Réessayer » (6 s).
+func _on_save_message(text: String, ok: bool, retry: Callable) -> void:
+	if ok:
+		toast.show_message(text, Toast.Kind.SUCCESS)
+	else:
+		toast.show_message(text, Toast.Kind.FAILURE, "Disque plein ou dossier protégé.", retry)

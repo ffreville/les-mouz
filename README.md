@@ -30,16 +30,16 @@ Les graphismes suivent la direction artistique « Maison de poche » décrite da
 
 ## Les parties et les sauvegardes
 
-Le jeu s'ouvre sur un **écran d'accueil** :
+Le jeu s'ouvre sur un **écran d'accueil** : la maison de la dernière partie en fond (ou un petit jardin où se promènent des Mouz s'il n'y en a pas), et les portraits de sa famille.
 
 - **Continuer** reprend la dernière partie enregistrée ;
 - **Nouvelle partie** ouvre la création, en deux étapes :
   1. **La famille** : nom de famille, 1 à 4 membres. Pour chacun : prénom (le dé en tire un), homme ou femme, âge (enfant, ado, adulte, aîné), peau, coupe et couleur des cheveux, tenue et sa couleur, ou « Apparence au hasard ». Entre deux cartes, une pastille fixe leur **lien** (couple, parent, enfant, frères et sœurs, colocs), qui donne leur relation de départ. Il faut au moins un adulte ou un aîné, et un prénom à chacun.
   2. **Le terrain** : la Prairie des Tilleuls (vide, gratuite), la Rue des Lilas ou le Clos Rétro (maisons meublées, payées sur le budget de départ). On y nomme la partie. Sur un terrain vide, la partie commence en mode Construire ;
-- **Charger une partie** affiche toutes les parties : vignette du terrain, nom, jour, argent, nombre d'objets et date. On peut y **renommer** ou **supprimer** une partie directement sur sa carte ;
+- **Charger une partie** affiche toutes les parties : vignette du terrain, nom, jour, heure, argent, nombre d'objets et date. On peut y **renommer** ou **supprimer** une partie directement sur sa carte. Une partie dont le fichier ne se lit plus est marquée **Abîmée** : on peut **restaurer sa copie de secours** (la version précédente, gardée à chaque sauvegarde) ou la supprimer ;
 - **Quitter**.
 
-En jeu, **Échap** (ou un clic sur le logo « Les Mouz ») ouvre le **menu** et arrête le temps : Reprendre, Sauvegarder, Sauvegarder sous… (une copie avec un autre nom, qui devient la partie en cours), Charger une partie…, Menu principal, Quitter le jeu. **Ctrl+S** sauvegarde à tout moment.
+En jeu, **Échap** (ou un clic sur le logo « Les Mouz ») ouvre le **menu** et arrête le temps : Reprendre, Sauvegarder, Sauvegarder sous… (une copie avec un autre nom, qui devient la partie en cours), Charger une partie…, Menu principal, Quitter le jeu. **Ctrl+S** sauvegarde à tout moment. Un message en bas de l'écran confirme chaque sauvegarde ; en cas d'échec, il reste 6 secondes et propose « Réessayer ».
 
 La partie en cours est aussi **sauvegardée automatiquement** : peu après chaque modification du terrain, au retour en mode Vivre, toutes les 2 minutes, avant d'en charger une autre et à la fermeture du jeu.
 

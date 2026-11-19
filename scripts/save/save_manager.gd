@@ -17,7 +17,7 @@ const DATA_FILE := "data.json"
 const BACKUP_SUFFIX := ".bak"
 const TEMP_SUFFIX := ".tmp"
 const THUMBNAIL_FILE := "vignette.png"
-const THUMBNAIL_SIZE := Vector2i(320, 180)
+const THUMBNAIL_SIZE := Vector2i(640, 360)
 const GAME_SCENE := "res://scenes/main.tscn"
 const TITLE_SCENE := "res://scenes/title.tscn"
 ## Ancien emplacement unique (avant la gestion des sauvegardes).
@@ -70,8 +70,10 @@ func load_slot(slot_id: String) -> bool:
 
 ## La partie la plus récemment enregistrée ("" s'il n'y en a pas).
 func latest_slot() -> String:
-	var slots := list_slots()
-	return slots[0]["id"] if not slots.is_empty() else ""
+	for slot in list_slots():
+		if not slot["damaged"]:
+			return slot["id"]
+	return ""
 
 
 func go_to_title() -> void:
@@ -150,18 +152,49 @@ func _write_thumbnail(world: World, path: String) -> void:
 # --- Lire et gérer les emplacements --------------------------------------------------
 
 ## Toutes les parties, de la plus récente à la plus ancienne :
-## { "id", "name", "saved", "day", "time", "funds", "objects", "thumbnail" (Texture2D ou null) }.
+## { "id", "name", "saved", "day", "time", "funds", "objects", "thumbnail" (Texture2D ou null),
+##   "damaged" (data.json illisible), "restorable" (la copie .bak, elle, se lit) }.
 func list_slots() -> Array[Dictionary]:
 	var slots: Array[Dictionary] = []
 	for slot_id in DirAccess.get_directories_at(SAVES_DIR):
-		var meta := read_meta(slot_id)
-		if meta.is_empty():
-			continue
+		var path := _folder(slot_id).path_join(DATA_FILE)
+		var main := _read_json(path)
+		var meta := {}
+		if not main.is_empty():
+			meta = WorldSerializer.migrate(main).get("meta", {}).duplicate()
+			meta["damaged"] = false
+		else:
+			var backup := _read_json(path + BACKUP_SUFFIX)
+			meta = WorldSerializer.migrate(backup).get("meta", {}).duplicate() if not backup.is_empty() else {}
+			meta["damaged"] = true
+			meta["restorable"] = not backup.is_empty()
+			meta["backup_day"] = meta.get("day", 0)
+			if not meta.has("name"):
+				meta["name"] = slot_id
+			if not meta.has("saved"):
+				meta["saved"] = FileAccess.get_modified_time(_folder(slot_id))
 		meta["id"] = slot_id
 		meta["thumbnail"] = _load_thumbnail(slot_id)
 		slots.append(meta)
 	slots.sort_custom(func(a, b): return float(a.get("saved", 0)) > float(b.get("saved", 0)))
 	return slots
+
+
+## Remet la copie de secours (.bak) à la place d'une sauvegarde abîmée.
+func restore_slot(slot_id: String) -> bool:
+	var path := _folder(slot_id).path_join(DATA_FILE)
+	if _read_json(path + BACKUP_SUFFIX).is_empty():
+		return false
+	DirAccess.remove_absolute(path)
+	var ok := DirAccess.copy_absolute(path + BACKUP_SUFFIX, path) == OK
+	slots_changed.emit()
+	return ok
+
+
+## Famille de la dernière partie (portraits de l'accueil), ou {} s'il n'y en a pas.
+func latest_family() -> Dictionary:
+	var latest := latest_slot()
+	return read_slot(latest).get("family", {}) if latest != "" else {}
 
 
 ## Données complètes d'une partie, mises au format actuel ({} si illisible).
