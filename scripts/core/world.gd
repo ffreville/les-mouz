@@ -39,6 +39,7 @@ var smart_objects: Array[SmartObject] = []
 
 
 func _ready() -> void:
+	Music.enter_game()
 	var saved := SaveManager.take_pending() if use_save else {}
 	# Une partie enregistrée contient son terrain ; une nouvelle partie peut nommer un terrain du catalogue.
 	var is_saved_game := saved.has("lot")

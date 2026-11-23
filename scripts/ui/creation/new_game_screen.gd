@@ -23,6 +23,7 @@ var _next := Button.new()
 
 func _ready() -> void:
 	theme = HudTheme.build()
+	Music.enter_menu()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_rng.randomize()
 	_start_family()

@@ -24,6 +24,7 @@ var _latest := ""
 
 func _ready() -> void:
 	theme = HudTheme.build()
+	Music.enter_menu()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_rng.randomize()
 	_latest = SaveManager.latest_slot()

@@ -91,6 +91,7 @@ Pour changer le format : augmenter `WorldSerializer.FORMAT_VERSION`, puis compl�
 | Bouton « Autonomie » | Active ou coupe l'autonomie du Mouz sélectionné |
 | Pause / x1 / x2 / x3, ou **Espace** et **1** à **3** | Vitesse du jeu |
 | **V** | Hauteur des murs : coupés (par défaut), baissés, pleins |
+| **M** | Couper ou remettre la musique |
 
 Un ordre du joueur remplace toujours les actions choisies par l'autonomie.
 
@@ -304,6 +305,19 @@ func _on_item_bought(item: Resource, price: int) -> void:
 ```
 
 Le gestionnaire de sauvegardes a aussi ses signaux : `SaveManager.saved(slot_id)` après chaque enregistrement, et `SaveManager.slots_changed` quand la liste des parties change.
+
+## La musique
+
+L'autoload `Music` joue une piste en boucle selon l'écran, avec un fondu enchaîné d'environ une seconde :
+
+| Écran | Fichier |
+|---|---|
+| Accueil et création de la famille | `assets/musique/menu.mp3` |
+| Vivre | `assets/musique/jeu.mp3` |
+| Construire | `assets/musique/construction.mp3` |
+| Acheter | `assets/musique/achat.mp3` |
+
+Une piste absente est remplacée par `jeu.mp3` (« Relaxed Gaming Groove »), et la musique continue sans se couper. Pour ajouter une piste, dépose le fichier sous ce nom : rien à changer dans le code. Le volume se règle dans `scripts/core/music.gd` (`VOLUME_DB`).
 
 ## La vue trois quarts
 
