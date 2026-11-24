@@ -15,3 +15,7 @@ end_hour = 17
 days = Array[int]([0, 1, 2, 3])
 min_age = &"adulte"
 need_changes = Dictionary[StringName, float]({&"energie": -15.0, &"plaisir": 10.0})
+skill = &"art"
+grades = Array[String](["Illustrateur·rice débutant·e", "Illustrateur·rice", "Illustrateur·rice confirmé·e", "Directeur·rice artistique", "Artiste exposé·e"])
+grade_salaries = Array[int]([170, 220, 290, 370, 480])
+grade_levels = Array[int]([0, 2, 4, 6, 8])

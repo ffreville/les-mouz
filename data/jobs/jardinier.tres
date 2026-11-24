@@ -15,3 +15,7 @@ end_hour = 15
 days = Array[int]([0, 1, 2, 3, 4])
 min_age = &"adulte"
 need_changes = Dictionary[StringName, float]({&"energie": -30.0, &"hygiene": -20.0, &"plaisir": 5.0})
+skill = &"jardinage"
+grades = Array[String](["Aide-jardinier·ère", "Jardinier·ère", "Paysagiste", "Architecte paysagiste", "Maître jardinier·ère"])
+grade_salaries = Array[int]([190, 240, 300, 370, 450])
+grade_levels = Array[int]([0, 2, 4, 6, 8])

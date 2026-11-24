@@ -95,3 +95,9 @@ signal job_board_requested(character: Node, source: StringName)
 ## Un Mouz rentre du travail et touche son salaire.
 @warning_ignore("unused_signal")
 signal salary_paid(character: Node, amount: int)
+## Un Mouz gagne un niveau dans une compétence.
+@warning_ignore("unused_signal")
+signal skill_level_up(character: Node, skill: StringName, level: int)
+## Un Mouz change de grade dans son métier (`up` : promotion, sinon rétrogradation).
+@warning_ignore("unused_signal")
+signal grade_changed(character: Node, grade: int, up: bool)

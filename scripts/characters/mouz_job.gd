@@ -6,6 +6,11 @@ extends Node
 ##  - À l'heure de fin, il revient au même endroit avec son salaire, et sa journée a marqué
 ##    ses besoins (`need_changes` du métier).
 ## Pendant qu'il est au travail, il n'est ni cliquable ni disponible pour les autres.
+##
+## Carrière : 5 grades par métier. La performance (0 à 100) monte quand il part travailler
+## de bonne humeur et baisse s'il part grognon ou épuisé. Au retour, s'il a le niveau demandé
+## dans la compétence du métier et une performance d'au moins PROMOTION_PERFORMANCE, il est promu ;
+## si sa performance tombe à 0, il redescend d'un grade.
 
 ## Le métier, l'état « au travail » ou l'heure ont changé (pour l'affichage).
 signal changed
@@ -14,12 +19,23 @@ signal changed
 const MIN_SHIFT_MINUTES := 30
 ## Au-delà de ce temps de marche vers la rue, on considère qu'il a pris le bus (minutes de jeu).
 const MAX_WALK_MINUTES := 20
+## Performance de départ (nouveau métier, nouveau grade) et seuil de promotion.
+const START_PERFORMANCE := 50.0
+const PROMOTION_PERFORMANCE := 80.0
+## Effet de l'humeur au départ sur la performance : [humeur minimale, variation], du meilleur au pire.
+const MOOD_PERFORMANCE := [[65.0, 15.0], [40.0, 5.0], [0.0, -10.0]]
+## Partir épuisé (énergie sous ce seuil) coûte en plus TIRED_PENALTY.
+const TIRED_ENERGY := 20.0
+const TIRED_PENALTY := 10.0
 
 var definition: JobDefinition
 ## Vrai pendant les heures de travail, une fois sorti du terrain.
 var away := false
 ## Dernier jour où il est parti travailler (pour ne partir qu'une fois par jour).
 var worked_day := 0
+## Grade actuel (1 = premier) et performance (0 à 100).
+var grade := 1
+var performance := START_PERFORMANCE
 
 var _character: Character
 var _leaving: QueuedAction
@@ -37,7 +53,9 @@ func setup(character: Character) -> void:
 func take(job: JobDefinition) -> void:
 	definition = job
 	worked_day = 0
-	EventBus.notice.emit("%s est maintenant %s." % [_character.get_display_name(), job.display_name.to_lower()])
+	grade = 1
+	performance = START_PERFORMANCE
+	EventBus.notice.emit("%s est maintenant %s." % [_character.get_display_name(), job.title(1).to_lower()])
 	changed.emit()
 
 
@@ -49,7 +67,7 @@ func quit() -> void:
 	definition = null
 	if away:
 		_return_home(false)
-	EventBus.notice.emit("%s a quitté son poste de %s." % [_character.get_display_name(), old.display_name.to_lower()])
+	EventBus.notice.emit("%s a quitté son poste de %s." % [_character.get_display_name(), old.title(grade).to_lower()])
 	changed.emit()
 
 
@@ -65,7 +83,28 @@ func status_text() -> String:
 		return "Au travail jusqu'à %d h" % definition.end_hour
 	if _leaving != null:
 		return "Part au travail"
-	return "%s · %d h – %d h" % [definition.display_name, definition.start_hour, definition.end_hour]
+	return "%s · %d h – %d h" % [definition.title(grade), definition.start_hour, definition.end_hour]
+
+
+## Salaire du grade actuel.
+func salary() -> int:
+	return definition.salary_for(grade) if definition != null else 0
+
+
+## Ce qui manque pour le grade suivant ("" s'il sera promu à son prochain retour du travail).
+func promotion_problem() -> String:
+	if definition == null:
+		return ""
+	if grade >= definition.grade_count():
+		return "Plus haut grade atteint"
+	var missing: Array[String] = []
+	var needed := definition.required_level(grade + 1)
+	var level := _character.skills.level(definition.skill)
+	if level < needed:
+		missing.append("%s niveau %d (a %d)" % [Skills.display_name(definition.skill), needed, level])
+	if performance < PROMOTION_PERFORMANCE:
+		missing.append("performance %d %% (a %d %%)" % [int(PROMOTION_PERFORMANCE), int(performance)])
+	return " · ".join(missing)
 
 
 func _on_minute_changed(day: int, hour: int, minute: int) -> void:
@@ -116,6 +155,7 @@ func _go_away() -> void:
 		_character.queue.cancel(action)
 	away = true
 	_character.visible = false
+	_rate_departure()
 	if _character.is_selected:
 		EventBus.notice.emit("%s part au travail." % _character.get_display_name())
 	changed.emit()
@@ -127,13 +167,43 @@ func _return_home(paid: bool) -> void:
 	_character.position = _character.world.navigation.cell_to_world(exit_cell())
 	_character.visible = true
 	if paid and definition != null:
-		Wallet.receive(definition.salary)
+		var pay := salary()
+		Wallet.receive(pay)
 		for need_id in definition.need_changes:
 			if _character.needs.has_need(need_id):
 				_character.needs.change(need_id, definition.need_changes[need_id])
-		EventBus.salary_paid.emit(_character, definition.salary)
-		EventBus.notice.emit("%s rentre du travail : +%s" % [_character.get_display_name(),
-				Palette.format_mz(definition.salary)])
+		EventBus.salary_paid.emit(_character, pay)
+		EventBus.notice.emit("%s rentre du travail : +%s" % [_character.get_display_name(), Palette.format_mz(pay)])
+		_check_grade()
+	changed.emit()
+
+
+## La performance suit l'état dans lequel il part travailler.
+func _rate_departure() -> void:
+	var mood := _character.needs.get_mood()
+	for step in MOOD_PERFORMANCE:
+		if mood >= step[0]:
+			performance += step[1]
+			break
+	if _character.needs.has_need(&"energie") and _character.needs.get_value(&"energie") < TIRED_ENERGY:
+		performance -= TIRED_PENALTY
+	performance = clampf(performance, 0.0, 100.0)
+
+
+## Promotion ou rétrogradation au retour du travail.
+func _check_grade() -> void:
+	if grade < definition.grade_count() and promotion_problem() == "":
+		grade += 1
+		performance = START_PERFORMANCE
+		EventBus.grade_changed.emit(_character, grade, true)
+		EventBus.notice.emit("%s est promu·e %s : %s par jour !" % [_character.get_display_name(),
+				definition.title(grade), Palette.format_mz(salary())])
+	elif performance <= 0.0 and grade > 1:
+		grade -= 1
+		performance = START_PERFORMANCE
+		EventBus.grade_changed.emit(_character, grade, false)
+		EventBus.notice.emit("%s redescend %s : il faut partir au travail en meilleure forme." % [
+				_character.get_display_name(), definition.title(grade)])
 	changed.emit()
 
 
@@ -145,12 +215,15 @@ func exit_cell() -> Vector2i:
 
 
 func to_dict() -> Dictionary:
-	return {"id": String(definition.id) if definition != null else "", "away": away, "worked_day": worked_day}
+	return {"id": String(definition.id) if definition != null else "", "away": away, "worked_day": worked_day,
+			"grade": grade, "performance": performance}
 
 
 func restore(data: Dictionary) -> void:
 	definition = JobBoard.find(StringName(data.get("id", "")))
 	worked_day = int(data.get("worked_day", 0))
+	grade = clampi(int(data.get("grade", 1)), 1, definition.grade_count() if definition != null else 1)
+	performance = float(data.get("performance", START_PERFORMANCE))
 	away = bool(data.get("away", false)) and definition != null
 	_character.visible = not away
 	changed.emit()

@@ -40,6 +40,8 @@ func _ready() -> void:
 	EventBus.action_started.connect(_on_action_started)
 	EventBus.action_finished.connect(_on_action_finished)
 	EventBus.need_critical.connect(_on_need_critical)
+	EventBus.skill_level_up.connect(func(_character, _skill, _level) -> void: play(&"niveau"))
+	EventBus.grade_changed.connect(func(_character, _grade, up: bool) -> void: play(&"promotion" if up else &"alerte"))
 
 
 ## Joue un son de l'interface (même volume partout).

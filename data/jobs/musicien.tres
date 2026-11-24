@@ -15,3 +15,7 @@ end_hour = 22
 days = Array[int]([2, 3, 4, 5])
 min_age = &"adulte"
 need_changes = Dictionary[StringName, float]({&"energie": -25.0, &"plaisir": 5.0, &"social": 10.0})
+skill = &"musique"
+grades = Array[String](["Pianiste de salon", "Pianiste d'orchestre", "Soliste", "Chef·fe d'orchestre", "Virtuose"])
+grade_salaries = Array[int]([240, 300, 370, 450, 560])
+grade_levels = Array[int]([0, 2, 4, 6, 8])

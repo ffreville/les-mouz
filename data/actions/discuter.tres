@@ -11,3 +11,4 @@ display_name = "Discuter"
 duration_minutes = 30.0
 need_gains = Dictionary[StringName, float]({&"social": 40.0, &"plaisir": 5.0})
 relationship_gain = 8.0
+skill = &"charisme"

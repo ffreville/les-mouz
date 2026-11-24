@@ -349,7 +349,35 @@ Une journée de travail (`MouzJob`, un composant de chaque Mouz) :
 2. Au travail, il disparaît : il n'est plus cliquable, ses ordres sont refusés avec un message, l'autonomie le laisse tranquille. L'en-tête affiche « Au travail jusqu'à 17 h ».
 3. À l'heure de fin, il revient par la rue avec son salaire (« Pépin rentre du travail : +280 Mz ») et sa journée a marqué ses besoins (`need_changes` du métier : moins d'énergie, plus ou moins de plaisir…).
 
-Les métiers sont des `JobDefinition` dans `data/jobs/` : en ajouter un, c'est ajouter un `.tres` (nom, phrase de l'annonce, icône, salaire, heures, jours, âge minimum, effets sur les besoins). Le métier et l'état « au travail » sont sauvegardés avec chaque Mouz.
+### Carrière
+
+Chaque métier a **5 grades**, avec un intitulé et un salaire chacun (Commis 210 Mz → Cuisinier·ère 270 → Chef·fe de partie 340 → Sous-chef·fe 420 → Chef·fe étoilé·e 520). Pour monter d'un grade, il faut, au retour du travail :
+
+1. le **niveau demandé dans la compétence du métier** : 2, puis 4, 6, 8 (Cuisine pour la cuisine, Informatique pour le développement, Charisme pour l'infirmerie et le service…) ;
+2. une **performance** d'au moins 80 %. Elle part de 50 % et bouge à chaque départ au travail : +15 de bonne humeur (≥ 65), +5 d'humeur moyenne, −10 grognon, et encore −10 si l'énergie est sous 20.
+
+Une promotion remet la performance à 50 %. Une performance tombée à 0 fait redescendre d'un grade. Dans les petites annonces, la carte « Ton métier » montre le grade, la performance et ce qu'il manque pour le suivant ; les autres annonces montrent jusqu'où mène la carrière.
+
+Les métiers sont des `JobDefinition` dans `data/jobs/` : en ajouter un, c'est ajouter un `.tres` (nom, phrase de l'annonce, icône, horaires, jours, âge minimum, effets sur les besoins, et pour la carrière : compétence, intitulés, salaires et niveaux de chaque grade). Le métier, le grade, la performance et l'état « au travail » sont sauvegardés avec chaque Mouz.
+
+## Les compétences
+
+Chaque Mouz a 8 compétences, de 0 à 10, visibles dans l'onglet « Compétences » du panneau de gauche :
+
+| Compétence | Actions qui la font monter |
+|---|---|
+| Cuisine | cuisiner, préparer un repas, barbecue |
+| Informatique | surfer, jouer ou discuter en ligne, jeux vidéo |
+| Musique | jouer du piano, écouter de la musique |
+| Art | peindre |
+| Jardinage | jardiner, récolter, arroser |
+| Culture | lire (partout), écrire, observer les étoiles, échecs |
+| Forme | yoga, balançoire, danser, grimper |
+| Charisme | discuter, apéro, cartes |
+
+Chaque minute passée sur l'action compte. Le niveau 1 demande 1 h de pratique, et chaque niveau 45 min de plus (le niveau 10, environ 8 h). On apprend ×1,5 de bonne humeur (≥ 65), ×0,5 grognon (≤ 35) ; les enfants ×1,3, les ados ×1,2, les aînés ×0,9. Un niveau gagné s'annonce par un message et un petit son.
+
+Les réglages sont dans `scripts/characters/skills.gd` ; une action choisit sa compétence avec son champ `skill`.
 
 ## Les bruitages
 
@@ -367,6 +395,7 @@ L'autoload `Sfx` joue de courts sons, rangés dans `assets/sons/<nom>.wav` :
 | `porte` | une porte qui s'ouvre au passage d'un Mouz |
 | `eau`, `cuisson`, `micro_ondes`, `piano`, `manger`, `interrupteur` | au début de l'action correspondante (`ACTION_SOUNDS` dans `scripts/core/sfx.gd`) |
 | `chasse` | à la fin de l'utilisation des toilettes |
+| `niveau`, `promotion` | un niveau de compétence gagné, une promotion |
 
 Les sons de la maison sont placés dans le monde : plus faibles quand la scène est loin de l'écran. Un même son ne se répète pas à moins de 80 ms (un mur tiré sur dix cases ne fait pas dix bruits d'affilée).
 
@@ -398,7 +427,7 @@ Le jeu passe progressivement en vue trois quarts (brief n° 6, livré par lots ;
 - Deux Mouz peuvent viser le même objet. Le premier arrivé le réserve, et l'action du second est annulée ; son autonomie choisit alors autre chose.
 - La file d'actions des Mouz n'est pas sauvegardée : au chargement, ils repartent les mains vides (l'autonomie reprend vite la main).
 - Il n'y a pas encore de dépenses régulières (factures) : l'argent ne baisse qu'en construisant et en achetant.
-- Au travail, un Mouz est simplement absent : on ne le voit pas travailler, et il n'y a ni promotion ni licenciement.
+- Au travail, un Mouz est simplement absent : on ne le voit pas travailler. Une mauvaise performance fait redescendre d'un grade, jamais renvoyer.
 
 ## Crédits
 

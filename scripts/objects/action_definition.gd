@@ -31,6 +31,11 @@ extends Resource
 ## Distance maximale, en cases, entre les deux objets.
 @export var nearby_radius: int = 6
 
+# --- Compétence ----------------------------------------------------------------------
+
+## Compétence que l'action fait progresser (&"" : aucune). Voir `Skills.LIST`.
+@export var skill: StringName = &""
+
 # --- Interrupteur -------------------------------------------------------------------
 
 enum Switch { NONE, TURN_ON, TURN_OFF }

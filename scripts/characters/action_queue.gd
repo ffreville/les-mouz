@@ -214,6 +214,7 @@ func _on_ticked(game_minutes: float) -> void:
 	var ratio := step / definition.duration_minutes if definition.duration_minutes > 0.0 else 1.0
 	for need_id in definition.need_gains:
 		_character.needs.change(need_id, definition.need_gains[need_id] * ratio)
+	_character.skills.practice(definition.skill, step)
 	# La relation est symétrique : seul l'initiateur l'applique, pour ne pas la compter deux fois.
 	if action.is_social() and not action.is_social_guest and definition.relationship_gain != 0.0:
 		_character.relationships.change_with(action.target_character, definition.relationship_gain * ratio)

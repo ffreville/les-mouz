@@ -90,6 +90,8 @@ def main():
     render("cuisson", 1.5, lambda t: sizzle.next() * (0.5 + 0.5 * (random.random() < 0.02)) * min(1, t / 0.2) * min(1, (1.5 - t) / 0.4), 0.22)
     render("micro_ondes", 0.5, lambda t: math.sin(2 * math.pi * 1568 * t) * (t < 0.12 or 0.2 < t < 0.32) * env(t % 0.2, 0.003, 0.2), 0.3)
     render("piano", 1.4, notes([(0, 523.3), (0.25, 659.3), (0.5, 784), (0.75, 1046.5)], 0.5), 0.4)
+    render("niveau", 0.9, notes([(0, 659.3), (0.08, 784), (0.16, 987.8), (0.24, 1318.5)], 0.3), 0.4)
+    render("promotion", 1.4, notes([(0, 523.3), (0.12, 659.3), (0.24, 784), (0.36, 1046.5), (0.36, 1318.5), (0.36, 1568)], 0.45), 0.45)
     crunch = Noise(0.4)
     render("manger", 0.6, lambda t: crunch.next() * sum(env(t - s, 0.003, 0.03) * (t >= s) for s in (0, 0.18, 0.36)), 0.35)
 

@@ -11,6 +11,7 @@ var _selected: Character
 @onready var context_menu: ContextMenu = $ContextMenu
 @onready var mouz_header: MouzHeader = %MouzHeader
 @onready var needs_panel: NeedsPanel = %NeedsPanel
+var skills_panel := SkillsPanel.new()
 @onready var relationship_panel: RelationshipPanel = %RelationshipPanel
 @onready var queue_panel: ActionQueuePanel = %ActionQueuePanel
 @onready var queue_help: Label = %QueueHelp
@@ -39,6 +40,7 @@ func _ready() -> void:
 	GameMode.mode_changed.connect(_on_mode_changed)
 	_on_mode_changed(GameMode.mode)
 	_setup_game_menu()
+	_setup_skills_tab()
 	# Petites annonces, par-dessus tout le reste de l'interface.
 	var job_board := JobBoardPanel.new()
 	root.add_child(job_board)
@@ -59,9 +61,26 @@ func _on_character_selected(character: Node) -> void:
 	_selected.brain.enabled_changed.connect(_on_brain_enabled_changed)
 	mouz_header.set_character(_selected)
 	needs_panel.set_character(_selected)
+	skills_panel.set_character(_selected)
 	relationship_panel.set_character(_selected)
 	queue_panel.set_character(_selected)
 	_on_brain_enabled_changed(_selected.brain.enabled)
+
+
+## Onglets « Besoins / Compétences » au-dessus des jauges du Mouz.
+func _setup_skills_tab() -> void:
+	var tabs := ChoiceGroup.new([[&"besoins", "Besoins"], [&"competences", "Compétences"]])
+	tabs.select(&"besoins")
+	var parent := needs_panel.get_parent()
+	parent.add_child(tabs)
+	parent.move_child(tabs, needs_panel.get_index())
+	skills_panel.visible = false
+	parent.add_child(skills_panel)
+	parent.move_child(skills_panel, needs_panel.get_index() + 1)
+	var show_tab := func(id: StringName) -> void:
+		needs_panel.visible = id == &"besoins"
+		skills_panel.visible = id == &"competences"
+	tabs.chosen.connect(show_tab)
 
 
 func _on_queue_count_changed(count: int) -> void:

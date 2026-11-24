@@ -20,6 +20,8 @@ const NAME_TAG_GAP := 6.0
 var _walk_time := 0.0
 ## Métier et journées de travail.
 var job := MouzJob.new()
+## Compétences (cuisine, informatique…).
+var skills := MouzSkills.new()
 ## Installé sur un objet (chaise, lit…) : la place, l'objet et la position debout à retrouver.
 ## Assis, le nœud prend le point de tri de l'objet (il s'affiche juste après lui) et le corps
 ## est décalé vers sa place ; un calque de l'objet peut repasser devant lui (`_front`).
@@ -76,6 +78,8 @@ func setup(p_world: World, p_profile: CharacterProfile, cell: Vector2i) -> void:
 	brain.setup(self, profile.autonomy_enabled)
 	add_child(job)
 	job.setup(self)
+	add_child(skills)
+	skills.setup(self)
 	bubble.setup(queue)
 	queue_redraw()
 

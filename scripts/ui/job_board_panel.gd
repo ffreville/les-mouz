@@ -139,7 +139,7 @@ func _job_card(job: JobDefinition, current: bool, problem := "") -> Control:
 	texts.add_theme_constant_override("separation", 2)
 	row.add_child(texts)
 	var title := Label.new()
-	title.text = job.display_name
+	title.text = job.title(_character.job.grade) if current else job.display_name
 	title.theme_type_variation = &"StrongLabel"
 	texts.add_child(title)
 	var schedule := Label.new()
@@ -151,6 +151,16 @@ func _job_card(job: JobDefinition, current: bool, problem := "") -> Control:
 	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	description.add_theme_font_size_override("font_size", 12)
 	texts.add_child(description)
+	if current:
+		texts.add_child(_career_box(job))
+	elif job.grades.size() > 1:
+		var career := Label.new()
+		career.text = "Carrière : %s, jusqu'à %s / jour (%s)" % [job.title(job.grade_count()),
+				Palette.format_mz(job.salary_for(job.grade_count())), Skills.display_name(job.skill)]
+		career.theme_type_variation = &"MutedLabel"
+		career.add_theme_font_size_override("font_size", 12)
+		career.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		texts.add_child(career)
 
 	var side := VBoxContainer.new()
 	side.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -167,7 +177,7 @@ func _job_card(job: JobDefinition, current: bool, problem := "") -> Control:
 	coin.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	pay.add_child(coin)
 	var amount := Label.new()
-	amount.text = "%s / jour" % Palette.format_mz(job.salary)
+	amount.text = "%s / jour" % Palette.format_mz(_character.job.salary() if current else job.salary)
 	amount.theme_type_variation = &"StrongLabel"
 	pay.add_child(amount)
 	side.add_child(pay)
@@ -194,6 +204,56 @@ func _job_card(job: JobDefinition, current: bool, problem := "") -> Control:
 		button.pressed.connect(accept)
 	side.add_child(button)
 	return card
+
+
+## Grade, performance et ce qui manque pour le grade suivant (métier actuel).
+func _career_box(job: JobDefinition) -> Control:
+	var mouz: MouzJob = _character.job
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 3)
+	var grade := Label.new()
+	grade.text = "Grade %d sur %d · compétence : %s (niveau %d)" % [mouz.grade, job.grade_count(),
+			Skills.display_name(job.skill), _character.skills.level(job.skill)]
+	grade.theme_type_variation = &"StrongLabel"
+	grade.add_theme_font_size_override("font_size", 12)
+	box.add_child(grade)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var label := Label.new()
+	label.text = "Performance"
+	label.theme_type_variation = &"MutedLabel"
+	label.add_theme_font_size_override("font_size", 12)
+	row.add_child(label)
+	var bar := ProgressBar.new()
+	bar.max_value = 100.0
+	bar.value = mouz.performance
+	bar.show_percentage = false
+	bar.custom_minimum_size = Vector2(120, 6)
+	bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	bar.add_theme_stylebox_override("fill", HudTheme.box(Palette.GAIN if mouz.performance >= MouzJob.PROMOTION_PERFORMANCE else Palette.ACCENT, 3))
+	bar.add_theme_stylebox_override("background", HudTheme.box(Palette.PAPIER_2, 3))
+	row.add_child(bar)
+	box.add_child(row)
+	var next := Label.new()
+	var problem := mouz.promotion_problem()
+	if mouz.grade >= job.grade_count():
+		next.text = "Plus haut grade atteint."
+	elif problem == "":
+		next.text = "Prêt·e pour « %s » : promotion au prochain retour du travail." % job.title(mouz.grade + 1)
+	else:
+		next.text = "Pour « %s » (%s / jour) : %s." % [job.title(mouz.grade + 1),
+				Palette.format_mz(job.salary_for(mouz.grade + 1)), problem]
+	next.theme_type_variation = &"MutedLabel"
+	next.add_theme_font_size_override("font_size", 12)
+	next.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	box.add_child(next)
+	var hint := Label.new()
+	hint.text = "Partir au travail de bonne humeur et reposé fait monter la performance."
+	hint.theme_type_variation = &"MutedLabel"
+	hint.add_theme_font_size_override("font_size", 11)
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	box.add_child(hint)
+	return box
 
 
 func _on_veil_input(event: InputEvent) -> void:
