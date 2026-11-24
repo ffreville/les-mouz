@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/chevalet_retro.svg" id="4_retro"]
 [ext_resource type="Texture2D" path="res://assets/sprites/chevalet_moderne.svg" id="5_moderne"]
 [ext_resource type="Resource" path="res://data/actions/peindre.tres" id="6_peindre"]
+[ext_resource type="Resource" path="res://data/actions/peindre_tableau.tres" id="99_peindre_tableau"]
 
 [resource]
 script = ExtResource("1_object")
@@ -15,7 +16,7 @@ sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("3_nature"),
 active_sprites = Dictionary[StringName, Texture2D]({})
 size = Vector2i(1, 1)
 blocks_movement = true
-actions = Array[ExtResource("2_action")]([ExtResource("6_peindre")])
+actions = Array[ExtResource("2_action")]([ExtResource("6_peindre"), ExtResource("99_peindre_tableau")])
 capacity = 1
 price = 300
 category = &"loisirs"

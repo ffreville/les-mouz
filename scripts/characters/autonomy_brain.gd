@@ -80,7 +80,7 @@ func _list_candidates() -> Array[Dictionary]:
 		var distance := navigation.path_length(here, spot)
 		var shared := not smart_object.other_users(_character).is_empty()
 		for definition in smart_object.get_actions():
-			if smart_object.action_problem(definition, _character.world) != "":
+			if not definition.autonomous or smart_object.action_problem(definition, _character.world) != "":
 				continue
 			candidates.append({
 				"action": QueuedAction.use_object(definition, smart_object),

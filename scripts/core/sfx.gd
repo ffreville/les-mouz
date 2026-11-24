@@ -37,6 +37,7 @@ func _ready() -> void:
 	get_tree().node_added.connect(_on_node_added)
 	EventBus.item_bought.connect(_on_item_bought)
 	EventBus.item_sold.connect(func(_item, _refund) -> void: play(&"vente"))
+	EventBus.home_income.connect(func(_character, _amount) -> void: play(&"vente"))
 	EventBus.action_started.connect(_on_action_started)
 	EventBus.action_finished.connect(_on_action_finished)
 	EventBus.need_critical.connect(_on_need_critical)

@@ -36,8 +36,34 @@ extends Resource
 ## Compétence que l'action fait progresser (&"" : aucune). Voir `Skills.LIST`.
 @export var skill: StringName = &""
 
+# --- Revenu ------------------------------------------------------------------------
+
+## Ce que rapporte l'action finie (tableau vendu, mission rendue…) : `earning_base`, plus
+## `earning_per_level` par niveau dans sa compétence. 0 : l'action ne rapporte rien.
+## Interrompue après au moins MIN_PAID_RATIO de sa durée, elle rapporte au prorata.
+@export var earning_base: int = 0
+@export var earning_per_level: int = 0
+## Message de la recette (« %s vend un tableau »), %s étant le nom du Mouz.
+@export var earning_text: String = ""
+
+const MIN_PAID_RATIO := 0.25
+
+# --- Autonomie ------------------------------------------------------------------------
+
+## Faux : les Mouz ne la choisissent jamais d'eux-mêmes (travail à la maison).
+@export var autonomous: bool = true
+
 # --- Interrupteur -------------------------------------------------------------------
 
 enum Switch { NONE, TURN_ON, TURN_OFF }
 ## Allumer ou éteindre l'objet (lampes) à la fin de l'action.
 @export var switch: Switch = Switch.NONE
+
+
+func earns() -> bool:
+	return earning_base > 0 or earning_per_level > 0
+
+
+## Recette de l'action finie, au niveau `level` de sa compétence.
+func earning_for(level: int) -> int:
+	return earning_base + earning_per_level * level

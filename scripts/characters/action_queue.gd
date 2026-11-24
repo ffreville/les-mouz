@@ -73,6 +73,7 @@ func cancel(action: QueuedAction) -> void:
 		_stop(action)
 	items.erase(action)
 	action.state = QueuedAction.State.DONE
+	_pay_earning(action)
 	EventBus.action_cancelled.emit(_character, action)
 	# L'action jumelle du partenaire s'arrête aussi.
 	var partner := action.partner_action
@@ -249,9 +250,28 @@ func _finish(action: QueuedAction) -> void:
 	_stop(action)
 	items.erase(action)
 	action.state = QueuedAction.State.DONE
+	_pay_earning(action)
 	EventBus.action_finished.emit(_character, action)
 	changed.emit()
 	_start_next_if_idle()
+
+
+## Travail à la maison : la recette selon le niveau, au prorata si l'action a été interrompue.
+func _pay_earning(action: QueuedAction) -> void:
+	var definition := action.definition
+	if definition == null or not definition.earns() or definition.duration_minutes <= 0.0:
+		return
+	var ratio := minf(action.elapsed_minutes / definition.duration_minutes, 1.0)
+	if ratio < ActionDefinition.MIN_PAID_RATIO:
+		return
+	var amount := roundi(definition.earning_for(_character.skills.level(definition.skill)) * ratio)
+	if amount <= 0:
+		return
+	Wallet.receive(amount)
+	EventBus.home_income.emit(_character, amount)
+	var text := definition.earning_text % _character.get_display_name() if definition.earning_text != "" \
+			else _character.get_display_name()
+	EventBus.notice.emit("%s : +%s%s" % [text, Palette.format_mz(amount), "" if ratio >= 1.0 else " (inachevé)"])
 
 
 ## Arrête le déplacement et libère l'objet éventuellement réservé.

@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/bureau_moderne.svg" id="5_moderne"]
 [ext_resource type="Resource" path="res://data/actions/lire.tres" id="6_lire"]
 [ext_resource type="Resource" path="res://data/actions/ecrire.tres" id="7_ecrire"]
+[ext_resource type="Resource" path="res://data/actions/ecrire_article.tres" id="99_ecrire_article"]
 
 [resource]
 script = ExtResource("1_object")
@@ -16,7 +17,7 @@ sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("3_nature"),
 active_sprites = Dictionary[StringName, Texture2D]({})
 size = Vector2i(2, 1)
 blocks_movement = true
-actions = Array[ExtResource("2_action")]([ExtResource("6_lire"), ExtResource("7_ecrire")])
+actions = Array[ExtResource("2_action")]([ExtResource("6_lire"), ExtResource("7_ecrire"), ExtResource("99_ecrire_article")])
 capacity = 1
 price = 450
 category = &"chambre"

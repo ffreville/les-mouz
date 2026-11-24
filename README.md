@@ -253,6 +253,7 @@ C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catal
 | Prénoms et noms tirés au dé | `scripts/ui/creation/name_ideas.gd` |
 | Vitesse de baisse d'un besoin, poids dans l'humeur, seuil critique, valeur de départ | `data/needs/*.tres` (`decay_per_hour`, `mood_weight`, `critical_threshold`, `start_value`) |
 | Durée et gains d'une action | `data/actions/*.tres` (`duration_minutes`, `need_gains`, `relationship_gain`) |
+| Recette du travail à la maison | `data/actions/*.tres` (`earning_base`, `earning_per_level`) |
 | Nombre d'utilisateurs simultanés d'un objet | `data/catalog/objects/*.tres` (`capacity`) |
 | Bonus des activités partagées, distance d'un objet voisin | `data/actions/*.tres` (`shared_need_gains`, `shared_relationship_gain`, `nearby_radius`) |
 | Coût d'un changement de style | `LotEditor.restyle_cost()` (prix − valeur de revente) |
@@ -359,6 +360,25 @@ Chaque métier a **5 grades**, avec un intitulé et un salaire chacun (Commis 21
 Une promotion remet la performance à 50 %. Une performance tombée à 0 fait redescendre d'un grade. Dans les petites annonces, la carte « Ton métier » montre le grade, la performance et ce qu'il manque pour le suivant ; les autres annonces montrent jusqu'où mène la carrière.
 
 Les métiers sont des `JobDefinition` dans `data/jobs/` : en ajouter un, c'est ajouter un `.tres` (nom, phrase de l'annonce, icône, horaires, jours, âge minimum, effets sur les besoins, et pour la carrière : compétence, intitulés, salaires et niveaux de chaque grade). Le métier, le grade, la performance et l'état « au travail » sont sauvegardés avec chaque Mouz.
+
+## Gagner de l'argent à la maison
+
+Sans métier, ou en plus, un Mouz peut travailler chez lui. Ces activités se lancent depuis l'objet et rapportent à la fin, selon son niveau dans la compétence de l'activité. Le menu de l'objet affiche ce qu'elles rapporteront (« Peindre un tableau à vendre · 92 Mz »).
+
+| Activité | Objet | Compétence | Durée | Recette |
+|---|---|---|---|---|
+| Peindre un tableau à vendre | chevalet | Art | 3 h | 20 + 18 par niveau |
+| Vendre des légumes au marché | potager | Jardinage | 1 h 30 | 10 + 7 par niveau |
+| Mission en freelance | ordinateur | Informatique | 3 h | 20 + 20 par niveau |
+| Écrire un article | bureau | Culture | 2 h | 10 + 13 par niveau |
+| Composer une chanson | piano | Musique | 3 h | 15 + 18 par niveau |
+
+- Au niveau 0, c'est peu (5 à 7 Mz de l'heure) ; vers le niveau 4, autant qu'un premier grade de métier ; au niveau 10, autant qu'un bon métier, mais fatigant (énergie qui baisse).
+- Interrompue après au moins un quart de sa durée, l'activité rapporte au prorata (« inachevé »).
+- Les Mouz ne les choisissent jamais d'eux-mêmes en autonomie (`autonomous = false`).
+- La mission en freelance demande l'électricité (ordinateur).
+
+Une action rapporte dès qu'elle a `earning_base` ou `earning_per_level` (`ActionDefinition`, section « Revenu ») ; `earning_text` est le message (« %s vend un tableau »).
 
 ## Les factures
 

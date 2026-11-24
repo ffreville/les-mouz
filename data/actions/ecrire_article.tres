@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ActionDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="1_action"]
+[ext_resource type="Texture2D" path="res://assets/icons/ink/ecrire.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_action")
+id = &"ecrire_article"
+display_name = "Écrire un article"
+icon = ExtResource("2_icon")
+duration_minutes = 120.0
+need_gains = Dictionary[StringName, float]({&"energie": -15.0, &"plaisir": -5.0})
+skill = &"culture"
+earning_base = 10
+earning_per_level = 13
+earning_text = "%s publie un article"
+autonomous = false

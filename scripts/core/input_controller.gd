@@ -51,8 +51,13 @@ func _open_object_menu(actor: Character, smart_object: SmartObject, screen_posit
 		# Allumer / Éteindre : on ne montre que celui qui a un sens.
 		if action.switch != ActionDefinition.Switch.NONE and problem != "":
 			continue
+		var label := action.display_name
+		if problem != "":
+			label += " (%s)" % problem
+		elif action.earns():
+			label += " · %s" % Palette.format_mz(action.earning_for(actor.skills.level(action.skill)))
 		options.append({
-			"label": action.display_name + (" (%s)" % problem if problem != "" else ""),
+			"label": label,
 			"icon": action.icon,
 			"disabled": problem != "",
 			"callback": func() -> void:
