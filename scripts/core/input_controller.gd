@@ -54,6 +54,8 @@ func _open_object_menu(actor: Character, smart_object: SmartObject, screen_posit
 		var label := action.display_name
 		if problem != "":
 			label += " (%s)" % problem
+		elif action.cost > 0:
+			label += " · −%s" % Palette.format_mz(action.cost)
 		elif action.earns():
 			label += " · %s" % Palette.format_mz(action.earning_for(actor.skills.level(action.skill)))
 		options.append({

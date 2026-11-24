@@ -36,6 +36,11 @@ extends Resource
 ## Compétence que l'action fait progresser (&"" : aucune). Voir `Skills.LIST`.
 @export var skill: StringName = &""
 
+# --- Coût --------------------------------------------------------------------------
+
+## Prix payé au début de l'action (les courses d'un repas…). Sans assez d'argent, impossible.
+@export var cost: int = 0
+
 # --- Revenu ------------------------------------------------------------------------
 
 ## Ce que rapporte l'action finie (tableau vendu, mission rendue…) : `earning_base`, plus

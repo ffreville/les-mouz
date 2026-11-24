@@ -16,3 +16,4 @@ shared_relationship_gain = 6.0
 nearby_object_id = &""
 skill = &"charisme"
 switch = 0
+cost = 5

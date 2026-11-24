@@ -181,6 +181,11 @@ func _run(action: QueuedAction) -> void:
 	if action.target_object != null and not action.target_object.reserve(_character):
 		cancel(action)
 		return
+	# Les courses se paient au moment de s'y mettre.
+	if action.definition.cost > 0 and not Wallet.pay(action.definition.cost):
+		EventBus.notice.emit("%s : pas assez d'argent pour %s." % [_character.get_display_name(), action.definition.display_name.to_lower()])
+		cancel(action)
+		return
 	action.state = QueuedAction.State.RUNNING
 	if action.target_object != null and action.definition.nearby_object_id != &"":
 		action.powered_object = action.target_object.find_nearby(action.definition, _character.world)

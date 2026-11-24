@@ -16,3 +16,4 @@ shared_relationship_gain = 0.0
 nearby_object_id = &""
 skill = &"cuisine"
 switch = 0
+cost = 20

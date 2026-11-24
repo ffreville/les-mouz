@@ -17,9 +17,9 @@ const LIST := [
 ]
 const MAX_LEVEL := 10
 ## Minutes de jeu pour passer du niveau 0 au niveau 1 ; chaque niveau suivant en demande
-## `LEVEL_GROWTH` de plus (niveau 10 : environ 8 h).
+## `LEVEL_GROWTH` de plus (niveau 9 → 10 : environ 11 h 30 ; 66 h en tout).
 const FIRST_LEVEL_MINUTES := 60.0
-const LEVEL_GROWTH := 45.0
+const LEVEL_GROWTH := 70.0
 ## On apprend plus vite de bonne humeur (humeur ≥ GOOD_MOOD), plus lentement grognon.
 const GOOD_MOOD := 65.0
 const BAD_MOOD := 35.0

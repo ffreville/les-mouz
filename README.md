@@ -253,6 +253,7 @@ C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catal
 | Prénoms et noms tirés au dé | `scripts/ui/creation/name_ideas.gd` |
 | Vitesse de baisse d'un besoin, poids dans l'humeur, seuil critique, valeur de départ | `data/needs/*.tres` (`decay_per_hour`, `mood_weight`, `critical_threshold`, `start_value`) |
 | Durée et gains d'une action | `data/actions/*.tres` (`duration_minutes`, `need_gains`, `relationship_gain`) |
+| Coût des repas (courses) | `data/actions/*.tres` (`cost`) |
 | Recette du travail à la maison | `data/actions/*.tres` (`earning_base`, `earning_per_level`) |
 | Nombre d'utilisateurs simultanés d'un objet | `data/catalog/objects/*.tres` (`capacity`) |
 | Bonus des activités partagées, distance d'un objet voisin | `data/actions/*.tres` (`shared_need_gains`, `shared_relationship_gain`, `nearby_radius`) |
@@ -380,6 +381,22 @@ Sans métier, ou en plus, un Mouz peut travailler chez lui. Ces activités se la
 
 Une action rapporte dès qu'elle a `earning_base` ou `earning_per_level` (`ActionDefinition`, section « Revenu ») ; `earning_text` est le message (« %s vend un tableau »).
 
+## Les courses
+
+Manger coûte : les actions qui nourrissent ont un `cost` (`data/actions/*.tres`), payé quand le Mouz s'y met. Sans assez d'argent, elles sont grisées (« pas assez d'argent ») et l'autonomie les ignore.
+
+| Action | Coût |
+|---|---|
+| En-cas | 3 Mz |
+| Apéro | 5 Mz |
+| Réchauffer un plat | 6 Mz |
+| Manger (frigo), manger à table | 8 Mz |
+| Préparer un repas | 10 Mz |
+| Cuisiner | 15 Mz |
+| Barbecue | 20 Mz |
+
+Pendant qu'un Mouz est au travail, ses besoins baissent moitié moins vite (il mange et se pose sur place) ; le métier marque la journée au retour par ses `need_changes`. Réglage : `NeedsComponent.AWAY_DECAY`.
+
 ## Les factures
 
 Tous les 3 jours (jours 3, 6, 9…) à 8 h, une facture arrive : **50 Mz + 1,5 % de la valeur de la maison** (ce qu'ont coûté ses murs, sols, portes, fenêtres et objets). La maison de démo (19 136 Mz) reçoit ainsi 337 Mz tous les 3 jours, à comparer à 60 – 640 Mz de salaire par jour travaillé.
@@ -396,15 +413,15 @@ Chaque Mouz a 8 compétences, de 0 à 10, visibles dans l'onglet « Compétences
 | Compétence | Actions qui la font monter |
 |---|---|
 | Cuisine | cuisiner, préparer un repas, barbecue |
-| Informatique | surfer, jouer ou discuter en ligne, jeux vidéo |
-| Musique | jouer du piano, écouter de la musique |
-| Art | peindre |
-| Jardinage | jardiner, récolter, arroser |
-| Culture | lire (partout), écrire, observer les étoiles, échecs |
+| Informatique | surfer, jouer ou discuter en ligne, jeux vidéo, freelance |
+| Musique | jouer du piano, écouter de la musique, composer |
+| Art | peindre, peindre un tableau à vendre |
+| Jardinage | jardiner, récolter, arroser, vendre des légumes |
+| Culture | lire (partout), écrire, écrire un article, observer les étoiles, échecs |
 | Forme | yoga, balançoire, danser, grimper |
 | Charisme | discuter, apéro, cartes |
 
-Chaque minute passée sur l'action compte. Le niveau 1 demande 1 h de pratique, et chaque niveau 45 min de plus (le niveau 10, environ 8 h). On apprend ×1,5 de bonne humeur (≥ 65), ×0,5 grognon (≤ 35) ; les enfants ×1,3, les ados ×1,2, les aînés ×0,9. Un niveau gagné s'annonce par un message et un petit son.
+Chaque minute passée sur l'action compte. Le niveau 1 demande 1 h de pratique, et chaque niveau 70 min de plus (du niveau 9 au 10, environ 11 h 30 ; environ 66 h de pratique pour tout monter). On apprend ×1,5 de bonne humeur (≥ 65), ×0,5 grognon (≤ 35) ; les enfants ×1,3, les ados ×1,2, les aînés ×0,9. Un niveau gagné s'annonce par un message et un petit son.
 
 Les réglages sont dans `scripts/characters/skills.gd` ; une action choisit sa compétence avec son champ `skill`.
 

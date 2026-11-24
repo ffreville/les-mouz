@@ -15,3 +15,4 @@ shared_need_gains = Dictionary[StringName, float]({&"social": 20.0})
 shared_relationship_gain = 4.0
 nearby_object_id = &""
 switch = 0
+cost = 8

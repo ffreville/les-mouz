@@ -146,6 +146,8 @@ func action_problem(action: ActionDefinition, world: World) -> String:
 		power = world.bills.problem_for(action.nearby_object_id)
 	if power != "":
 		return power
+	if action.cost > 0 and not Wallet.can_afford(action.cost):
+		return "pas assez d'argent"
 	match action.switch:
 		ActionDefinition.Switch.TURN_ON:
 			if placed.switched_on:

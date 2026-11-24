@@ -9,6 +9,8 @@ signal mood_changed(mood: float)
 
 const MIN_VALUE := 0.0
 const MAX_VALUE := 100.0
+## Vitesse de baisse des besoins pendant qu'un Mouz est au travail.
+const AWAY_DECAY := 0.5
 
 var definitions: Array[NeedDefinition] = []
 var _values: Dictionary[StringName, float] = {}
@@ -90,8 +92,11 @@ func change(need_id: StringName, amount: float, notify_mood := true) -> void:
 
 
 func _on_ticked(game_minutes: float) -> void:
+	# Au travail, on mange et on se repose sur place : les besoins baissent moitié moins vite
+	# (le métier, lui, marque la journée par ses `need_changes` au retour).
+	var factor := AWAY_DECAY if _character != null and _character.has_method("is_away") and _character.is_away() else 1.0
 	for definition in definitions:
-		change(definition.id, -definition.decay_per_hour * game_minutes / 60.0, false)
+		change(definition.id, -definition.decay_per_hour * factor * game_minutes / 60.0, false)
 	_notify_mood()
 
 
