@@ -1,6 +1,6 @@
 extends Node
 ## Musique de fond (autoload `Music`) : une piste par écran, en boucle, avec un fondu enchaîné.
-##  - menu : écran d'accueil et création de la famille ;
+##  - menu : écran d'accueil et création de la famille (silence tant que `menu.mp3` n'existe pas) ;
 ##  - jeu, construction, achat : selon le mode (Vivre, Construire, Acheter).
 ## Une piste absente est remplacée par sa voisine (achat ↔ construction), sinon par celle du jeu :
 ## on peut déposer les autres plus tard dans `assets/musique/`, sans toucher au code.
@@ -53,6 +53,9 @@ func _refresh() -> void:
 ## Passe à la piste `track` (fondu enchaîné), ou continue si c'est déjà la même musique.
 func play(track: StringName) -> void:
 	var path := FOLDER % track
+	if not ResourceLoader.exists(path) and track == &"menu":
+		stop()
+		return
 	if not ResourceLoader.exists(path) and NEIGHBOURS.has(track):
 		path = FOLDER % NEIGHBOURS[track]
 	if not ResourceLoader.exists(path):
@@ -75,6 +78,18 @@ func play(track: StringName) -> void:
 	if previous != null:
 		tween.tween_property(previous, "volume_db", SILENT_DB, FADE)
 		tween.chain().tween_callback(previous.queue_free)
+
+
+## Silence : la piste en cours s'efface en fondu.
+func stop() -> void:
+	_track_path = ""
+	if _current == null:
+		return
+	var previous := _current
+	_current = null
+	var tween := create_tween()
+	tween.tween_property(previous, "volume_db", SILENT_DB, FADE)
+	tween.tween_callback(previous.queue_free)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
