@@ -23,6 +23,8 @@ var characters: Array[Character] = []
 ## La famille qui vit ici (prénoms, apparences, liens).
 var family: Family
 var smart_objects: Array[SmartObject] = []
+## Teinte selon l'heure et lumière des objets allumés.
+var day_night := DayNight.new()
 
 @onready var floor_view: FloorView = $FloorView
 @onready var wall_view: WallView = $WallView
@@ -40,6 +42,7 @@ var smart_objects: Array[SmartObject] = []
 
 func _ready() -> void:
 	Music.enter_game()
+	add_child(day_night)
 	var saved := SaveManager.take_pending() if use_save else {}
 	# Une partie enregistrée contient son terrain ; une nouvelle partie peut nommer un terrain du catalogue.
 	var is_saved_game := saved.has("lot")
@@ -65,6 +68,7 @@ func _ready() -> void:
 	# Les murs du haut du terrain montent de 64 px au-dessus de leur ligne.
 	camera.set_bounds(Rect2(Vector2(0, -WALL_MARGIN), Vector2(lot.size * lot.cell_size) + Vector2(0, WALL_MARGIN)))
 	refresh_lot()
+	day_night.setup(self)
 	# Connecté avant la création des personnages : le monde se met à jour avant leurs files.
 	EventBus.lot_changed.connect(refresh_lot)
 	_spawn_characters(profiles)

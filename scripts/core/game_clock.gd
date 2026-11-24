@@ -44,7 +44,9 @@ func reset() -> void:
 ## Reprend une partie enregistrée.
 func restore(minutes: float) -> void:
 	total_minutes = minutes
-	_last_whole_minute = -1
+	_last_whole_minute = int(total_minutes)
+	# L'horloge affichée suit, même si la partie reprend en pause.
+	minute_changed.emit(get_day(), get_hour(), get_minute())
 
 
 func _process(delta: float) -> void:
