@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="JobDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/jobs/job_definition.gd" id="1_job"]
+[ext_resource type="Texture2D" path="res://assets/icons/ink/surfer.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_job")
+id = &"informaticien"
+display_name = "Développeur·se web"
+description = "Petite agence, grands écrans, café à volonté. Débutants bienvenus."
+icon = ExtResource("2_icon")
+salary = 280
+start_hour = 9
+end_hour = 17
+days = Array[int]([0, 1, 2, 3, 4])
+min_age = &"adulte"
+need_changes = Dictionary[StringName, float]({&"energie": -20.0, &"plaisir": -15.0, &"social": -5.0})

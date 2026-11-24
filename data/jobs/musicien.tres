@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="JobDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/jobs/job_definition.gd" id="1_job"]
+[ext_resource type="Texture2D" path="res://assets/icons/ink/piano.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_job")
+id = &"musicien"
+display_name = "Pianiste de salon"
+description = "Animer les soirées du grand hôtel, en costume s'il vous plaît."
+icon = ExtResource("2_icon")
+salary = 240
+start_hour = 15
+end_hour = 22
+days = Array[int]([2, 3, 4, 5])
+min_age = &"adulte"
+need_changes = Dictionary[StringName, float]({&"energie": -25.0, &"plaisir": 5.0, &"social": 10.0})

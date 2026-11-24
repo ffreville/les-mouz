@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="JobDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/jobs/job_definition.gd" id="1_job"]
+[ext_resource type="Texture2D" path="res://assets/icons/ink/peindre.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_job")
+id = &"artiste"
+display_name = "Illustrateur·rice"
+description = "Une maison d'édition cherche des dessins pour ses livres d'enfants."
+icon = ExtResource("2_icon")
+salary = 170
+start_hour = 11
+end_hour = 17
+days = Array[int]([0, 1, 2, 3])
+min_age = &"adulte"
+need_changes = Dictionary[StringName, float]({&"energie": -15.0, &"plaisir": 10.0})

@@ -18,6 +18,8 @@ const HEIGHTS := {&"enfant": 32.0, &"ado": 42.0, &"adulte": 48.0, &"aine": 46.0}
 const NAME_TAG_GAP := 6.0
 
 var _walk_time := 0.0
+## Métier et journées de travail.
+var job := MouzJob.new()
 ## Installé sur un objet (chaise, lit…) : la place, l'objet et la position debout à retrouver.
 ## Assis, le nœud prend le point de tri de l'objet (il s'affiche juste après lui) et le corps
 ## est décalé vers sa place ; un calque de l'objet peut repasser devant lui (`_front`).
@@ -72,6 +74,8 @@ func setup(p_world: World, p_profile: CharacterProfile, cell: Vector2i) -> void:
 	queue.setup(self)
 	relationships.setup(self)
 	brain.setup(self, profile.autonomy_enabled)
+	add_child(job)
+	job.setup(self)
 	bubble.setup(queue)
 	queue_redraw()
 
@@ -83,6 +87,16 @@ func get_cell() -> Vector2i:
 ## Position des pieds quand le Mouz est debout (celle d'avant de s'installer s'il est assis).
 func standing_position() -> Vector2:
 	return _stand_position if is_seated() else position
+
+
+## Au travail : hors du terrain, ni cliquable ni disponible.
+func is_away() -> bool:
+	return job.away
+
+
+## Au travail ou en route : on ne lui donne plus d'ordres.
+func is_busy_with_job() -> bool:
+	return job.away or job.is_leaving()
 
 
 func is_seated() -> bool:
@@ -146,6 +160,8 @@ func get_display_name() -> String:
 
 ## Vrai si un clic à cette position (monde) touche le personnage.
 func contains_point(world_position: Vector2) -> bool:
+	if is_away():
+		return false
 	if is_seated() and _seat["pose"] == "allonge":
 		return Rect2(-16, -16, 32, 32).has_point(world_position - position - body.position)
 	return CLICK_RECT.has_point(world_position - position - body.position)

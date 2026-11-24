@@ -2,6 +2,7 @@ class_name InputController
 extends Node2D
 ## Traduit les clics dans le monde en ordres pour le personnage sélectionné.
 ## Les clics sur l'interface sont absorbés avant d'arriver ici.
+##  - clic sur le personnage sélectionné : son téléphone (petites annonces, démission) ;
 ##  - clic sur un autre personnage : menu (actions sociales, prendre le contrôle) ;
 ##  - clic sur un objet : menu de ses actions ;
 ##  - clic sur le sol : « Aller ici ».
@@ -21,12 +22,17 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	var character := world.get_character_at(position_in_world)
 	if character != null:
-		if selected == null or character == selected:
+		if selected == null:
 			world.selection.select(character)
+		elif character == selected:
+			_open_phone_menu(character, click.position)
 		else:
 			_open_character_menu(selected, character, click.position)
 		return
 	if selected == null:
+		return
+	if selected.is_busy_with_job():
+		EventBus.notice.emit("%s : %s" % [selected.get_display_name(), selected.job.status_text().to_lower()])
 		return
 
 	var cell := world.navigation.world_to_cell(position_in_world)
@@ -53,6 +59,25 @@ func _open_object_menu(actor: Character, smart_object: SmartObject, screen_posit
 				actor.queue.enqueue(QueuedAction.use_object(action, smart_object)),
 		})
 	EventBus.context_menu_requested.emit(smart_object.get_display_name(), options, screen_position)
+
+
+## Le téléphone du Mouz : petites annonces, et démission s'il a un métier.
+func _open_phone_menu(actor: Character, screen_position: Vector2) -> void:
+	if actor.is_busy_with_job():
+		EventBus.notice.emit("%s : %s" % [actor.get_display_name(), actor.job.status_text().to_lower()])
+		return
+	var options: Array = [{
+		"label": "Petites annonces (téléphone)",
+		"icon": load("res://assets/icons/ink/surfer.svg"),
+		"callback": func() -> void: EventBus.job_board_requested.emit(actor, &"telephone"),
+	}]
+	if actor.job.definition != null:
+		options.append({
+			"label": "Démissionner (%s)" % actor.job.definition.display_name,
+			"icon": load("res://assets/icons/ink/quitter.svg"),
+			"callback": actor.job.quit,
+		})
+	EventBus.context_menu_requested.emit(actor.get_display_name(), options, screen_position)
 
 
 func _open_character_menu(actor: Character, other: Character, screen_position: Vector2) -> void:

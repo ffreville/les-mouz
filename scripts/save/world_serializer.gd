@@ -24,6 +24,7 @@ static func to_data(world: World) -> Dictionary:
 			"needs": character.needs.snapshot(),
 			"relationships": relationships,
 			"autonomy": character.brain.enabled,
+			"job": character.job.to_dict(),
 		})
 	var selected := world.selection.selected
 	return {
@@ -61,6 +62,7 @@ static func apply_to_world(world: World, data: Dictionary) -> void:
 			character.position = world.navigation.cell_to_world(world.navigation.nearest_walkable(cell))
 		character.needs.restore(entry.get("needs", {}))
 		character.brain.enabled = bool(entry.get("autonomy", true))
+		character.job.restore(entry.get("job", {}))
 		var relationships: Dictionary = entry.get("relationships", {})
 		for other_id in relationships:
 			if by_id.has(other_id):

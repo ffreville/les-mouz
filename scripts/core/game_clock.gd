@@ -87,5 +87,6 @@ func get_minute() -> int:
 
 
 ## Texte prêt à afficher, par exemple « Jour 2 — 07:45 ».
+## « Lun. 1 — 08:02 » : jour de la semaine (le jour 1 est un lundi), numéro du jour, heure.
 func format_time() -> String:
-	return "Jour %d — %02d:%02d" % [get_day(), get_hour(), get_minute()]
+	return "%s %d — %02d:%02d" % [JobBoard.SHORT_DAYS[posmod(get_day() - 1, 7)] + ".", get_day(), get_hour(), get_minute()]

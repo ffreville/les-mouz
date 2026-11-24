@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="JobDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/jobs/job_definition.gd" id="1_job"]
+[ext_resource type="Texture2D" path="res://assets/icons/ink/cafe.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_job")
+id = &"serveur"
+display_name = "Serveur·se (petit boulot)"
+description = "Le salon de thé cherche du renfort en fin de journée. Dès l'adolescence."
+icon = ExtResource("2_icon")
+salary = 90
+start_hour = 17
+end_hour = 21
+days = Array[int]([4, 5, 6])
+min_age = &"ado"
+need_changes = Dictionary[StringName, float]({&"energie": -15.0, &"social": 10.0})

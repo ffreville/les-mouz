@@ -11,6 +11,7 @@
 [ext_resource type="Resource" path="res://data/actions/surfer.tres" id="9_surfer"]
 [ext_resource type="Resource" path="res://data/actions/jouer_en_ligne.tres" id="10_jouer_en_ligne"]
 [ext_resource type="Resource" path="res://data/actions/discuter_en_ligne.tres" id="11_discuter_en_ligne"]
+[ext_resource type="Resource" path="res://data/actions/chercher_emploi.tres" id="12_chercher_emploi"]
 
 [resource]
 script = ExtResource("1_object")
@@ -20,7 +21,7 @@ sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("3_nature"),
 active_sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("4_nature_actif"), &"retro": ExtResource("6_retro_actif"), &"moderne": ExtResource("8_moderne_actif")})
 size = Vector2i(2, 1)
 blocks_movement = true
-actions = Array[ExtResource("2_action")]([ExtResource("9_surfer"), ExtResource("10_jouer_en_ligne"), ExtResource("11_discuter_en_ligne")])
+actions = Array[ExtResource("2_action")]([ExtResource("9_surfer"), ExtResource("10_jouer_en_ligne"), ExtResource("11_discuter_en_ligne"), ExtResource("12_chercher_emploi")])
 capacity = 1
 price = 900
 category = &"loisirs"

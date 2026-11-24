@@ -86,6 +86,7 @@ Pour changer le format : augmenter `WorldSerializer.FORMAT_VERSION`, puis compl�
 | Clic sur le sol | Ajoute « Aller ici » à la file du Mouz sélectionné (remplace le déplacement déjà prévu) |
 | Clic sur un objet | Menu des actions de l'objet ; l'action choisie s'ajoute à la file |
 | Clic sur l'autre Mouz | Menu : « Discuter » ou « Contrôler » |
+| Clic sur le Mouz sélectionné | Son téléphone : « Petites annonces », « Démissionner » |
 | Clic sur ✕ dans la file | Annule l'action |
 | Boutons Pépin / Myrtille, ou **Tab** | Change de Mouz |
 | Bouton « Autonomie » | Active ou coupe l'autonomie du Mouz sélectionné |
@@ -319,6 +320,37 @@ L'autoload `Music` joue une piste en boucle selon l'écran, avec un fondu encha�
 
 Aujourd'hui : `menu.mp3` est « Good Morning, World! », `jeu.mp3` est « Felt Piano Motif », `construction.mp3` est « Relaxed Gaming Groove ». Une piste absente est remplacée par sa voisine (Acheter ↔ Construire, sans reprendre la musique au début quand on passe de l'un à l'autre), sinon par `jeu.mp3`. L'accueil, lui, reste silencieux s'il n'a pas de `menu.mp3`. Pour ajouter une piste, dépose le fichier sous ce nom : rien à changer dans le code. Le volume se règle dans `scripts/core/music.gd` (`VOLUME_DB`).
 
+## Le travail
+
+Un Mouz trouve un métier dans les **petites annonces** :
+
+- **sur son téléphone** : clic sur le Mouz sélectionné, « Petites annonces (téléphone) » ; 3 annonces ;
+- **sur l'ordinateur** : action « Lire les petites annonces » (20 min) ; 5 annonces, dont celles du téléphone.
+
+Les annonces changent chaque jour (tirées au sort d'après le numéro du jour). Le jour 1 est un lundi ; l'horloge affiche le jour de la semaine (« Lun. 1 — 08:00 »).
+
+| Métier | Jours | Horaires | Salaire |
+|---|---|---|---|
+| Développeur·se web | Lun – Ven | 9 h – 17 h | 280 Mz |
+| Infirmier·ère | Lun – Ven | 7 h – 15 h | 260 Mz |
+| Pianiste de salon | Mer – Sam | 15 h – 22 h | 240 Mz |
+| Commis de cuisine | Mar – Sam | 10 h – 18 h | 210 Mz |
+| Jardinier·ère paysagiste | Lun – Ven | 8 h – 15 h | 190 Mz |
+| Libraire | Mar – Sam | 10 h – 18 h | 180 Mz |
+| Illustrateur·rice | Lun – Jeu | 11 h – 17 h | 170 Mz |
+| Serveur·se (petit boulot, dès l'adolescence) | Ven – Dim | 17 h – 21 h | 90 Mz |
+| Livreur·se de journaux (dès l'adolescence) | Lun – Sam | 6 h – 8 h | 60 Mz |
+
+Les enfants ne travaillent pas ; les ados n'ont que les petits boulots.
+
+Une journée de travail (`MouzJob`, un composant de chaque Mouz) :
+
+1. À l'heure de début, un jour travaillé, le Mouz laisse tomber ce qu'il faisait et sort par la rue (en bas du terrain). Au bout de 20 minutes de marche, il est parti de toute façon (il a pris le bus).
+2. Au travail, il disparaît : il n'est plus cliquable, ses ordres sont refusés avec un message, l'autonomie le laisse tranquille. L'en-tête affiche « Au travail jusqu'à 17 h ».
+3. À l'heure de fin, il revient par la rue avec son salaire (« Pépin rentre du travail : +280 Mz ») et sa journée a marqué ses besoins (`need_changes` du métier : moins d'énergie, plus ou moins de plaisir…).
+
+Les métiers sont des `JobDefinition` dans `data/jobs/` : en ajouter un, c'est ajouter un `.tres` (nom, phrase de l'annonce, icône, salaire, heures, jours, âge minimum, effets sur les besoins). Le métier et l'état « au travail » sont sauvegardés avec chaque Mouz.
+
 ## Les bruitages
 
 L'autoload `Sfx` joue de courts sons, rangés dans `assets/sons/<nom>.wav` :
@@ -365,7 +397,8 @@ Le jeu passe progressivement en vue trois quarts (brief n° 6, livré par lots ;
 - Les Mouz peuvent se traverser : ils ne bloquent pas la navigation.
 - Deux Mouz peuvent viser le même objet. Le premier arrivé le réserve, et l'action du second est annulée ; son autonomie choisit alors autre chose.
 - La file d'actions des Mouz n'est pas sauvegardée : au chargement, ils repartent les mains vides (l'autonomie reprend vite la main).
-- Il n'y a pas encore de revenus ni de dépenses régulières : l'argent ne bouge qu'en construisant et en achetant.
+- Il n'y a pas encore de dépenses régulières (factures) : l'argent ne baisse qu'en construisant et en achetant.
+- Au travail, un Mouz est simplement absent : on ne le voit pas travailler, et il n'y a ni promotion ni licenciement.
 
 ## Crédits
 

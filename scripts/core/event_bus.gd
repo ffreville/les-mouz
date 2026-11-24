@@ -82,3 +82,16 @@ signal character_selected(character: Node)
 ## `options` : tableau de dictionnaires { "label": String, "callback": Callable }.
 @warning_ignore("unused_signal")
 signal context_menu_requested(title: String, options: Array, screen_position: Vector2)
+## Petit message en bas de l'écran (« Pépin rentre du travail : +210 Mz »).
+@warning_ignore("unused_signal")
+signal notice(text: String)
+
+
+# --- Travail ------------------------------------------------------------------
+
+## Ouvrir les petites annonces pour ce Mouz ; `source` : &"telephone" ou &"ordinateur".
+@warning_ignore("unused_signal")
+signal job_board_requested(character: Node, source: StringName)
+## Un Mouz rentre du travail et touche son salaire.
+@warning_ignore("unused_signal")
+signal salary_paid(character: Node, amount: int)

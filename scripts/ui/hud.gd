@@ -39,6 +39,14 @@ func _ready() -> void:
 	GameMode.mode_changed.connect(_on_mode_changed)
 	_on_mode_changed(GameMode.mode)
 	_setup_game_menu()
+	# Petites annonces, par-dessus tout le reste de l'interface.
+	var job_board := JobBoardPanel.new()
+	root.add_child(job_board)
+	# Les messages restent lisibles au-dessus du voile des annonces.
+	if toast.get_parent() == root:
+		root.move_child(job_board, toast.get_index())
+	EventBus.notice.connect(func(text: String) -> void: toast.show_message(text))
+	EventBus.salary_paid.connect(func(_character: Node, _amount: int) -> void: Sfx.play(&"achat"))
 
 
 func _on_character_selected(character: Node) -> void:

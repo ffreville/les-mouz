@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="JobDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/jobs/job_definition.gd" id="1_job"]
+[ext_resource type="Texture2D" path="res://assets/icons/ink/lire.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_job")
+id = &"livreur"
+display_name = "Livreur·se de journaux"
+description = "Tournée du matin à vélo, avant l'école. Dès l'adolescence."
+icon = ExtResource("2_icon")
+salary = 60
+start_hour = 6
+end_hour = 8
+days = Array[int]([0, 1, 2, 3, 4, 5])
+min_age = &"ado"
+need_changes = Dictionary[StringName, float]({&"energie": -10.0, &"plaisir": 5.0})

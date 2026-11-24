@@ -23,7 +23,7 @@ func setup(character: Character, start_enabled: bool) -> void:
 
 
 func _on_ticked(game_minutes: float) -> void:
-	if not enabled or not _character.queue.is_empty():
+	if not enabled or not _character.queue.is_empty() or _character.is_busy_with_job():
 		return
 	_cooldown_minutes -= game_minutes
 	if _cooldown_minutes > 0.0:
@@ -90,7 +90,7 @@ func _list_candidates() -> Array[Dictionary]:
 			})
 	for other in _character.world.characters:
 		# On ne dérange pas quelqu'un d'occupé (un ordre du joueur, lui, interrompt).
-		if other == _character or _is_busy(other):
+		if other == _character or _is_busy(other) or other.is_away():
 			continue
 		var spot := navigation.closest_reachable(navigation.cells_next_to(other.get_cell()), here)
 		if spot == GridNavigation.NO_CELL:
