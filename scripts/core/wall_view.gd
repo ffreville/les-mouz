@@ -198,7 +198,7 @@ func _process(_delta: float) -> void:
 	var occupied := {}
 	for character in _characters:
 		if is_instance_valid(character):
-			occupied[Vector2i((character.position / float(_lot.cell_size)).floor())] = true
+			occupied[Vector2i((character.standing_position() / float(_lot.cell_size)).floor())] = true
 	for door in _doors:
 		var open := false
 		for cell in door["cells"]:
@@ -211,6 +211,8 @@ func _process(_delta: float) -> void:
 		var texture := _texture(OPENING_PATH % (door["name"] + ("_ouverte" if open else "")))
 		if texture != null:
 			door["sprite"].texture = texture
+		if open:
+			Sfx.play_at(&"porte", door["sprite"].global_position)
 
 
 ## Dessine une porte ou une fenêtre vue de dessus sur `canvas` (aperçus de l'éditeur).

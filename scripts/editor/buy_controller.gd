@@ -110,11 +110,16 @@ func _on_click(screen_position: Vector2) -> void:
 		return
 	if _moving != null:
 		if editor.move_object(_moving, _cell, _rotation):
+			Sfx.play(&"poser")
 			_stop()
+		else:
+			Sfx.play(&"erreur")
 	elif editor.buy_object(_definition, _cell, _rotation, _collection):
 		# On garde l'objet en main pour en poser un autre, s'il reste de quoi payer.
 		if not Wallet.can_afford(_definition.price):
 			_stop()
+	else:
+		Sfx.play(&"erreur")
 	_update_preview()
 
 

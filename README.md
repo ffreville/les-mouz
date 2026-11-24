@@ -319,6 +319,33 @@ L'autoload `Music` joue une piste en boucle selon l'écran, avec un fondu encha�
 
 Aujourd'hui : `menu.mp3` est « Good Morning, World! », `jeu.mp3` est « Felt Piano Motif », `construction.mp3` est « Relaxed Gaming Groove ». Une piste absente est remplacée par sa voisine (Acheter ↔ Construire, sans reprendre la musique au début quand on passe de l'un à l'autre), sinon par `jeu.mp3`. L'accueil, lui, reste silencieux s'il n'a pas de `menu.mp3`. Pour ajouter une piste, dépose le fichier sous ce nom : rien à changer dans le code. Le volume se règle dans `scripts/core/music.gd` (`VOLUME_DB`).
 
+## Les bruitages
+
+L'autoload `Sfx` joue de courts sons, rangés dans `assets/sons/<nom>.wav` :
+
+| Son | Quand |
+|---|---|
+| `clic` | n'importe quel bouton |
+| `poser`, `achat` | un objet acheté et posé (ou déplacé) |
+| `construire` | un mur, un sol, une porte ou une fenêtre posés |
+| `vente` | une revente |
+| `erreur` | une pose refusée, un message d'échec |
+| `sauvegarde` | un message de réussite (« Partie enregistrée ») |
+| `alerte` | un besoin critique pour le Mouz sélectionné |
+| `porte` | une porte qui s'ouvre au passage d'un Mouz |
+| `eau`, `cuisson`, `micro_ondes`, `piano`, `manger`, `interrupteur` | au début de l'action correspondante (`ACTION_SOUNDS` dans `scripts/core/sfx.gd`) |
+| `chasse` | à la fin de l'utilisation des toilettes |
+
+Les sons de la maison sont placés dans le monde : plus faibles quand la scène est loin de l'écran. Un même son ne se répète pas à moins de 80 ms (un mur tiré sur dix cases ne fait pas dix bruits d'affilée).
+
+Ces sons sont **provisoires** : ils sont synthétisés par `tools/generer_sons.py` (`python3 tools/generer_sons.py`). Pour en remplacer un, dépose un vrai fichier sous le même nom ; un son absent est simplement ignoré.
+
+## Le jour et la nuit
+
+`DayNight` (enfant du monde) teinte la maison selon l'heure : nuit bleutée jusqu'à 5 h, aube rosée vers 6 h 30, plein jour de 8 h à 18 h, coucher orangé vers 19 h 30, nuit à partir de 21 h. Les couleurs sont dans `SKY` (`scripts/core/day_night.gd`). L'interface n'est pas teintée.
+
+La nuit, les objets en marche éclairent autour d'eux : lampes de chevet et sur pied, cheminée, télé, ordinateur, cuisinière, barbecue (`LIGHTS` : couleur et rayon). En Construire et Acheter, la nuit est nettement adoucie pour qu'on voie ce qu'on fait.
+
 ## La vue trois quarts
 
 Le jeu passe progressivement en vue trois quarts (brief n° 6, livré par lots ; règles complètes dans `design/README.md`). La grille reste carrée, les objets montent vers le haut de l'écran.

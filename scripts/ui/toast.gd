@@ -64,6 +64,10 @@ func _ready() -> void:
 
 func show_message(text: String, kind: Kind = Kind.INFO, detail := "", retry := Callable()) -> void:
 	_label.text = text
+	if kind == Kind.SUCCESS:
+		Sfx.play(&"sauvegarde")
+	elif kind == Kind.FAILURE:
+		Sfx.play(&"erreur")
 	_detail.text = detail
 	_detail.visible = detail != ""
 	_retry_action = retry

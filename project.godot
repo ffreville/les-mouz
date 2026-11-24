@@ -16,6 +16,7 @@ Wallet="*res://scripts/core/wallet.gd"
 GameMode="*res://scripts/core/game_mode.gd"
 SaveManager="*res://scripts/save/save_manager.gd"
 Music="*res://scripts/core/music.gd"
+Sfx="*res://scripts/core/sfx.gd"
 
 [display]
 
