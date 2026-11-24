@@ -101,3 +101,13 @@ signal skill_level_up(character: Node, skill: StringName, level: int)
 ## Un Mouz change de grade dans son métier (`up` : promotion, sinon rétrogradation).
 @warning_ignore("unused_signal")
 signal grade_changed(character: Node, grade: int, up: bool)
+
+
+# --- Factures -----------------------------------------------------------------
+
+## Une facture arrive.
+@warning_ignore("unused_signal")
+signal bill_received(amount: int)
+## L'électricité est coupée (`cut`) ou rétablie.
+@warning_ignore("unused_signal")
+signal power_cut_changed(cut: bool)

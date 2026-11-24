@@ -25,6 +25,8 @@ var family: Family
 var smart_objects: Array[SmartObject] = []
 ## Teinte selon l'heure et lumière des objets allumés.
 var day_night := DayNight.new()
+## Factures et coupure d'électricité.
+var bills := Bills.new()
 
 @onready var floor_view: FloorView = $FloorView
 @onready var wall_view: WallView = $WallView
@@ -43,6 +45,8 @@ var day_night := DayNight.new()
 func _ready() -> void:
 	Music.enter_game()
 	add_child(day_night)
+	add_child(bills)
+	bills.setup(self)
 	var saved := SaveManager.take_pending() if use_save else {}
 	# Une partie enregistrée contient son terrain ; une nouvelle partie peut nommer un terrain du catalogue.
 	var is_saved_game := saved.has("lot")

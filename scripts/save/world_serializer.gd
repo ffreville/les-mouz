@@ -35,6 +35,7 @@ static func to_data(world: World) -> Dictionary:
 		"lot": LotSerializer.to_data(world.lot),
 		"family": world.family.to_dict(),
 		"characters": characters,
+		"bills": world.bills.to_dict(),
 		"selected": String(selected.profile.id) if selected != null else "",
 		"camera": {"position": [world.camera.position.x, world.camera.position.y], "zoom": world.camera.zoom.x},
 	}
@@ -69,6 +70,7 @@ static func apply_to_world(world: World, data: Dictionary) -> void:
 		for other_id in relationships:
 			if by_id.has(other_id):
 				character.relationships.restore_with(by_id[other_id], float(relationships[other_id]))
+	world.bills.restore(data.get("bills", {}))
 	if by_id.has(data.get("selected", "")):
 		world.selection.select.call_deferred(by_id[data["selected"]])
 	var camera: Dictionary = data.get("camera", {})

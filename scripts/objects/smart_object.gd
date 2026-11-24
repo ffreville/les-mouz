@@ -122,6 +122,8 @@ func contains_point(world_position: Vector2) -> bool:
 
 ## « En marche » : utilisé, alimenté à distance ou allumé.
 func is_active() -> bool:
+	if Bills.cut and definition.id in Bills.ELECTRIC:
+		return false
 	return not _users.is_empty() or not _powered_by.is_empty() or placed.switched_on
 
 
@@ -139,6 +141,11 @@ func get_spots(navigation: GridNavigation) -> Array[Vector2i]:
 
 ## Raison pour laquelle l'action n'est pas possible ici ("" si elle l'est).
 func action_problem(action: ActionDefinition, world: World) -> String:
+	var power := world.bills.problem_for(definition.id)
+	if power == "" and action.nearby_object_id != &"":
+		power = world.bills.problem_for(action.nearby_object_id)
+	if power != "":
+		return power
 	match action.switch:
 		ActionDefinition.Switch.TURN_ON:
 			if placed.switched_on:

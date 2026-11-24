@@ -360,6 +360,15 @@ Une promotion remet la performance à 50 %. Une performance tombée à 0 fait re
 
 Les métiers sont des `JobDefinition` dans `data/jobs/` : en ajouter un, c'est ajouter un `.tres` (nom, phrase de l'annonce, icône, horaires, jours, âge minimum, effets sur les besoins, et pour la carrière : compétence, intitulés, salaires et niveaux de chaque grade). Le métier, le grade, la performance et l'état « au travail » sont sauvegardés avec chaque Mouz.
 
+## Les factures
+
+Tous les 3 jours (jours 3, 6, 9…) à 8 h, une facture arrive : **50 Mz + 1,5 % de la valeur de la maison** (ce qu'ont coûté ses murs, sols, portes, fenêtres et objets). La maison de démo (19 136 Mz) reçoit ainsi 337 Mz tous les 3 jours, à comparer à 60 – 640 Mz de salaire par jour travaillé.
+
+- Les factures à payer s'affichent à côté de l'argent, en haut de l'écran. Un clic montre le détail et propose « Tout payer ».
+- Une facture est à payer dans les 3 jours. En retard, elle est **majorée de 10 %** et **l'électricité est coupée** : le bouton passe au rouge, les objets électriques (frigo, cuisinière, micro-ondes, machine à café, lave-vaisselle, machine à laver, télé, ordinateur, console, chaîne hi-fi, lampes, aquarium) ne servent plus, les lampes s'éteignent et l'autonomie les ignore. Tout payer rétablit le courant.
+
+Les réglages sont dans `scripts/core/bills.gd` (intervalle, heure, délai, forfait, taux, majoration, objets électriques). Les factures et la coupure sont sauvegardées.
+
 ## Les compétences
 
 Chaque Mouz a 8 compétences, de 0 à 10, visibles dans l'onglet « Compétences » du panneau de gauche :
@@ -426,7 +435,6 @@ Le jeu passe progressivement en vue trois quarts (brief n° 6, livré par lots ;
 - Les Mouz peuvent se traverser : ils ne bloquent pas la navigation.
 - Deux Mouz peuvent viser le même objet. Le premier arrivé le réserve, et l'action du second est annulée ; son autonomie choisit alors autre chose.
 - La file d'actions des Mouz n'est pas sauvegardée : au chargement, ils repartent les mains vides (l'autonomie reprend vite la main).
-- Il n'y a pas encore de dépenses régulières (factures) : l'argent ne baisse qu'en construisant et en achetant.
 - Au travail, un Mouz est simplement absent : on ne le voit pas travailler. Une mauvaise performance fait redescendre d'un grade, jamais renvoyer.
 
 ## Crédits
