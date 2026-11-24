@@ -2,12 +2,14 @@ extends Node
 ## Musique de fond (autoload `Music`) : une piste par écran, en boucle, avec un fondu enchaîné.
 ##  - menu : écran d'accueil et création de la famille ;
 ##  - jeu, construction, achat : selon le mode (Vivre, Construire, Acheter).
-## Une piste absente est remplacée par celle du jeu : on peut déposer les autres plus tard
-## dans `assets/musique/` (menu, construction, achat), sans toucher au code.
+## Une piste absente est remplacée par sa voisine (achat ↔ construction), sinon par celle du jeu :
+## on peut déposer les autres plus tard dans `assets/musique/`, sans toucher au code.
 ## M coupe ou remet la musique.
 
 const FOLDER := "res://assets/musique/%s.mp3"
 const FALLBACK := &"jeu"
+## Piste à essayer avant celle du jeu (Construire et Acheter partagent la même ambiance).
+const NEIGHBOURS := {&"achat": &"construction", &"construction": &"achat"}
 const MODE_TRACKS := {GameMode.Mode.LIVE: &"jeu", GameMode.Mode.BUILD: &"construction", GameMode.Mode.BUY: &"achat"}
 ## Volume normal (dB) et durée du fondu (secondes).
 const VOLUME_DB := -8.0
@@ -51,6 +53,8 @@ func _refresh() -> void:
 ## Passe à la piste `track` (fondu enchaîné), ou continue si c'est déjà la même musique.
 func play(track: StringName) -> void:
 	var path := FOLDER % track
+	if not ResourceLoader.exists(path) and NEIGHBOURS.has(track):
+		path = FOLDER % NEIGHBOURS[track]
 	if not ResourceLoader.exists(path):
 		path = FOLDER % FALLBACK
 	if path == _track_path or not ResourceLoader.exists(path):

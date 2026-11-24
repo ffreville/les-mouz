@@ -317,7 +317,7 @@ L'autoload `Music` joue une piste en boucle selon l'écran, avec un fondu encha�
 | Construire | `assets/musique/construction.mp3` |
 | Acheter | `assets/musique/achat.mp3` |
 
-Une piste absente est remplacée par `jeu.mp3` (« Relaxed Gaming Groove »), et la musique continue sans se couper. Pour ajouter une piste, dépose le fichier sous ce nom : rien à changer dans le code. Le volume se règle dans `scripts/core/music.gd` (`VOLUME_DB`).
+Aujourd'hui : `jeu.mp3` est « Felt Piano Motif », `construction.mp3` est « Relaxed Gaming Groove ». Une piste absente est remplacée par sa voisine (Acheter ↔ Construire, sans reprendre la musique au début quand on passe de l'un à l'autre), sinon par `jeu.mp3` : l'accueil joue donc « Felt Piano Motif » tant qu'il n'a pas sa piste. Pour ajouter une piste, dépose le fichier sous ce nom : rien à changer dans le code. Le volume se règle dans `scripts/core/music.gd` (`VOLUME_DB`).
 
 ## La vue trois quarts
 
