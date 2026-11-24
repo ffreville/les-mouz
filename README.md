@@ -317,7 +317,7 @@ L'autoload `Music` joue une piste en boucle selon l'écran, avec un fondu encha�
 | Construire | `assets/musique/construction.mp3` |
 | Acheter | `assets/musique/achat.mp3` |
 
-Aujourd'hui : `jeu.mp3` est « Felt Piano Motif », `construction.mp3` est « Relaxed Gaming Groove ». Une piste absente est remplacée par sa voisine (Acheter ↔ Construire, sans reprendre la musique au début quand on passe de l'un à l'autre), sinon par `jeu.mp3` : l'accueil, lui, reste silencieux tant que `menu.mp3` n'existe pas. Pour ajouter une piste, dépose le fichier sous ce nom : rien à changer dans le code. Le volume se règle dans `scripts/core/music.gd` (`VOLUME_DB`).
+Aujourd'hui : `menu.mp3` est « Good Morning, World! », `jeu.mp3` est « Felt Piano Motif », `construction.mp3` est « Relaxed Gaming Groove ». Une piste absente est remplacée par sa voisine (Acheter ↔ Construire, sans reprendre la musique au début quand on passe de l'un à l'autre), sinon par `jeu.mp3`. L'accueil, lui, reste silencieux s'il n'a pas de `menu.mp3`. Pour ajouter une piste, dépose le fichier sous ce nom : rien à changer dans le code. Le volume se règle dans `scripts/core/music.gd` (`VOLUME_DB`).
 
 ## La vue trois quarts
 
