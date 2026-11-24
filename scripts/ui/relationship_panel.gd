@@ -2,6 +2,7 @@ class_name RelationshipPanel
 extends VBoxContainer
 ## Relation du personnage sélectionné avec chacun des autres : une ligne par membre
 ## (portrait, prénom, lien de famille, palier en mots) et une jauge de -100 à +100.
+## Les voisins en visite y apparaissent aussi, le temps de leur visite.
 
 const HEART_ICON := preload("res://assets/icons/white/relation.svg")
 
@@ -14,6 +15,13 @@ var _tiers: Dictionary[Node, Label] = {}
 func _ready() -> void:
 	add_theme_constant_override("separation", 12)
 	EventBus.relationship_changed.connect(_on_relationship_changed)
+	EventBus.visitor_arrived.connect(_on_visitors_changed)
+	EventBus.visitor_left.connect(_on_visitors_changed)
+
+
+func _on_visitors_changed(_visitor: Node) -> void:
+	if _character != null and is_instance_valid(_character):
+		_rebuild()
 
 
 func set_character(character: Character) -> void:
@@ -33,7 +41,7 @@ func _rebuild() -> void:
 		child.queue_free()
 	_gauges.clear()
 	_tiers.clear()
-	for other in _character.world.characters:
+	for other in _character.world.people:
 		if other != _character:
 			add_child(_make_block(other, _character.relationships.get_value(other)))
 
@@ -55,7 +63,12 @@ func _make_block(other: Character, value: float) -> Control:
 	name_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(name_label)
 	var link := _character.world.family.link_label(String(_character.profile.id), String(other.profile.id))
-	if link != "":
+	if other.is_visitor():
+		var guest := _small("En visite")
+		guest.tooltip_text = "Famille %s" % other.family_name
+		guest.mouse_filter = Control.MOUSE_FILTER_PASS
+		row.add_child(guest)
+	elif link != "":
 		var heart := TextureRect.new()
 		heart.texture = HEART_ICON
 		heart.modulate = Palette.ACCENT

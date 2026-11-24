@@ -351,7 +351,7 @@ func _placement_problem(ghost: PlacedObject, moving: PlacedObject) -> String:
 			if y + 1 < rect.end.y and lot.has_wall(Edges.between(cell, cell + Vector2i.DOWN)):
 				return "Un mur traverse l'objet"
 	if ghost.definition.blocks_movement:
-		for character in world.characters:
+		for character in world.people:
 			if rect.has_point(character.get_cell()):
 				return "Un Mouz est dans le passage"
 	# Un objet traversable (tapis de yoga) s'utilise en se tenant dessus.

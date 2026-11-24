@@ -84,7 +84,8 @@ Pour changer le format : augmenter `WorldSerializer.FORMAT_VERSION`, puis compl�
 | Clic sur le sol | Ajoute « Aller ici » à la file du Mouz sélectionné (remplace le déplacement déjà prévu) |
 | Clic sur un objet | Menu des actions de l'objet ; l'action choisie s'ajoute à la file |
 | Clic sur l'autre Mouz | Menu : « Discuter » ou « Contrôler » |
-| Clic sur le Mouz sélectionné | Son téléphone : « Petites annonces », « Démissionner » |
+| Clic sur le Mouz sélectionné | Son téléphone : « Petites annonces », « Inviter un voisin… », « Démissionner » |
+| Clic sur un voisin en visite | Actions sociales, « Raccompagner à la porte » |
 | Clic sur ✕ dans la file | Annule l'action |
 | Boutons Pépin / Myrtille, ou **Tab** | Change de Mouz |
 | Bouton « Autonomie » | Active ou coupe l'autonomie du Mouz sélectionné |
@@ -384,6 +385,18 @@ Les maisons sont décrites en code dans `tools/construire_quartier.gd` (pièces,
 ```
 godot --headless --script tools/construire_quartier.gd
 ```
+
+## Les visites
+
+Les familles du quartier se rendent visite.
+
+- **Inviter** : clic sur son Mouz, « Inviter un voisin… ». La liste montre chaque voisin, sa famille et la relation qu'on a avec lui ; il arrive par la rue une demi-heure plus tard. On ne peut pas inviter avant 8 h ni après 21 h, quelqu'un qui est déjà là ou en route, ni plus de trois visiteurs à la fois (« maison pleine »).
+- **Visites spontanées** : entre 10 h et 19 h, s'il n'y a personne, un voisin (pas un enfant) passe parfois sans prévenir (8 % de chances par heure).
+- **Bienvenue** : une heure après l'emménagement d'une nouvelle famille, un ou deux voisins viennent dire bonjour.
+- **Pendant la visite**, le voisin vit sa vie chez vous : il discute, s'assoit, regarde la télé, joue… mais ne dort pas, ne se lave pas, ne mange pas vos courses, ne touche pas aux lampes et ne travaille pas. Il apparaît dans le panneau Relations (« En visite ») et on peut lancer avec lui les actions sociales.
+- **Départ** : au bout de 2 h 30 à 5 h, à 22 h au plus tard, ou quand on le **raccompagne à la porte**, il repart par la rue.
+
+Les relations avec les voisins sont gardées dans le quartier (`"relationships"` de la sauvegarde, une valeur par paire de Mouz) : on retrouve ses amis d'une visite à l'autre, et quand on joue l'autre famille. Deux membres d'une même famille venus ensemble gardent leur relation de famille. Les visiteurs ne sont pas sauvegardés : une partie rechargée repart sans eux. Réglages : `scripts/neighborhood/visits.gd`.
 
 ## Gagner de l'argent à la maison
 

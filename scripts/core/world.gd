@@ -19,7 +19,12 @@ const WALL_MARGIN := 80.0
 
 ## Le terrain en cours de partie.
 var lot: Lot
+## La famille jouée.
 var characters: Array[Character] = []
+## Les voisins en visite (voir Visits).
+var visitors: Array[Character] = []
+## Tous les Mouz présents : la famille et ses visiteurs (portes, clics, autonomie, relations).
+var people: Array[Character] = []
 ## La famille qui vit ici (prénoms, apparences, liens).
 var family: Family
 var smart_objects: Array[SmartObject] = []
@@ -27,6 +32,8 @@ var smart_objects: Array[SmartObject] = []
 var day_night := DayNight.new()
 ## Factures et coupure d'électricité.
 var bills := Bills.new()
+## Visites des voisins.
+var visits := Visits.new()
 
 @onready var floor_view: FloorView = $FloorView
 @onready var wall_view: WallView = $WallView
@@ -80,6 +87,8 @@ func _ready() -> void:
 	if not characters.is_empty():
 		# Différé pour que l'interface soit prête à recevoir le signal de sélection.
 		selection.select.call_deferred(characters[0])
+	add_child(visits)
+	visits.setup(self, use_save and not played_before)
 	if played_before:
 		WorldSerializer.apply_to_world(self, household)
 	elif lot.walls.is_empty() and lot.objects.is_empty():
@@ -90,7 +99,7 @@ func _ready() -> void:
 ## Redessine le terrain, synchronise les objets et recalcule la navigation.
 func refresh_lot() -> void:
 	floor_view.render(lot)
-	wall_view.render(lot, characters)
+	wall_view.render(lot, people)
 	grid_overlay.render(lot)
 	_sync_objects()
 	_build_navigation()
@@ -139,6 +148,7 @@ func _spawn_characters(profiles: Array[CharacterProfile]) -> void:
 		used[spawn] = true
 		character.setup(self, profiles[i], spawn)
 		characters.append(character)
+		people.append(character)
 
 
 func _free_cell_near(start: Vector2i, used: Dictionary) -> Vector2i:
@@ -162,9 +172,15 @@ func _apply_family_links() -> void:
 			by_id[link["a"]].relationships.restore_with(by_id[link["b"]], Family.LINK_START.get(link["kind"], 0.0))
 
 
+## Case de la rue par où l'on part et arrive : bas du terrain, sous la première case de départ.
+func street_cell() -> Vector2i:
+	var spawn: Vector2i = lot.spawn_cells[0] if not lot.spawn_cells.is_empty() else Vector2i.ZERO
+	return navigation.nearest_walkable(Vector2i(spawn.x, lot.size.y - 1))
+
+
 ## Le personnage sous cette position (monde), ou null.
 func get_character_at(world_position: Vector2) -> Character:
-	for character in characters:
+	for character in people:
 		if character.contains_point(world_position):
 			return character
 	return null

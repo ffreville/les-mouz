@@ -23,7 +23,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	var character := world.get_character_at(position_in_world)
 	if character != null:
 		if selected == null:
-			world.selection.select(character)
+			if not character.is_visitor():
+				world.selection.select(character)
 		elif character == selected:
 			_open_phone_menu(character, click.position)
 		else:
@@ -78,6 +79,12 @@ func _open_phone_menu(actor: Character, screen_position: Vector2) -> void:
 		"icon": load("res://assets/icons/ink/surfer.svg"),
 		"callback": func() -> void: EventBus.job_board_requested.emit(actor, &"telephone"),
 	}]
+	if not world.visits.neighbors().is_empty():
+		options.append({
+			"label": "Inviter un voisin…",
+			"icon": load("res://assets/icons/ink/discuter.svg"),
+			"callback": func() -> void: _open_invite_menu.call_deferred(actor, screen_position),
+		})
 	if actor.job.definition != null:
 		options.append({
 			"label": "Démissionner (%s)" % actor.job.definition.display_name,
@@ -85,6 +92,21 @@ func _open_phone_menu(actor: Character, screen_position: Vector2) -> void:
 			"callback": actor.job.quit,
 		})
 	EventBus.context_menu_requested.emit(actor.get_display_name(), options, screen_position)
+
+
+## Les voisins du quartier, avec la relation de `actor` et ce qui empêche de les inviter.
+func _open_invite_menu(actor: Character, screen_position: Vector2) -> void:
+	var options: Array = []
+	for neighbor in world.visits.neighbors():
+		var problem := world.visits.invite_problem(neighbor)
+		var tier := Palette.palier_relation(world.visits.relation_with(actor, neighbor["ref"]))
+		options.append({
+			"label": "%s %s · %s%s" % [neighbor["first_name"], neighbor["family"].trim_prefix("Famille "), tier,
+					" (%s)" % problem if problem != "" else ""],
+			"disabled": problem != "",
+			"callback": world.visits.invite.bind(neighbor),
+		})
+	EventBus.context_menu_requested.emit("Inviter un voisin", options, screen_position)
 
 
 func _open_character_menu(actor: Character, other: Character, screen_position: Vector2) -> void:
@@ -96,6 +118,15 @@ func _open_character_menu(actor: Character, other: Character, screen_position: V
 			"callback": func() -> void:
 				actor.queue.enqueue(QueuedAction.with_character(action, other)),
 		})
+	if other.is_visitor():
+		options.append({
+			"label": "Raccompagner à la porte",
+			"icon": load("res://assets/icons/ink/quitter.svg"),
+			"callback": world.visits.send_home.bind(other),
+		})
+		var title := "%s %s · en visite" % [other.get_display_name(), other.family_name]
+		EventBus.context_menu_requested.emit(title, options, screen_position)
+		return
 	options.append({
 		"label": "Contrôler %s" % other.get_display_name(),
 		"callback": world.selection.select.bind(other),

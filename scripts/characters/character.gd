@@ -34,6 +34,10 @@ var _bubble_base := Vector2.ZERO
 
 var profile: CharacterProfile
 var world: World
+## Visiteur : emplacement de sa maison dans le quartier ("" pour un Mouz de la famille jouée).
+var home_plot := ""
+## Nom de famille d'un visiteur.
+var family_name := ""
 
 ## Vrai quand le joueur contrôle ce personnage.
 var is_selected: bool = false:
@@ -91,6 +95,11 @@ func get_cell() -> Vector2i:
 ## Position des pieds quand le Mouz est debout (celle d'avant de s'installer s'il est assis).
 func standing_position() -> Vector2:
 	return _stand_position if is_seated() else position
+
+
+## Un voisin en visite (pas de la famille jouée).
+func is_visitor() -> bool:
+	return home_plot != ""
 
 
 ## Au travail : hors du terrain, ni cliquable ni disponible.

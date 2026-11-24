@@ -209,9 +209,7 @@ func _check_grade() -> void:
 
 ## Case de la rue par où l'on part et revient : bas du terrain, sous le point d'arrivée.
 func exit_cell() -> Vector2i:
-	var world := _character.world
-	var spawn: Vector2i = world.lot.spawn_cells[0] if not world.lot.spawn_cells.is_empty() else Vector2i.ZERO
-	return world.navigation.nearest_walkable(Vector2i(spawn.x, world.lot.size.y - 1))
+	return _character.world.street_cell()
 
 
 func to_dict() -> Dictionary:

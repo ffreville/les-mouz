@@ -166,6 +166,7 @@ func save_as(world: World, game_name: String) -> bool:
 func _write(slot_id: String, game_name: String, world: World) -> bool:
 	if neighborhood.is_empty():
 		_adopt_world(world)
+	world.visits.store_relations()
 	var plot := active_plot_data()
 	if not plot.is_empty():
 		plot["lot"] = LotSerializer.to_data(world.lot)

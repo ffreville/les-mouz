@@ -80,7 +80,8 @@ func _list_candidates() -> Array[Dictionary]:
 		var distance := navigation.path_length(here, spot)
 		var shared := not smart_object.other_users(_character).is_empty()
 		for definition in smart_object.get_actions():
-			if not definition.autonomous or smart_object.action_problem(definition, _character.world) != "":
+			if not definition.autonomous or not _suits_guest(definition) \
+					or smart_object.action_problem(definition, _character.world) != "":
 				continue
 			candidates.append({
 				"action": QueuedAction.use_object(definition, smart_object),
@@ -88,7 +89,7 @@ func _list_candidates() -> Array[Dictionary]:
 				"distance": distance,
 				"shared": shared,
 			})
-	for other in _character.world.characters:
+	for other in _character.world.people:
 		# On ne dérange pas quelqu'un d'occupé (un ordre du joueur, lui, interrompt).
 		if other == _character or _is_busy(other) or other.is_away():
 			continue
@@ -103,6 +104,19 @@ func _list_candidates() -> Array[Dictionary]:
 				"distance": distance,
 			})
 	return candidates
+
+
+## Un visiteur ne dort pas, ne se lave pas, ne paie pas de courses et ne touche pas aux lampes
+## chez les autres.
+func _suits_guest(definition: ActionDefinition) -> bool:
+	if not _character.is_visitor():
+		return true
+	if definition.cost > 0 or definition.earns() or definition.switch != ActionDefinition.Switch.NONE:
+		return false
+	for need_id in Visits.PRIVATE_NEEDS:
+		if definition.need_gains.get(need_id, 0.0) > 0.0:
+			return false
+	return true
 
 
 func _is_busy(other: Character) -> bool:

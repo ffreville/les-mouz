@@ -39,6 +39,11 @@ func restore_with(other: Character, value: float) -> void:
 	other.relationships._store(_character, value)
 
 
+## Oublie `other` (un visiteur qui repart : sa relation est gardée dans le quartier).
+func forget(other: Node) -> void:
+	_values.erase(other)
+
+
 func _store(other: Node, value: float) -> void:
 	_values[other] = value
 	changed.emit(other, value)

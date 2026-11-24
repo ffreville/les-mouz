@@ -114,7 +114,7 @@ func _set_power_cut(value: bool) -> void:
 		if smart_object.definition.id in ELECTRIC:
 			smart_object.queue_redraw()
 	if value:
-		for character in world.characters:
+		for character in world.people:
 			for action in character.queue.items.duplicate():
 				if action.target_object != null and problem_for(action.target_object.definition.id) != "":
 					character.queue.cancel(action)
