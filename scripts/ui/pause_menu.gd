@@ -81,6 +81,7 @@ func _build_buttons() -> void:
 	line.custom_minimum_size = Vector2(BUTTON_WIDTH, 2)
 	line.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_buttons.add_child(line)
+	_add(_buttons, "Retour au quartier", &"SecondaryButton", _on_neighborhood_pressed, "emmenager")
 	_add(_buttons, "Menu principal", &"QuietButton", _on_title_pressed, "menu")
 	_add(_buttons, "Quitter le jeu", &"QuietButton", _on_quit_pressed, "quitter")
 
@@ -88,6 +89,11 @@ func _build_buttons() -> void:
 func _on_save_pressed() -> void:
 	save_now()
 	close()
+
+
+func _on_neighborhood_pressed() -> void:
+	_resume_time()
+	SaveManager.leave_to_neighborhood(world)
 
 
 func _on_title_pressed() -> void:

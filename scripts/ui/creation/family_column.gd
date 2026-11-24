@@ -45,7 +45,7 @@ func _ready() -> void:
 	row.add_child(dice)
 	column.add_child(row)
 	var hint := Label.new()
-	hint.text = "Sert aussi de nom à la partie."
+	hint.text = "C'est le nom affiché dans le quartier."
 	hint.theme_type_variation = &"MutedLabel"
 	column.add_child(hint)
 	var header := HBoxContainer.new()

@@ -3,11 +3,10 @@ extends Control
 ## Écran d'accueil.
 ##  - Sans partie : un petit jardin où se promènent des Mouz, et « Nouvelle partie ».
 ##  - Avec une partie : sa vignette en grand derrière la carte, et « Continuer : … ».
-## Puis Nouvelle partie (création de la famille), Charger une partie, Quitter.
+## Puis Nouvelle partie (un nouveau quartier et ses familles), Charger une partie, Quitter.
 
 const GRASS := preload("res://assets/floors/herbe.svg")
 const PLANT := "res://assets/sprites/plante_nature_bas.svg"
-const NEW_GAME_SCENE := "res://scenes/new_game.tscn"
 const CARD_WIDTH := 440.0
 const VEIL := Color(0.169, 0.141, 0.251, 0.38)
 ## Plantes et promeneurs du jardin (positions relatives à l'écran).
@@ -155,7 +154,7 @@ func _build_menu() -> void:
 		_menu.add_child(resume)
 		_menu.add_child(_note("Jour %d · %s · enregistrée %s" % [int(meta.get("day", 1)), meta.get("time", "--:--"),
 				TimeFormat.since(float(meta.get("saved", 0)))]))
-	var new_game := _button("Nouvelle partie", &"SecondaryButton" if _latest != "" else &"PrimaryButton", "famille")
+	var new_game := _button("Nouveau quartier", &"SecondaryButton" if _latest != "" else &"PrimaryButton", "famille")
 	new_game.pressed.connect(_new_game)
 	_menu.add_child(new_game)
 	var has_slots := not SaveManager.list_slots().is_empty()
@@ -171,7 +170,7 @@ func _build_menu() -> void:
 
 
 func _new_game() -> void:
-	get_tree().change_scene_to_file(NEW_GAME_SCENE)
+	SaveManager.start_new_game()
 
 
 func _show_menu() -> void:

@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="NeighborhoodDefinition" format=3]
+
+[ext_resource type="Resource" path="res://data/quartier/terrain_libre.tres" id="1_3d58d"]
+[ext_resource type="Script" path="res://scripts/neighborhood/plot_definition.gd" id="2_3ahkh"]
+[ext_resource type="Resource" path="res://data/quartier/maisons/la_bicoque.tres" id="3_tada2"]
+[ext_resource type="Resource" path="res://data/quartier/maisons/les_glycines.tres" id="4_tqxmi"]
+[ext_resource type="Resource" path="res://data/quartier/maisons/villa_horizon.tres" id="5_yid52"]
+[ext_resource type="Resource" path="res://data/quartier/maisons/le_potager.tres" id="6_uv8ml"]
+[ext_resource type="Resource" path="res://data/quartier/maisons/l_atelier.tres" id="7_l8auy"]
+[ext_resource type="Script" path="res://scripts/neighborhood/neighborhood_definition.gd" id="8_faxxr"]
+
+[sub_resource type="Resource" id="Resource_yg656"]
+script = ExtResource("2_3ahkh")
+id = &"lilas_1"
+address = "1 rue des Lilas"
+house_name = "La Bicoque"
+lot = ExtResource("3_tada2")
+
+[sub_resource type="Resource" id="Resource_h0orb"]
+script = ExtResource("2_3ahkh")
+id = &"lilas_3"
+address = "3 rue des Lilas"
+house_name = "Les Glycines"
+lot = ExtResource("4_tqxmi")
+
+[sub_resource type="Resource" id="Resource_plwyv"]
+script = ExtResource("2_3ahkh")
+id = &"lilas_5"
+address = "5 rue des Lilas"
+
+[sub_resource type="Resource" id="Resource_rprws"]
+script = ExtResource("2_3ahkh")
+id = &"lilas_7"
+address = "7 rue des Lilas"
+house_name = "Villa Horizon"
+lot = ExtResource("5_yid52")
+
+[sub_resource type="Resource" id="Resource_p2bv8"]
+script = ExtResource("2_3ahkh")
+id = &"lilas_2"
+address = "2 rue des Lilas"
+house_name = "Le Potager"
+lot = ExtResource("6_uv8ml")
+
+[sub_resource type="Resource" id="Resource_g6nk6"]
+script = ExtResource("2_3ahkh")
+id = &"lilas_4"
+address = "4 rue des Lilas"
+
+[sub_resource type="Resource" id="Resource_wriy5"]
+script = ExtResource("2_3ahkh")
+id = &"lilas_6"
+address = "6 rue des Lilas"
+house_name = "L'Atelier"
+lot = ExtResource("7_l8auy")
+
+[sub_resource type="Resource" id="Resource_dof7r"]
+script = ExtResource("2_3ahkh")
+id = &"lilas_8"
+address = "8 rue des Lilas"
+
+[resource]
+script = ExtResource("8_faxxr")
+display_name = "Quartier des Tilleuls"
+plots = Array[ExtResource("2_3ahkh")]([SubResource("Resource_yg656"), SubResource("Resource_h0orb"), SubResource("Resource_plwyv"), SubResource("Resource_rprws"), SubResource("Resource_p2bv8"), SubResource("Resource_g6nk6"), SubResource("Resource_wriy5"), SubResource("Resource_dof7r")])
+empty_lot = ExtResource("1_3d58d")

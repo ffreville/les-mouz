@@ -1,17 +1,19 @@
 class_name WorldSerializer
 extends RefCounted
-## Convertit l'état d'une partie en données JSON (et inversement) :
-## terrain, argent, heure, vitesse, famille, Mouz (position, besoins, relations, autonomie), caméra.
+## Convertit l'état de la famille jouée en données JSON (et inversement) : argent, famille,
+## Mouz (position, besoins, relations, autonomie, métier, compétences), factures, caméra.
+## Le terrain passe par LotSerializer, le quartier et l'heure par SaveManager (voir Neighborhood).
 ## `FORMAT_VERSION` augmente à chaque changement du format ; `migrate()` met les anciennes
 ## sauvegardes à jour.
 
-const FORMAT_VERSION := 3
+const FORMAT_VERSION := 4
 ## Objets dont l'ancien sprite (format 1) avait la face avant en bas : depuis le format 2,
 ## tous les sprites ont la face en haut, on les tourne d'un demi-tour pour garder leur aspect.
 const V1_FACE_DOWN_OBJECTS := ["frigo", "plan_travail", "lit", "tele", "douche", "lavabo"]
 
 
-static func to_data(world: World) -> Dictionary:
+## Le foyer joué (rangé dans son emplacement du quartier, voir Neighborhood).
+static func household_data(world: World) -> Dictionary:
 	var characters: Array = []
 	for character in world.characters:
 		var relationships := {}
@@ -29,10 +31,7 @@ static func to_data(world: World) -> Dictionary:
 		})
 	var selected := world.selection.selected
 	return {
-		"version": FORMAT_VERSION,
-		"clock": {"total_minutes": GameClock.total_minutes, "speed": GameClock.speed_index},
 		"funds": Wallet.funds,
-		"lot": LotSerializer.to_data(world.lot),
 		"family": world.family.to_dict(),
 		"characters": characters,
 		"bills": world.bills.to_dict(),
@@ -41,15 +40,8 @@ static func to_data(world: World) -> Dictionary:
 	}
 
 
-## Applique ce qui se règle avant la création des personnages : argent et heure.
-static func apply_globals(data: Dictionary) -> void:
-	Wallet.set_funds(int(data.get("funds", Wallet.settings.start_funds)))
-	var clock: Dictionary = data.get("clock", {})
-	GameClock.restore(float(clock.get("total_minutes", GameClock.total_minutes)))
-	GameClock.set_speed(int(clock.get("speed", 1)))
-
-
-## Applique ce qui dépend des personnages et de la caméra, une fois le monde construit.
+## Applique ce qui dépend des personnages et de la caméra, une fois le monde construit
+## (foyer déjà joué : `data` contient "characters").
 static func apply_to_world(world: World, data: Dictionary) -> void:
 	var by_id := {}
 	for character in world.characters:
@@ -100,5 +92,21 @@ static func migrate(data: Dictionary) -> Dictionary:
 		var profiles: Array[CharacterProfile] = [load("res://data/characters/pepin.tres"),
 				load("res://data/characters/myrtille.tres")]
 		data["family"] = Family.from_profiles(profiles).to_dict()
+	if version < 4:
+		# Format 4 : la partie devient un quartier. L'ancienne maison prend le premier
+		# emplacement libre, avec sa famille, qu'on continue de jouer.
+		var hood := Neighborhood.create(RandomNumberGenerator.new(), false)
+		var free: Array = hood["plots"].filter(func(p: Dictionary) -> bool: return p["house_name"] == "")
+		var plot: Dictionary = free[0] if not free.is_empty() else hood["plots"][0]
+		plot["house_name"] = "Ma maison"
+		plot["price"] = 0
+		plot["lot"] = data.get("lot", {})
+		plot["household"] = {"family": data.get("family", {}), "funds": int(data.get("funds", 0)), "moved_in_day": 1,
+				"characters": data.get("characters", []), "bills": data.get("bills", {}),
+				"selected": data.get("selected", ""), "camera": data.get("camera", {})}
+		for key in ["lot", "family", "funds", "characters", "bills", "selected", "camera"]:
+			data.erase(key)
+		data["neighborhood"] = hood
+		data["active_plot"] = plot["id"]
 	data["version"] = FORMAT_VERSION
 	return data

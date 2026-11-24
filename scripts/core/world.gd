@@ -47,22 +47,19 @@ func _ready() -> void:
 	add_child(day_night)
 	add_child(bills)
 	bills.setup(self)
-	var saved := SaveManager.take_pending() if use_save else {}
-	# Une partie enregistrée contient son terrain ; une nouvelle partie peut nommer un terrain du catalogue.
-	var is_saved_game := saved.has("lot")
-	if is_saved_game:
-		lot = LotSerializer.from_data(saved["lot"])
-		WorldSerializer.apply_globals(saved)
-	else:
-		var source: Lot = load(saved["lot_path"]) if saved.has("lot_path") else starting_lot
-		lot = source.duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL)
-		if saved.has("lot_path"):
-			_mark_as_used(lot)
+	# La famille jouée et son terrain viennent du quartier (SaveManager) ; sans sauvegarde
+	# (tests), on prend le terrain et les fiches de la scène.
+	var plot := SaveManager.active_plot_data() if use_save else {}
+	var household: Dictionary = plot.get("household", {})
+	var played_before := household.has("characters")
 	var profiles := character_profiles
-	if saved.has("family"):
-		family = Family.from_dict(saved["family"])
+	if not plot.is_empty():
+		lot = LotSerializer.from_data(plot["lot"])
+		Wallet.set_funds(int(household.get("funds", Wallet.settings.start_funds)))
+		family = Family.from_dict(household.get("family", {}))
 		profiles = family.make_profiles()
 	else:
+		lot = starting_lot.duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL)
 		family = Family.from_profiles(character_profiles)
 	editor.setup(self)
 	if use_save:
@@ -76,13 +73,15 @@ func _ready() -> void:
 	# Connecté avant la création des personnages : le monde se met à jour avant leurs files.
 	EventBus.lot_changed.connect(refresh_lot)
 	_spawn_characters(profiles)
-	if not is_saved_game:
+	if not played_before:
 		_apply_family_links()
+		# Pas de facture le jour même de l'emménagement.
+		bills.last_bill_day = GameClock.get_day()
 	if not characters.is_empty():
 		# Différé pour que l'interface soit prête à recevoir le signal de sélection.
 		selection.select.call_deferred(characters[0])
-	if is_saved_game:
-		WorldSerializer.apply_to_world(self, saved)
+	if played_before:
+		WorldSerializer.apply_to_world(self, household)
 	elif lot.walls.is_empty() and lot.objects.is_empty():
 		# Sur un terrain encore vide, on commence par construire.
 		GameMode.set_mode.call_deferred(GameMode.Mode.BUILD)
@@ -161,17 +160,6 @@ func _apply_family_links() -> void:
 	for link in family.links:
 		if by_id.has(link["a"]) and by_id.has(link["b"]):
 			by_id[link["a"]].relationships.restore_with(by_id[link["b"]], Family.LINK_START.get(link["kind"], 0.0))
-
-
-## Terrain acheté déjà construit : tout ce qu'il contient se revend comme un achat ancien.
-func _mark_as_used(p_lot: Lot) -> void:
-	var items: Array = []
-	items.append_array(p_lot.walls.values())
-	items.append_array(p_lot.floors.values())
-	items.append_array(p_lot.openings)
-	items.append_array(p_lot.objects)
-	for item in items:
-		item.bought_day = 0
 
 
 ## Le personnage sous cette position (monde), ou null.

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Lot" format=3]
+
+[ext_resource type="Resource" path="res://data/catalog/floors/herbe.tres" id="1_nn3ms"]
+[ext_resource type="Script" path="res://scripts/lot/placed_floor.gd" id="2_8sqh4"]
+[ext_resource type="Script" path="res://scripts/lot/placed_object.gd" id="3_pb8sk"]
+[ext_resource type="Script" path="res://scripts/lot/placed_opening.gd" id="4_aja4i"]
+[ext_resource type="Script" path="res://scripts/lot/lot.gd" id="5_2jjn6"]
+[ext_resource type="Script" path="res://scripts/lot/placed_wall.gd" id="6_2gvtt"]
+
+[resource]
+script = ExtResource("5_2jjn6")
+default_floor = ExtResource("1_nn3ms")
+spawn_cells = Array[Vector2i]([Vector2i(13, 16), Vector2i(15, 16)])

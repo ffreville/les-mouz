@@ -2,7 +2,7 @@
 
 Petit jeu de simulation de vie en 2D vue de dessus, inspiré des Sims, fait avec **Godot 4.7** en GDScript.
 
-Tu crées ta famille de Mouz (1 à 4 humains : prénoms, âge, apparence, liens), tu choisis un terrain vide ou une maison meublée, puis tu leur construis une maison (murs, portes, fenêtres, sols), tu achètes et places les meubles et tu les regardes vivre. Ils ont des besoins, utilisent des objets « intelligents », discutent entre eux et peuvent agir seuls.
+Tu arrives dans un quartier où vivent déjà quelques familles. Tu en joues une, ou tu crées la tienne (1 à 4 humains : prénoms, âge, apparence, liens) et tu l'installes dans une maison à vendre ou sur un terrain libre, puis tu leur construis une maison (murs, portes, fenêtres, sols), tu achètes et places les meubles et tu les regardes vivre. Ils ont des besoins, utilisent des objets « intelligents », discutent entre eux et peuvent agir seuls.
 
 Les graphismes suivent la direction artistique « Maison de poche » décrite dans [design/README.md](design/README.md) : aplats doux, contour encre, interface couleur papier.
 
@@ -30,20 +30,18 @@ Les graphismes suivent la direction artistique « Maison de poche » décrite da
 
 ## Les parties et les sauvegardes
 
-Le jeu s'ouvre sur un **écran d'accueil** : la maison de la dernière partie en fond (ou un petit jardin où se promènent des Mouz s'il n'y en a pas), et les portraits de sa famille.
+Le jeu s'ouvre sur un **écran d'accueil** : la maison de la dernière partie en fond (ou un petit jardin où se promènent des Mouz s'il n'y en a pas), et les portraits de la dernière famille jouée.
 
-- **Continuer** reprend la dernière partie enregistrée ;
-- **Nouvelle partie** ouvre la création, en deux étapes :
-  1. **La famille** : nom de famille, 1 à 4 membres. Pour chacun : prénom (le dé en tire un), homme ou femme, âge (enfant, ado, adulte, aîné), peau, coupe et couleur des cheveux, tenue et sa couleur, ou « Apparence au hasard ». Entre deux cartes, une pastille fixe leur **lien** (couple, parent, enfant, frères et sœurs, colocs), qui donne leur relation de départ. Il faut au moins un adulte ou un aîné, et un prénom à chacun.
-  2. **Le terrain** : la Prairie des Tilleuls (vide, gratuite), la Rue des Lilas ou le Clos Rétro (maisons meublées, payées sur le budget de départ). On y nomme la partie. Sur un terrain vide, la partie commence en mode Construire ;
-- **Charger une partie** affiche toutes les parties : vignette du terrain, nom, jour, heure, argent, nombre d'objets et date. On peut y **renommer** ou **supprimer** une partie directement sur sa carte. Une partie dont le fichier ne se lit plus est marquée **Abîmée** : on peut **restaurer sa copie de secours** (la version précédente, gardée à chaque sauvegarde) ou la supprimer ;
+- **Continuer** reprend la dernière partie enregistrée : la famille qu'on jouait, ou l'écran du quartier si on l'avait quittée depuis le quartier ;
+- **Nouveau quartier** crée une partie : le quartier des Tilleuls, ses maisons, et trois familles tirées au hasard déjà installées (voir « Le quartier ») ;
+- **Charger une partie** affiche toutes les parties : vignette, nom, jour, heure, famille jouée et son argent (ou le nombre de familles du quartier) et date. On peut y **renommer** ou **supprimer** une partie directement sur sa carte. Une partie dont le fichier ne se lit plus est marquée **Abîmée** : on peut **restaurer sa copie de secours** (la version précédente, gardée à chaque sauvegarde) ou la supprimer ;
 - **Quitter**.
 
-En jeu, **Échap** (ou un clic sur le logo « Les Mouz ») ouvre le **menu** et arrête le temps : Reprendre, Sauvegarder, Sauvegarder sous… (une copie avec un autre nom, qui devient la partie en cours), Charger une partie…, Menu principal, Quitter le jeu. **Ctrl+S** sauvegarde à tout moment. Un message en bas de l'écran confirme chaque sauvegarde ; en cas d'échec, il reste 6 secondes et propose « Réessayer ».
+En jeu, **Échap** (ou un clic sur le logo « Les Mouz ») ouvre le **menu** et arrête le temps : Reprendre, Sauvegarder, Sauvegarder sous… (une copie avec un autre nom, qui devient la partie en cours), Charger une partie…, **Retour au quartier**, Menu principal, Quitter le jeu. **Ctrl+S** sauvegarde à tout moment. Un message en bas de l'écran confirme chaque sauvegarde ; en cas d'échec, il reste 6 secondes et propose « Réessayer ».
 
 La partie en cours est aussi **sauvegardée automatiquement** : peu après chaque modification du terrain, au retour en mode Vivre, toutes les 2 minutes, avant d'en charger une autre et à la fermeture du jeu.
 
-Une sauvegarde contient tout l'état de la partie : le terrain, l'argent, l'heure et la vitesse, la famille (prénoms, apparences, liens), la position, les besoins, les relations et l'autonomie de chaque Mouz, le Mouz sélectionné et la caméra. Les parties d'avant les humains (format 2) retrouvent Pépin et Myrtille, devenus humains.
+Une sauvegarde contient tout le quartier : l'heure, et pour chaque emplacement son terrain et la famille qui y vit (prénoms, apparences, liens, argent ; et, une fois jouée, la position, les besoins, les relations, l'autonomie, le métier et les compétences de chaque Mouz, les factures, le Mouz sélectionné et la caméra). Les parties d'avant les humains (format 2) retrouvent Pépin et Myrtille, devenus humains ; celles d'avant le quartier (format 3) y entrent : leur maison prend le premier terrain libre, sous le nom « Ma maison », et l'on continue de jouer leur famille.
 
 ### Où sont les fichiers
 
@@ -63,7 +61,7 @@ L'ancienne sauvegarde unique (`user://partie.tres`) est convertie automatiquemen
 
 Le format est décrit dans `scripts/save/world_serializer.gd` (état de la partie) et `scripts/save/lot_serializer.gd` (terrain). Les éléments du catalogue y sont désignés par leur `id` : on peut déplacer ou renommer les fichiers `.tres` sans casser les sauvegardes, mais **il ne faut pas changer l'`id` d'un élément existant**. Un `id` inconnu (élément retiré du catalogue) est ignoré au chargement.
 
-Le format est en version 2 : la version 1 n'avait pas de styles, et six objets y étaient dessinés face avant en bas. La migration leur donne le style Nature et les retourne d'un demi-tour, pour qu'ils gardent leur aspect.
+Le format est en version 4 (voir `migrate()`). La version 1 n'avait pas de styles, et six objets y étaient dessinés face avant en bas. La migration leur donne le style Nature et les retourne d'un demi-tour, pour qu'ils gardent leur aspect.
 
 Pour changer le format : augmenter `WorldSerializer.FORMAT_VERSION`, puis compléter `WorldSerializer.migrate()` pour mettre à jour les anciennes sauvegardes (par exemple, ajouter une valeur par défaut à une nouvelle clé). Une sauvegarde d'un format plus récent que le jeu est refusée plutôt que mal lue.
 
@@ -133,7 +131,6 @@ assets/
   murs/                Murs en vue trois quarts : segments et poteaux, pleins et baissés
   ouvertures/          Portes (fermées, ouvertes) et fenêtres en vue trois quarts
   personnages/         Calques des humains (corps, tête, cheveux, ombre) en 3 vues et portraits de face
-  terrains/            Vignettes des terrains proposés à l'emménagement
   floors/              Tuiles de sol 32 × 32 raccordables
   icons/ink/           Icônes 24 × 24 couleur encre
   icons/white/         Mêmes icônes en blanc, teintées par le thème (boutons)
@@ -148,11 +145,12 @@ data/                  Resources (.tres) : tout le contenu et l'équilibrage
   needs/               Besoins (Faim, Énergie…)
   characters/          Modèle de fiche (besoins, vitesse) ; Pépin et Myrtille pour les tests et
                        les anciennes parties
-  lots/                Terrains : terrain_vide, maison_demo, maison_retro
-  lots/offres/         Terrains proposés à l'emménagement (nom, terrain, prix, vignette)
+  quartier/            Le quartier (quartier.tres : emplacements, adresses), ses maisons
+                       (maisons/*.tres) et le terrain des emplacements libres — générés par
+                       tools/construire_quartier.gd
   settings/            Horloge, autonomie, économie
-scenes/                title.tscn (accueil, scène de démarrage), new_game.tscn (création de la famille et
-                       choix du terrain), main.tscn (le jeu), personnage, objet, HUD
+scenes/                title.tscn (accueil, scène de démarrage), neighborhood.tscn (le quartier),
+                       new_game.tscn (création d'une famille), main.tscn (le jeu), personnage, objet, HUD
 scripts/
   core/                Autoloads (GameClock, EventBus, Wallet, GameMode), monde, rendu, navigation,
                        caméra, catalogue, sauvegarde
@@ -162,9 +160,11 @@ scripts/
   objects/             Définitions d'action et d'objet, objet posé dans le monde
   characters/          Personnage, déplacement, file d'actions, autonomie, relations, famille,
                        apparence (calques à teinter) et corps dessiné en jeu
-  save/                Autoload SaveManager, format JSON (terrain, partie), vignettes
+  neighborhood/        Quartier : définitions, données de la partie, familles au hasard, outil de maisons
+  save/                Autoload SaveManager, format JSON (quartier, foyer, terrain), vignettes
   ui/                  Autoload Palette, thème, panneaux du HUD, portraits, écran d'accueil, menu en jeu
-  ui/creation/         Écran de création : colonne de la famille, aperçu, éditeur, choix du terrain
+  ui/creation/         Écran de création : colonne de la famille, aperçu, éditeur
+  ui/neighborhood/     Écran du quartier : carte, plans des terrains, fiche d'un emplacement
 ```
 
 Principes à retenir :
@@ -235,11 +235,9 @@ C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catal
 
 **Ajouter un besoin** : créer une `NeedDefinition` dans `data/needs/` avec un `id` unique, une `color`, une `background_color` et une `icon`, puis l'ajouter au tableau `needs` des fiches de `data/characters/`. Le HUD l'affichera tout seul.
 
-**Ajouter un personnage** : dupliquer `data/characters/myrtille.tres` (nom, `sprite`, `color`), ajouter la copie à `character_profiles` sur le nœud `World`, et une case de départ dans `spawn_cells` de `data/lots/terrain_vide.tres`.
+**Ajouter un personnage** : dupliquer `data/characters/myrtille.tres` (nom, `sprite`, `color`), ajouter la copie à `character_profiles` sur le nœud `World`, et une case de départ dans `spawn_cells` de `data/quartier/terrain_libre.tres`.
 
-**Partir de la maison de démo** : sur le nœud `World` de `scenes/main.tscn`, mettre `starting_lot` sur `data/lots/maison_demo.tres`, puis lancer une nouvelle partie depuis l'écran d'accueil.
-
-**Lancer directement le jeu sans l'accueil** : ouvrir `scenes/main.tscn` dans l'éditeur et appuyer sur F6. La partie n'a alors pas d'emplacement : « Sauvegarder » en crée un, nommé « Ma partie ».
+**Lancer directement le jeu sans l'accueil** : ouvrir `scenes/main.tscn` dans l'éditeur et appuyer sur F6 (terrain : `starting_lot` du nœud `World`, par exemple une maison de `data/quartier/maisons/`). La partie n'a alors pas d'emplacement : « Sauvegarder » en crée une, nommée « Ma partie », dans un quartier neuf où cette maison prend le premier terrain libre.
 
 ## Où modifier l'équilibrage
 
@@ -247,8 +245,9 @@ C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catal
 |---|---|
 | Budget de départ, part rendue à la revente (même jour / ensuite) | `data/settings/economy_settings.tres` |
 | Prix des objets, sols, murs, portes et fenêtres | `data/catalog/**/*.tres` (`price`, `price_per_cell`, `price_per_segment`) |
-| Taille du terrain, cases de départ | `data/lots/*.tres` (`size`, `spawn_cells`) |
-| Terrains proposés et leur prix | `data/lots/offres/*.tres` (`lot`, `price`, `order`) |
+| Maisons du quartier, cases de départ | `tools/construire_quartier.gd` (puis relancer l'outil) |
+| Emplacements, nombre de familles au départ | `data/quartier/quartier.tres` (`plots`, `starting_families`) |
+| Prix des maisons, compositions des familles au hasard | `scripts/neighborhood/neighborhood.gd` (`PRICE_RATIO`, `COMPOSITIONS`) |
 | Relation de départ selon le lien de famille | `Family.LINK_START` (`scripts/characters/family.gd`) |
 | Prénoms et noms tirés au dé | `scripts/ui/creation/name_ideas.gd` |
 | Vitesse de baisse d'un besoin, poids dans l'humeur, seuil critique, valeur de départ | `data/needs/*.tres` (`decay_per_hour`, `mood_weight`, `critical_threshold`, `start_value`) |
@@ -361,6 +360,30 @@ Chaque métier a **5 grades**, avec un intitulé et un salaire chacun (Commis 21
 Une promotion remet la performance à 50 %. Une performance tombée à 0 fait redescendre d'un grade. Dans les petites annonces, la carte « Ton métier » montre le grade, la performance et ce qu'il manque pour le suivant ; les autres annonces montrent jusqu'où mène la carrière.
 
 Les métiers sont des `JobDefinition` dans `data/jobs/` : en ajouter un, c'est ajouter un `.tres` (nom, phrase de l'annonce, icône, horaires, jours, âge minimum, effets sur les besoins, et pour la carrière : compétence, intitulés, salaires et niveaux de chaque grade). Le métier, le grade, la performance et l'état « au travail » sont sauvegardés avec chaque Mouz.
+
+## Le quartier
+
+Une partie, c'est un **quartier** : le quartier des Tilleuls, huit emplacements de part et d'autre de la rue des Lilas.
+
+| Emplacement | Maison | Style |
+|---|---|---|
+| 1 rue des Lilas | La Bicoque : grande pièce à vivre, une chambre | Nature |
+| 3 rue des Lilas | Les Glycines : salon, cuisine, chambre des parents, chambre des enfants, salle de bain avec baignoire | Rétro |
+| 7 rue des Lilas | Villa Horizon : grande pièce ouverte, bureau avec ordinateur, chambre, entrée | Moderne |
+| 2 rue des Lilas | Le Potager : petite maison, grand jardin (trois potagers, barbecue, salon de jardin, hamac) | Nature |
+| 6 rue des Lilas | L'Atelier : atelier avec piano et chevalet, cuisine, chambre, grande salle de bain | Rétro |
+| 4, 5 et 8 rue des Lilas | Terrains libres | |
+
+- À la création, **trois familles tirées au hasard** (une personne seule, un couple, des parents et leurs enfants, des colocs, un parent et son ado, deux aînés…) s'installent dans trois des maisons. Elles ont payé leur maison et gardent un peu d'argent.
+- **L'écran du quartier** montre la carte, avec le plan de chaque terrain. Un clic sur un emplacement ouvre sa fiche : la famille qui y vit (membres, âges, argent) et **Jouer cette famille**, ou bien le prix et **Faire emménager une famille**. Un double-clic fait la même chose que le bouton.
+- **Faire emménager une famille** ouvre la création : nom de famille, 1 à 4 membres. Pour chacun : prénom (le dé en tire un), homme ou femme, âge (enfant, ado, adulte, aîné), peau, coupe et couleur des cheveux, tenue et sa couleur, ou « Apparence au hasard ». Entre deux cartes, une pastille fixe leur **lien** (couple, parent, enfant, frères et sœurs, colocs), qui donne leur relation de départ. Il faut au moins un adulte ou un aîné, et un prénom à chacun. La famille arrive avec 20 000 Mz, moins le prix de la maison (70 % de ce qu'elle a coûté, arrondi à 500 Mz ; un terrain libre est gratuit). Sur un terrain libre, on commence en mode Construire.
+- On joue **une famille à la fois** ; les autres attendent, comme on les a laissées. Chaque famille a son argent ; l'heure est commune au quartier. **Retour au quartier** (menu Échap) enregistre la famille et revient à la carte.
+
+Les maisons sont décrites en code dans `tools/construire_quartier.gd` (pièces, portes, fenêtres, meubles en coordonnées de cases), avec l'aide de `HouseBuilder`. Pour les régénérer :
+
+```
+godot --headless --script tools/construire_quartier.gd
+```
 
 ## Gagner de l'argent à la maison
 

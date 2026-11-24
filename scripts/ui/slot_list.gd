@@ -236,7 +236,7 @@ func _empty_state() -> Control:
 	var help := _small("Crée une famille et construis sa maison : la partie apparaîtra ici.")
 	help.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(help)
-	var button := _button("Nouvelle partie", &"PrimaryButton", "famille")
+	var button := _button("Nouveau quartier", &"PrimaryButton", "famille")
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	button.pressed.connect(new_game_requested.emit)
 	column.add_child(button)
@@ -251,7 +251,10 @@ func _details(slot: Dictionary) -> Control:
 	row.add_child(_icon(CLOCK, 14))
 	row.add_child(_info_label("Jour %d · %s ·" % [int(slot.get("day", 1)), slot.get("time", "--:--")]))
 	row.add_child(_icon(COIN, 14, false))
-	row.add_child(_info_label("%s · %d objets" % [Palette.format_mz(int(slot.get("funds", 0))), int(slot.get("objects", 0))]))
+	var families := int(slot.get("families", 0))
+	var where := "%s · %s" % [slot["family"], Palette.format_mz(int(slot.get("funds", 0)))] if slot.get("family", "") != "" \
+			else "Quartier · %d famille%s" % [families, "s" if families > 1 else ""]
+	row.add_child(_info_label(where))
 	return row
 
 
