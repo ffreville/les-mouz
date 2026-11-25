@@ -11,6 +11,14 @@ extends Purchase
 @export var collection: StringName = &""
 ## Allumé (lampes) : affiche l'image « en marche » même sans utilisateur.
 @export var switched_on: bool = false
+## Usure, de 0 (neuf) à 100 (en panne). Voir Upkeep.
+@export var wear: float = 0.0
+## Minute de jeu où le réparateur appelé passera (0 : pas appelé).
+@export var repair_at: float = 0.0
+
+
+func is_broken() -> bool:
+	return wear >= 100.0
 
 
 ## Collection effective (celle par défaut si aucune n'est choisie ou si elle n'existe plus).

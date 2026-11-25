@@ -14,6 +14,7 @@ const LIST := [
 	[&"culture", "Culture", "lire", Color("#B08A3E")],
 	[&"forme", "Forme", "yoga", Color("#2FA3A3")],
 	[&"charisme", "Charisme", "discuter", Color("#D9A21E")],
+	[&"bricolage", "Bricolage", "construire", Color("#7A6A58")],
 ]
 const MAX_LEVEL := 10
 ## Minutes de jeu pour passer du niveau 0 au niveau 1 ; chaque niveau suivant en demande

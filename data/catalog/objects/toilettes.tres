@@ -19,3 +19,4 @@ actions = Array[ExtResource("2_action")]([ExtResource("6_utiliser_toilettes")])
 capacity = 1
 price = 300
 category = &"salle_de_bain"
+wear_per_hour = 10.0

@@ -26,3 +26,4 @@ actions = Array[ExtResource("2_action")]([ExtResource("9_surfer"), ExtResource("
 capacity = 1
 price = 900
 category = &"loisirs"
+wear_per_hour = 3.0

@@ -95,6 +95,11 @@ signal job_board_requested(character: Node, source: StringName)
 ## Un Mouz rentre du travail et touche son salaire.
 @warning_ignore("unused_signal")
 signal salary_paid(character: Node, amount: int)
+## Un objet tombe en panne / est réparé.
+@warning_ignore("unused_signal")
+signal object_broke(smart_object: Node)
+@warning_ignore("unused_signal")
+signal object_repaired(smart_object: Node)
 ## Un voisin arrive en visite / repart chez lui.
 @warning_ignore("unused_signal")
 signal visitor_arrived(visitor: Node)

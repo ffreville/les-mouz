@@ -20,3 +20,4 @@ actions = Array[ExtResource("2_action")]([ExtResource("6_manger"), ExtResource("
 capacity = 1
 price = 800
 category = &"cuisine"
+wear_per_hour = 6.0

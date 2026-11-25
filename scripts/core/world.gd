@@ -34,6 +34,8 @@ var day_night := DayNight.new()
 var bills := Bills.new()
 ## Visites des voisins.
 var visits := Visits.new()
+## Usure et réparation des objets.
+var upkeep := Upkeep.new()
 
 @onready var floor_view: FloorView = $FloorView
 @onready var wall_view: WallView = $WallView
@@ -87,6 +89,8 @@ func _ready() -> void:
 	if not characters.is_empty():
 		# Différé pour que l'interface soit prête à recevoir le signal de sélection.
 		selection.select.call_deferred(characters[0])
+	add_child(upkeep)
+	upkeep.setup(self)
 	add_child(visits)
 	visits.setup(self, use_save and not played_before)
 	if played_before:

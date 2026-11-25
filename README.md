@@ -422,6 +422,17 @@ Sans métier, ou en plus, un Mouz peut travailler chez lui. Ces activités se la
 
 Une action rapporte dès qu'elle a `earning_base` ou `earning_per_level` (`ActionDefinition`, section « Revenu ») ; `earning_text` est le message (« %s vend un tableau »).
 
+## L'usure et les pannes
+
+Les appareils s'usent quand on s'en sert : frigo, cuisinière, micro-ondes, machine à café, lave-vaisselle, machine à laver, télé, ordinateur, console, chaîne hi-fi, douche, baignoire, toilettes, lavabo et évier (`wear_per_hour` de leur définition : de 3 à 10 points par heure d'utilisation, un peu au hasard). À 100, l'objet **tombe en panne** : un message, un petit son, un panneau rouge au-dessus de lui ; ses actions sont grisées (« en panne ») et l'autonomie l'ignore. Au-delà de 50, son menu le dit « usé ».
+
+Deux façons de le remettre en état, depuis son menu :
+
+- **Réparer** (1 h) : réussit à 45 % au niveau 0 de **Bricolage**, 5,5 % de plus par niveau (100 % vers le niveau 10) ; sinon il faut réessayer. Le menu affiche la chance de réussite. Réparer fait monter le Bricolage.
+- **Appeler un réparateur** : 50 Mz + 15 % du prix de l'objet, payés tout de suite ; il passe une heure plus tard.
+
+Un objet en panne se revend moitié moins cher. L'usure et le réparateur attendu sont sauvegardés. Réglages : `scripts/objects/upkeep.gd`.
+
 ## Les courses
 
 Manger coûte : les actions qui nourrissent ont un `cost` (`data/actions/*.tres`), payé quand le Mouz s'y met. Sans assez d'argent, elles sont grisées (« pas assez d'argent ») et l'autonomie les ignore.
@@ -449,7 +460,7 @@ Les réglages sont dans `scripts/core/bills.gd` (intervalle, heure, délai, forf
 
 ## Les compétences
 
-Chaque Mouz a 8 compétences, de 0 à 10, visibles dans l'onglet « Compétences » du panneau de gauche :
+Chaque Mouz a 9 compétences, de 0 à 10, visibles dans l'onglet « Compétences » du panneau de gauche :
 
 | Compétence | Actions qui la font monter |
 |---|---|
@@ -461,6 +472,7 @@ Chaque Mouz a 8 compétences, de 0 à 10, visibles dans l'onglet « Compétences
 | Culture | lire (partout), écrire, écrire un article, observer les étoiles, échecs |
 | Forme | yoga, balançoire, danser, grimper |
 | Charisme | discuter, apéro, cartes |
+| Bricolage | réparer un objet en panne |
 
 Chaque minute passée sur l'action compte. Le niveau 1 demande 1 h de pratique, et chaque niveau 70 min de plus (du niveau 9 au 10, environ 11 h 30 ; environ 66 h de pratique pour tout monter). On apprend ×1,5 de bonne humeur (≥ 65), ×0,5 grognon (≤ 35) ; les enfants ×1,3, les ados ×1,2, les aînés ×0,9. Un niveau gagné s'annonce par un message et un petit son.
 

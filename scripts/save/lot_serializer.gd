@@ -34,6 +34,7 @@ static func to_data(lot: Lot) -> Dictionary:
 		objects.append({
 			"cell": _cell(placed.cell), "object": String(placed.definition.id), "rotation": placed.rotation,
 			"style": String(placed.get_collection()), "on": placed.switched_on,
+			"wear": snappedf(placed.wear, 0.01), "repair_at": placed.repair_at,
 		}.merged(_purchase(placed)))
 	return {
 		"size": _cell(lot.size),
@@ -95,6 +96,8 @@ static func from_data(data: Dictionary) -> Lot:
 			placed.rotation = int(entry.get("rotation", 0)) % 4
 			placed.collection = StringName(entry.get("style", ""))
 			placed.switched_on = bool(entry.get("on", false))
+			placed.wear = float(entry.get("wear", 0.0))
+			placed.repair_at = float(entry.get("repair_at", 0.0))
 			_restore_purchase(placed, entry)
 			lot.objects.append(placed)
 	var spawns: Array[Vector2i] = []

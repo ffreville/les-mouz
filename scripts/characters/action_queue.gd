@@ -221,6 +221,8 @@ func _on_ticked(game_minutes: float) -> void:
 	for need_id in definition.need_gains:
 		_character.needs.change(need_id, definition.need_gains[need_id] * ratio)
 	_character.skills.practice(definition.skill, step)
+	if action.target_object != null:
+		_character.world.upkeep.wear(action.target_object, step)
 	# La relation est symétrique : seul l'initiateur l'applique, pour ne pas la compter deux fois.
 	if action.is_social() and not action.is_social_guest and definition.relationship_gain != 0.0:
 		_character.relationships.change_with(action.target_character, definition.relationship_gain * ratio)

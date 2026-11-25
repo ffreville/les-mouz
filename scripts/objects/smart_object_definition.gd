@@ -24,6 +24,8 @@ extends Resource
 @export var price: int = 100
 ## Catégorie du catalogue : cuisine, chambre, salon, salle_de_bain, loisirs, jardin ou deco.
 @export var category: StringName = &"deco"
+## Usure par heure d'utilisation (0 : ne s'use pas). À 100, l'objet tombe en panne (voir Upkeep).
+@export var wear_per_hour: float = 0.0
 
 
 ## Collections disponibles, dans l'ordre des sprites.

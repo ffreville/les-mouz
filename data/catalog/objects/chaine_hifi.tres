@@ -23,3 +23,4 @@ actions = Array[ExtResource("2_action")]([ExtResource("9_ecouter_musique"), ExtR
 capacity = 2
 price = 300
 category = &"salon"
+wear_per_hour = 3.0

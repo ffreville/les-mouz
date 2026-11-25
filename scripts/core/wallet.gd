@@ -49,6 +49,9 @@ func stamp(item: Purchase, price: int) -> void:
 ## Ce que rapporte la revente d'un élément : prix plein le jour même, une part ensuite.
 func resale_value(item: Purchase) -> int:
 	var ratio := settings.refund_same_day if item.bought_day == GameClock.get_day() else settings.refund_later
+	# Un objet en panne se revend moitié moins cher.
+	if item is PlacedObject and item.is_broken():
+		ratio /= 2.0
 	return roundi(item.price * ratio)
 
 

@@ -59,6 +59,8 @@ func _open_object_menu(actor: Character, smart_object: SmartObject, screen_posit
 			label += " · −%s" % Palette.format_mz(action.cost)
 		elif action.earns():
 			label += " · %s" % Palette.format_mz(action.earning_for(actor.skills.level(action.skill)))
+		if action == Upkeep.REPAIR_ACTION and problem == "":
+			label += " · %d %% de réussite" % int(Upkeep.repair_chance(actor.skills.level(&"bricolage")) * 100)
 		options.append({
 			"label": label,
 			"icon": action.icon,
@@ -66,7 +68,20 @@ func _open_object_menu(actor: Character, smart_object: SmartObject, screen_posit
 			"callback": func() -> void:
 				actor.queue.enqueue(QueuedAction.use_object(action, smart_object)),
 		})
-	EventBus.context_menu_requested.emit(smart_object.get_display_name(), options, screen_position)
+	var title := smart_object.get_display_name()
+	if smart_object.placed.is_broken():
+		title += " · en panne"
+		if smart_object.placed.repair_at <= 0.0:
+			var fee := world.upkeep.repairman_fee(smart_object)
+			options.append({
+				"label": "Appeler un réparateur · %s" % Palette.format_mz(fee),
+				"icon": load("res://assets/icons/ink/alerte.svg"),
+				"disabled": not Wallet.can_afford(fee),
+				"callback": world.upkeep.call_repairman.bind(smart_object),
+			})
+	elif smart_object.placed.wear >= Upkeep.WORN:
+		title += " · usé à %d %%" % int(smart_object.placed.wear)
+	EventBus.context_menu_requested.emit(title, options, screen_position)
 
 
 ## Le téléphone du Mouz : petites annonces, et démission s'il a un métier.

@@ -75,12 +75,17 @@ func get_display_name() -> String:
 	return definition.display_name
 
 
+## Actions de l'objet ; en panne, « Réparer » passe en premier.
 func get_actions() -> Array[ActionDefinition]:
+	if placed != null and placed.is_broken():
+		var actions: Array[ActionDefinition] = [Upkeep.REPAIR_ACTION]
+		actions.append_array(definition.actions)
+		return actions
 	return definition.actions
 
 
 func has_actions() -> bool:
-	return not definition.actions.is_empty()
+	return not get_actions().is_empty()
 
 
 func occupies(cell: Vector2i) -> bool:
@@ -122,7 +127,7 @@ func contains_point(world_position: Vector2) -> bool:
 
 ## « En marche » : utilisé, alimenté à distance ou allumé.
 func is_active() -> bool:
-	if Bills.cut and definition.id in Bills.ELECTRIC:
+	if Bills.cut and definition.id in Bills.ELECTRIC or placed.is_broken():
 		return false
 	return not _users.is_empty() or not _powered_by.is_empty() or placed.switched_on
 
@@ -141,6 +146,10 @@ func get_spots(navigation: GridNavigation) -> Array[Vector2i]:
 
 ## Raison pour laquelle l'action n'est pas possible ici ("" si elle l'est).
 func action_problem(action: ActionDefinition, world: World) -> String:
+	if action == Upkeep.REPAIR_ACTION:
+		return "réparateur appelé" if placed.repair_at > 0.0 else ""
+	if placed.is_broken():
+		return "en panne"
 	var power := world.bills.problem_for(definition.id)
 	if power == "" and action.nearby_object_id != &"":
 		power = world.bills.problem_for(action.nearby_object_id)
@@ -227,3 +236,17 @@ func _draw() -> void:
 	if placed != null:
 		draw_definition(self, definition, placed.rotation, _origin(), _cell_size, Color.WHITE,
 				placed.get_collection(), is_active())
+		if placed.is_broken():
+			_draw_broken_mark()
+
+
+## Signe « en panne » au-dessus de l'objet : un panneau rouge avec un point d'exclamation.
+func _draw_broken_mark() -> void:
+	var rect := sprite_rect_local()
+	if rect.size == Vector2.ZERO:
+		rect = Rect2(_origin(), Vector2(footprint.size) * _cell_size)
+	var center := Vector2(rect.get_center().x, rect.position.y - 6)
+	draw_circle(center, 8.0, Palette.CRITIQUE)
+	draw_circle(center, 8.0, Palette.PAPIER, false, 2.0, true)
+	draw_rect(Rect2(center.x - 1.2, center.y - 5, 2.4, 6), Palette.PAPIER)
+	draw_circle(center + Vector2(0, 3.5), 1.4, Palette.PAPIER)

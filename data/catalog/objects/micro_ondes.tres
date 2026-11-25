@@ -22,3 +22,4 @@ actions = Array[ExtResource("2_action")]([ExtResource("9_rechauffer")])
 capacity = 1
 price = 200
 category = &"cuisine"
+wear_per_hour = 6.0
