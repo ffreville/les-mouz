@@ -11,6 +11,8 @@ var placed: PlacedObject
 var definition: SmartObjectDefinition
 ## Cases occupées par l'objet.
 var footprint: Rect2i
+## Niveau où il est posé (voir Levels).
+var level := 0
 var _cell_size: float
 var _users: Array[Node] = []
 ## Place occupée par chaque utilisateur (0, 1, 2…) : chacun garde la sienne jusqu'à ce qu'il parte.
@@ -88,8 +90,14 @@ func has_actions() -> bool:
 	return not get_actions().is_empty()
 
 
+## Emprise en cases de navigation (niveau compris).
+func nav_footprint() -> Rect2i:
+	return Rect2i(Levels.nav(footprint.position, level), footprint.size)
+
+
+## `cell` : case de navigation.
 func occupies(cell: Vector2i) -> bool:
-	return footprint.has_point(cell)
+	return nav_footprint().has_point(cell)
 
 
 ## Coin haut-gauche de l'emprise, dans le repère du nœud.
@@ -134,11 +142,12 @@ func is_active() -> bool:
 
 ## Cases où se tenir pour s'en servir : autour d'un meuble, dessus pour un tapis.
 func get_spots(navigation: GridNavigation) -> Array[Vector2i]:
+	var rect := nav_footprint()
 	if definition.blocks_movement:
-		return navigation.cells_around(footprint)
+		return navigation.cells_around(rect)
 	var cells: Array[Vector2i] = []
-	for y in range(footprint.position.y, footprint.end.y):
-		for x in range(footprint.position.x, footprint.end.x):
+	for y in range(rect.position.y, rect.end.y):
+		for x in range(rect.position.x, rect.end.x):
 			if navigation.is_walkable(Vector2i(x, y)):
 				cells.append(Vector2i(x, y))
 	return cells
@@ -176,7 +185,7 @@ func find_nearby(action: ActionDefinition, world: World) -> SmartObject:
 	var best_distance := action.nearby_radius + 1
 	var center := footprint.get_center()
 	for other in world.smart_objects:
-		if other == self or other.definition.id != action.nearby_object_id:
+		if other == self or other.level != level or other.definition.id != action.nearby_object_id:
 			continue
 		var d := other.footprint.get_center() - center
 		var distance := maxi(absi(d.x), absi(d.y))

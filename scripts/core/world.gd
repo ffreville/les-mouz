@@ -16,9 +16,17 @@ extends Node2D
 
 ## Marge au-dessus du terrain pour la caméra (hauteur des murs).
 const WALL_MARGIN := 80.0
+## Écart d'ordre d'affichage entre deux niveaux (tout un étage passe devant celui du dessous).
+const LEVEL_Z := 10
+## Voile sur les niveaux du dessous quand on regarde un étage.
+const LOWER_LEVEL_TINT := Color(0.62, 0.62, 0.7)
 
 ## Le terrain en cours de partie.
 var lot: Lot
+## Niveau regardé (0 : rez-de-chaussée). On construit et on achète à ce niveau.
+var view_level := 0
+## Un calque par niveau : { "node", "floor", "walls", "objects", "characters" }.
+var _layers: Array[Dictionary] = []
 ## La famille jouée.
 var characters: Array[Character] = []
 ## Les voisins en visite (voir Visits).
@@ -75,12 +83,16 @@ func _ready() -> void:
 		auto_saver.setup(self)
 	build_controller.setup(editor)
 	buy_controller.setup(editor)
+	_make_layers()
 	# Les murs du haut du terrain montent de 64 px au-dessus de leur ligne.
 	camera.set_bounds(Rect2(Vector2(0, -WALL_MARGIN), Vector2(lot.size * lot.cell_size) + Vector2(0, WALL_MARGIN)))
 	refresh_lot()
 	day_night.setup(self)
 	# Connecté avant la création des personnages : le monde se met à jour avant leurs files.
 	EventBus.lot_changed.connect(refresh_lot)
+	# La vue suit le Mouz contrôlé quand il est à un autre étage, ou qu'il en change.
+	EventBus.character_selected.connect(func(character: Node) -> void: _follow(character))
+	EventBus.character_level_changed.connect(_on_character_level_changed)
 	_spawn_characters(profiles)
 	if not played_before:
 		_apply_family_links()
@@ -102,28 +114,102 @@ func _ready() -> void:
 
 ## Redessine le terrain, synchronise les objets et recalcule la navigation.
 func refresh_lot() -> void:
-	floor_view.render(lot)
-	wall_view.render(lot, people)
+	for level in Levels.COUNT:
+		_layers[level]["floor"].render(lot, level)
+		_layers[level]["walls"].render(lot, people, level)
 	grid_overlay.render(lot)
 	_sync_objects()
 	_build_navigation()
+	_apply_view()
+
+
+# --- Niveaux ---------------------------------------------------------------------------
+
+## Le calque du rez-de-chaussée reprend les nœuds de la scène ; ceux des étages sont créés ici,
+## chacun dessiné tout entier au-dessus du précédent.
+func _make_layers() -> void:
+	for level in Levels.COUNT:
+		var node := Node2D.new()
+		node.name = "Niveau%d" % level
+		node.y_sort_enabled = true
+		node.z_index = level * LEVEL_Z
+		add_child(node)
+		move_child(node, floor_view.get_index())
+		var layer := {"node": node}
+		if level == 0:
+			for part in [floor_view, wall_view, objects_root, characters_root]:
+				part.reparent(node, false)
+			layer.merge({"floor": floor_view, "walls": wall_view, "objects": objects_root, "characters": characters_root})
+		else:
+			var floor_part := FloorView.new()
+			var walls_part := WallView.new()
+			walls_part.y_sort_enabled = true
+			var objects_part := Node2D.new()
+			objects_part.y_sort_enabled = true
+			var characters_part := Node2D.new()
+			characters_part.y_sort_enabled = true
+			for part in [floor_part, walls_part, objects_part, characters_part]:
+				node.add_child(part)
+			layer.merge({"floor": floor_part, "walls": walls_part, "objects": objects_part, "characters": characters_part})
+		_layers.append(layer)
+
+
+func layer(level: int) -> Dictionary:
+	return _layers[clampi(level, 0, Levels.COUNT - 1)]
+
+
+## Regarde un autre niveau : ceux du dessous restent visibles, voilés ; ceux du dessus disparaissent.
+func set_view_level(level: int) -> void:
+	level = clampi(level, 0, Levels.COUNT - 1)
+	if level == view_level:
+		return
+	view_level = level
+	_apply_view()
+	EventBus.view_level_changed.emit(view_level)
+
+
+func _on_character_level_changed(character: Node, _level: int) -> void:
+	if character == selection.selected:
+		_follow(character)
+
+
+func _follow(character: Node) -> void:
+	if GameMode.is_live() and character.level != view_level:
+		set_view_level(character.level)
+
+
+func _apply_view() -> void:
+	for level in _layers.size():
+		var node: Node2D = _layers[level]["node"]
+		node.visible = level <= view_level
+		node.modulate = Color.WHITE if level == view_level else LOWER_LEVEL_TINT
+	grid_overlay.show_level(view_level)
+	# Grille et aperçus de l'éditeur passent au-dessus du niveau regardé.
+	for overlay in [grid_overlay, build_controller, buy_controller]:
+		overlay.z_index = view_level * LEVEL_Z + LEVEL_Z - 1
 
 
 ## Crée les nœuds des objets ajoutés au terrain et retire ceux qui n'y sont plus.
 func _sync_objects() -> void:
+	var placed_levels: Dictionary[PlacedObject, int] = {}
+	for entry in lot.all_objects():
+		placed_levels[entry[0]] = entry[1]
 	var existing: Dictionary[PlacedObject, SmartObject] = {}
 	for smart_object in smart_objects.duplicate():
-		if smart_object.placed in lot.objects:
+		if placed_levels.has(smart_object.placed):
 			existing[smart_object.placed] = smart_object
 		else:
 			smart_objects.erase(smart_object)
 			smart_object.queue_free()
-	for placed in lot.objects:
+	for placed in placed_levels:
+		var level: int = placed_levels[placed]
 		if existing.has(placed):
+			existing[placed].level = level
 			existing[placed].setup(placed, lot.cell_size)
 			continue
 		var smart_object: SmartObject = smart_object_scene.instantiate()
-		objects_root.add_child(smart_object)
+		smart_object.level = level
+		_layers[level]["objects"].add_child(smart_object)
 		smart_object.setup(placed, lot.cell_size)
 		smart_objects.append(smart_object)
 
@@ -131,13 +217,14 @@ func _sync_objects() -> void:
 ## Les objets solides rendent leurs cases inaccessibles.
 func _build_navigation() -> void:
 	var blocked: Array[Vector2i] = []
-	for placed in lot.objects:
+	for entry in lot.all_objects():
+		var placed: PlacedObject = entry[0]
 		if not placed.definition.blocks_movement:
 			continue
 		var rect := placed.footprint()
 		for y in range(rect.position.y, rect.end.y):
 			for x in range(rect.position.x, rect.end.x):
-				blocked.append(Vector2i(x, y))
+				blocked.append(Levels.nav(Vector2i(x, y), entry[1]))
 	navigation.setup(lot, blocked)
 
 
@@ -185,7 +272,7 @@ func street_cell() -> Vector2i:
 ## Le personnage sous cette position (monde), ou null.
 func get_character_at(world_position: Vector2) -> Character:
 	for character in people:
-		if character.contains_point(world_position):
+		if character.level == view_level and character.contains_point(world_position):
 			return character
 	return null
 
@@ -195,7 +282,8 @@ func get_character_at(world_position: Vector2) -> Character:
 func get_object_at_point(world_position: Vector2) -> SmartObject:
 	var best: SmartObject = null
 	for smart_object in smart_objects:
-		if not smart_object.definition.blocks_movement or not smart_object.contains_point(world_position):
+		if smart_object.level != view_level or not smart_object.definition.blocks_movement \
+				or not smart_object.contains_point(world_position):
 			continue
 		if best == null or smart_object.position.y > best.position.y:
 			best = smart_object

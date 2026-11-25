@@ -34,6 +34,8 @@ var _bubble_base := Vector2.ZERO
 
 var profile: CharacterProfile
 var world: World
+## Niveau où se trouve le Mouz (0 : rez-de-chaussée, voir Levels).
+var level := 0
 ## Visiteur : emplacement de sa maison dans le quartier ("" pour un Mouz de la famille jouée).
 var home_plot := ""
 ## Nom de famille d'un visiteur.
@@ -88,8 +90,20 @@ func setup(p_world: World, p_profile: CharacterProfile, cell: Vector2i) -> void:
 	queue_redraw()
 
 
+## Case de navigation où il se tient (niveau compris, voir Levels).
 func get_cell() -> Vector2i:
-	return world.navigation.world_to_cell(standing_position())
+	return world.navigation.world_to_cell(standing_position(), level)
+
+
+## Change de niveau (escalier) : il passe dans le calque de ce niveau.
+func set_level(value: int) -> void:
+	if value == level:
+		return
+	level = value
+	var root: Node2D = world.layer(level)["characters"]
+	if get_parent() != root:
+		reparent(root, true)
+	EventBus.character_level_changed.emit(self, level)
 
 
 ## Position des pieds quand le Mouz est debout (celle d'avant de s'installer s'il est assis).

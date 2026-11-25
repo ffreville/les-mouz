@@ -36,7 +36,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		EventBus.notice.emit("%s : %s" % [selected.get_display_name(), selected.job.status_text().to_lower()])
 		return
 
-	var cell := world.navigation.world_to_cell(position_in_world)
+	var cell := world.navigation.world_to_cell(position_in_world, world.view_level)
 	var smart_object := world.get_object_at_point(position_in_world)
 	if smart_object != null:
 		if smart_object.has_actions():

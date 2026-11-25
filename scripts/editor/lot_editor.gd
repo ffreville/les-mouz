@@ -13,6 +13,14 @@ var _history: Array[Dictionary] = []
 var lot: Lot:
 	get:
 		return world.lot
+## Niveau où l'on construit : celui que l'on regarde (voir Levels).
+var level_index: int:
+	get:
+		return world.view_level
+## Les données de ce niveau.
+var data: LotLevel:
+	get:
+		return world.lot.level(world.view_level)
 
 
 func setup(p_world: World) -> void:
@@ -49,7 +57,7 @@ func quote_walls(edges: Array[Vector3i], style: WallStyleDefinition) -> Dictiona
 	for edge in edges:
 		if not can_hold_wall(edge):
 			valid = false
-		elif not lot.has_wall(edge):
+		elif not lot.has_wall(edge, level_index):
 			fresh.append(edge)
 	return {"edges": fresh, "cost": fresh.size() * style.price_per_segment, "valid": valid and not fresh.is_empty()}
 
@@ -68,11 +76,11 @@ func _place_walls(fresh: Array[Vector3i], style: WallStyleDefinition) -> Callabl
 		var wall := PlacedWall.new()
 		wall.style = style
 		Wallet.stamp(wall, style.price_per_segment)
-		lot.walls[edge] = wall
+		data.walls[edge] = wall
 		EventBus.item_bought.emit(wall, wall.price)
 	return func() -> void:
 		for edge in fresh:
-			lot.walls.erase(edge)
+			data.walls.erase(edge)
 
 
 # --- Pièces ----------------------------------------------------------------------
@@ -92,13 +100,41 @@ static func room_edges(rect: Rect2i) -> Array[Vector3i]:
 ## Devis d'une pièce : murs neufs sur le pourtour et sol à l'intérieur, en une fois.
 func quote_room(rect: Rect2i, style: RoomStyle) -> Dictionary:
 	var inside := rect.intersection(Rect2i(Vector2i.ZERO, lot.size)) == rect
-	var walls := quote_walls(room_edges(rect), style.wall)
 	var floors := quote_floor(rect, style.floor)
-	var holds := room_edges(rect).all(can_hold_wall)
-	var fresh: Array[Vector3i] = walls["edges"]
-	var valid: bool = inside and holds and (not fresh.is_empty() or floors["valid"])
-	return {"edges": fresh, "cells": floors["cells"], "cost": walls["cost"] + floors["cost"], "valid": valid,
-			"reason": "" if valid else ("Hors du terrain" if not inside else ("Un meuble est sur le tracé" if not holds else "Déjà construite"))}
+	# À l'étage, toute la pièce doit être au-dessus de pièces fermées ; ses murs bordent
+	# le plancher qu'elle pose.
+	var supported := true
+	for cell in _cells_in(rect):
+		if not supports_floor(cell):
+			supported = false
+	var fresh: Array[Vector3i] = []
+	var holds := true
+	for edge in room_edges(rect):
+		var ok := can_hold_wall(edge) or level_index > 0 and supported and lot.contains_edge(edge) \
+				and _crosses_no_object(edge)
+		if not ok:
+			holds = false
+		elif not data.walls.has(edge):
+			fresh.append(edge)
+	var cost: int = fresh.size() * style.wall.price_per_segment + floors["cost"]
+	var valid: bool = inside and holds and supported and (not fresh.is_empty() or floors["valid"])
+	var reason := ""
+	if not inside:
+		reason = "Hors du terrain"
+	elif not supported:
+		reason = FLOOR_NEEDS_ROOM
+	elif not holds:
+		reason = "Un meuble est sur le tracé"
+	elif not valid:
+		reason = "Déjà construite"
+	return {"edges": fresh, "cells": floors["cells"], "cost": cost, "valid": valid, "reason": reason}
+
+
+## Un mur sur cette arête ne coupe aucun objet en deux.
+func _crosses_no_object(edge: Vector3i) -> bool:
+	var sides := Edges.sides(edge)
+	var a := lot.blocking_object_at(sides[0], level_index)
+	return a == null or a != lot.blocking_object_at(sides[1], level_index)
 
 
 func build_room(rect: Rect2i, style: RoomStyle) -> bool:
@@ -124,17 +160,17 @@ func quote_demolish(edges: Array[Vector3i]) -> Dictionary:
 	var openings: Array[PlacedOpening] = []
 	var refund := 0
 	for edge in edges:
-		if lot.fences.has(edge):
+		if level_index == 0 and lot.fences.has(edge):
 			fences.append(edge)
 			refund += Wallet.resale_value(lot.fences[edge])
-		elif not lot.has_wall(edge):
+		elif not lot.has_wall(edge, level_index):
 			continue
 		else:
 			walls.append(edge)
-			refund += Wallet.resale_value(lot.walls[edge])
-			if lot.wallpapers.has(edge):
-				refund += Wallet.resale_value(lot.wallpapers[edge])
-		var opening := lot.opening_at(edge)
+			refund += Wallet.resale_value(data.walls[edge])
+			if data.wallpapers.has(edge):
+				refund += Wallet.resale_value(data.wallpapers[edge])
+		var opening := lot.opening_at(edge, level_index)
 		if opening != null and opening not in openings:
 			openings.append(opening)
 			refund += Wallet.resale_value(opening)
@@ -149,12 +185,12 @@ func demolish_walls(edges: Array[Vector3i]) -> bool:
 	var removed: Dictionary[Vector3i, PlacedWall] = {}
 	var papers: Dictionary[Vector3i, PlacedWallpaper] = {}
 	for edge in quote["edges"]:
-		removed[edge] = lot.walls[edge]
-		lot.walls.erase(edge)
+		removed[edge] = data.walls[edge]
+		data.walls.erase(edge)
 		EventBus.item_sold.emit(removed[edge], Wallet.resale_value(removed[edge]))
-		if lot.wallpapers.has(edge):
-			papers[edge] = lot.wallpapers[edge]
-			lot.wallpapers.erase(edge)
+		if data.wallpapers.has(edge):
+			papers[edge] = data.wallpapers[edge]
+			data.wallpapers.erase(edge)
 	var fences: Dictionary[Vector3i, PlacedFence] = {}
 	for edge in quote["fences"]:
 		fences[edge] = lot.fences[edge]
@@ -162,17 +198,17 @@ func demolish_walls(edges: Array[Vector3i]) -> bool:
 		EventBus.item_sold.emit(fences[edge], Wallet.resale_value(fences[edge]))
 	var openings: Array[PlacedOpening] = quote["openings"]
 	for opening in openings:
-		lot.openings.erase(opening)
+		data.openings.erase(opening)
 		EventBus.item_sold.emit(opening, Wallet.resale_value(opening))
 	Wallet.receive(quote["refund"])
 	var revert := func() -> void:
 		for edge in removed:
-			lot.walls[edge] = removed[edge]
+			data.walls[edge] = removed[edge]
 		for edge in papers:
-			lot.wallpapers[edge] = papers[edge]
+			data.wallpapers[edge] = papers[edge]
 		for edge in fences:
 			lot.fences[edge] = fences[edge]
-		lot.openings.append_array(openings)
+		data.openings.append_array(openings)
 	_commit(revert, quote["refund"])
 	return true
 
@@ -180,21 +216,25 @@ func demolish_walls(edges: Array[Vector3i]) -> bool:
 ## Un mur (ou une clôture) ne peut pas couper un objet en deux, sortir du terrain,
 ## ni se poser là où il y a déjà une clôture (ou un mur).
 func can_hold_wall(edge: Vector3i) -> bool:
-	if not lot.contains_edge(edge) or lot.fences.has(edge):
+	if not lot.contains_edge(edge) or level_index == 0 and lot.fences.has(edge):
 		return false
 	var sides := Edges.sides(edge)
-	var a := lot.blocking_object_at(sides[0])
-	return a == null or a != lot.blocking_object_at(sides[1])
+	# À l'étage, un mur se pose au bord d'un plancher.
+	if level_index > 0 and lot.floor_at(sides[0], level_index) == null and lot.floor_at(sides[1], level_index) == null:
+		return false
+	var a := lot.blocking_object_at(sides[0], level_index)
+	return a == null or a != lot.blocking_object_at(sides[1], level_index)
 
 
 # --- Clôtures ---------------------------------------------------------------------
 
 func can_hold_fence(edge: Vector3i) -> bool:
-	if not lot.contains_edge(edge) or lot.has_wall(edge):
+	# Les clôtures sont au jardin : au rez-de-chaussée seulement.
+	if level_index > 0 or not lot.contains_edge(edge) or lot.has_wall(edge, level_index):
 		return false
 	var sides := Edges.sides(edge)
-	var a := lot.blocking_object_at(sides[0])
-	return a == null or a != lot.blocking_object_at(sides[1])
+	var a := lot.blocking_object_at(sides[0], level_index)
+	return a == null or a != lot.blocking_object_at(sides[1], level_index)
 
 
 ## Devis pour une clôture : segments nouveaux (ou d'un autre style, l'ancien est revendu), coût, validité.
@@ -247,8 +287,8 @@ func quote_opening(edge: Vector3i, definition: OpeningDefinition) -> Dictionary:
 	var valid := true
 	for i in definition.width_segments:
 		var segment := Edges.next_along(edge, i)
-		var holder := lot.fences.has(segment) if definition.on_fence else lot.has_wall(segment)
-		if not holder or lot.opening_at(segment) != null:
+		var holder := lot.fences.has(segment) if definition.on_fence else lot.has_wall(segment, level_index)
+		if not holder or lot.opening_at(segment, level_index) != null:
 			valid = false
 	return {"cost": definition.price, "valid": valid}
 
@@ -264,9 +304,9 @@ func place_opening(edge: Vector3i, definition: OpeningDefinition, swing_positive
 	opening.swing_positive = swing_positive
 	opening.hinge_flipped = hinge_flipped
 	Wallet.stamp(opening, definition.price)
-	lot.openings.append(opening)
+	data.openings.append(opening)
 	EventBus.item_bought.emit(opening, opening.price)
-	_commit(func() -> void: lot.openings.erase(opening), -quote["cost"])
+	_commit(func() -> void: data.openings.erase(opening), -quote["cost"])
 	return true
 
 
@@ -279,14 +319,14 @@ const NO_WALLPAPER := &"retirer"
 ## Devis pour tapisser la pièce qui contient `cell` (ou retirer son papier peint) :
 ## segments concernés, coût net (l'ancien papier est revendu), validité et raison d'un refus.
 func quote_wallpaper(cell: Vector2i, definition: WallpaperDefinition) -> Dictionary:
-	var room := lot.room_cells(cell)
+	var room := lot.room_cells(cell, level_index)
 	if room.is_empty():
 		return {"room": room, "edges": [], "cost": 0, "valid": false, "reason": "Clique dans une pièce fermée"}
 	var removing := definition.id == NO_WALLPAPER
 	var edges: Array[Vector3i] = []
 	var cost := 0
-	for edge in lot.room_wall_faces(room):
-		var current: PlacedWallpaper = lot.wallpapers.get(edge)
+	for edge in lot.room_wall_faces(room, level_index):
+		var current: PlacedWallpaper = data.wallpapers.get(edge)
 		if removing and current == null or not removing and current != null and current.definition == definition:
 			continue
 		edges.append(edge)
@@ -307,23 +347,23 @@ func apply_wallpaper(cell: Vector2i, definition: WallpaperDefinition) -> bool:
 		Wallet.receive(-cost)
 	var previous: Dictionary = {}
 	for edge in quote["edges"]:
-		previous[edge] = lot.wallpapers.get(edge)
+		previous[edge] = data.wallpapers.get(edge)
 		if previous[edge] != null:
 			EventBus.item_sold.emit(previous[edge], Wallet.resale_value(previous[edge]))
 		if definition.id == NO_WALLPAPER:
-			lot.wallpapers.erase(edge)
+			data.wallpapers.erase(edge)
 			continue
 		var paper := PlacedWallpaper.new()
 		paper.definition = definition
 		Wallet.stamp(paper, definition.price_per_segment)
-		lot.wallpapers[edge] = paper
+		data.wallpapers[edge] = paper
 		EventBus.item_bought.emit(paper, paper.price)
 	var revert := func() -> void:
 		for edge in previous:
 			if previous[edge] == null:
-				lot.wallpapers.erase(edge)
+				data.wallpapers.erase(edge)
 			else:
-				lot.wallpapers[edge] = previous[edge]
+				data.wallpapers[edge] = previous[edge]
 	_commit(revert, -cost)
 	return true
 
@@ -334,15 +374,32 @@ func apply_wallpaper(cell: Vector2i, definition: WallpaperDefinition) -> bool:
 func quote_floor(rect: Rect2i, definition: FloorDefinition) -> Dictionary:
 	var cells: Array[Vector2i] = []
 	var cost := 0
+	var unsupported := 0
 	for cell in _cells_in(rect):
-		var current: PlacedFloor = lot.floors.get(cell)
+		if not supports_floor(cell):
+			unsupported += 1
+			continue
+		var current: PlacedFloor = data.floors.get(cell)
 		if current != null and current.definition == definition:
 			continue
 		cells.append(cell)
 		cost += definition.price_per_cell
 		if current != null:
 			cost -= Wallet.resale_value(current)
-	return {"cells": cells, "cost": cost, "valid": not cells.is_empty()}
+	var reason := "" if not cells.is_empty() else (FLOOR_NEEDS_ROOM if unsupported > 0 else "")
+	return {"cells": cells, "cost": cost, "valid": not cells.is_empty(), "reason": reason}
+
+
+## Raison affichée quand un sol d'étage n'a rien dessous.
+const FLOOR_NEEDS_ROOM := "Un sol d'étage se pose au-dessus d'une pièce fermée"
+
+
+## Peut-on poser un sol sur cette case du niveau regardé ? Au rez-de-chaussée, partout ;
+## à l'étage, au-dessus d'une pièce fermée du niveau du dessous, hors cage d'escalier.
+func supports_floor(cell: Vector2i) -> bool:
+	if level_index == 0:
+		return true
+	return lot.interior_cells(level_index - 1).has(cell) and not lot.is_stairwell(cell, level_index)
 
 
 func paint_floor(rect: Rect2i, definition: FloorDefinition) -> bool:
@@ -364,9 +421,10 @@ func quote_erase(rect: Rect2i) -> Dictionary:
 	var cells: Array[Vector2i] = []
 	var refund := 0
 	for cell in _cells_in(rect):
-		if lot.floors.has(cell):
+		# À l'étage, on ne retire pas le plancher sous un objet.
+		if data.floors.has(cell) and (level_index == 0 or _object_on(cell) == null):
 			cells.append(cell)
-			refund += Wallet.resale_value(lot.floors[cell])
+			refund += Wallet.resale_value(data.floors[cell])
 	return {"cells": cells, "refund": refund, "valid": not cells.is_empty()}
 
 
@@ -380,20 +438,28 @@ func erase_floor(rect: Rect2i) -> bool:
 	return true
 
 
+## L'objet posé sur cette case du niveau regardé (tapis compris), ou null.
+func _object_on(cell: Vector2i) -> PlacedObject:
+	for placed in data.objects:
+		if placed.footprint().has_point(cell):
+			return placed
+	return null
+
+
 ## Pose `definition` (ou l'herbe si null) sur les cases ; renvoie les anciens revêtements.
 func _replace_floors(cells: Array[Vector2i], definition: FloorDefinition) -> Dictionary:
 	var previous := {}
 	for cell in cells:
-		previous[cell] = lot.floors.get(cell)
+		previous[cell] = data.floors.get(cell)
 		if previous[cell] != null:
 			EventBus.item_sold.emit(previous[cell], Wallet.resale_value(previous[cell]))
 		if definition == null:
-			lot.floors.erase(cell)
+			data.floors.erase(cell)
 			continue
 		var placed := PlacedFloor.new()
 		placed.definition = definition
 		Wallet.stamp(placed, definition.price_per_cell)
-		lot.floors[cell] = placed
+		data.floors[cell] = placed
 		EventBus.item_bought.emit(placed, placed.price)
 	return previous
 
@@ -401,9 +467,9 @@ func _replace_floors(cells: Array[Vector2i], definition: FloorDefinition) -> Dic
 func _restore_floors(previous: Dictionary) -> void:
 	for cell in previous:
 		if previous[cell] == null:
-			lot.floors.erase(cell)
+			data.floors.erase(cell)
 		else:
-			lot.floors[cell] = previous[cell]
+			data.floors[cell] = previous[cell]
 
 
 ## Cases d'un rectangle, limitées au terrain.
@@ -442,21 +508,21 @@ func buy_object(definition: SmartObjectDefinition, cell: Vector2i, rotation: int
 	placed.rotation = rotation
 	placed.collection = collection if definition.sprites.has(collection) else definition.default_collection()
 	Wallet.stamp(placed, definition.price)
-	lot.objects.append(placed)
+	data.objects.append(placed)
 	EventBus.item_bought.emit(placed, placed.price)
-	_commit(func() -> void: lot.objects.erase(placed), -quote["cost"])
+	_commit(func() -> void: data.objects.erase(placed), -quote["cost"])
 	return true
 
 
 func sell_object(placed: PlacedObject) -> bool:
-	if placed not in lot.objects:
+	if placed not in data.objects:
 		return false
 	var refund := Wallet.resale_value(placed)
 	EventBus.object_displaced.emit(placed)
-	lot.objects.erase(placed)
+	data.objects.erase(placed)
 	Wallet.receive(refund)
 	EventBus.item_sold.emit(placed, refund)
-	_commit(func() -> void: lot.objects.append(placed), refund)
+	_commit(func() -> void: data.objects.append(placed), refund)
 	return true
 
 
@@ -483,7 +549,7 @@ func restyle_cost(placed: PlacedObject) -> int:
 
 
 func restyle_object(placed: PlacedObject, collection: StringName) -> bool:
-	if placed not in lot.objects or not placed.definition.sprites.has(collection):
+	if placed not in data.objects or not placed.definition.sprites.has(collection):
 		return false
 	var cost := restyle_cost(placed)
 	if not Wallet.pay(cost):
@@ -502,10 +568,10 @@ func restyle_object(placed: PlacedObject, collection: StringName) -> bool:
 
 ## L'objet posé sous une case (les objets solides passent avant les tapis), ou null.
 func object_at(cell: Vector2i) -> PlacedObject:
-	var found: PlacedObject = lot.blocking_object_at(cell)
+	var found: PlacedObject = lot.blocking_object_at(cell, level_index)
 	if found != null:
 		return found
-	for placed in lot.objects:
+	for placed in data.objects:
 		if placed.footprint().has_point(cell):
 			return placed
 	return null
@@ -516,7 +582,7 @@ func _placement_problem(ghost: PlacedObject, moving: PlacedObject) -> String:
 	var rect := ghost.footprint()
 	if not Rect2i(Vector2i.ZERO, lot.size).encloses(rect):
 		return "Hors du terrain"
-	for other in lot.objects:
+	for other in data.objects:
 		if other == moving or not other.footprint().intersects(rect):
 			continue
 		# Un tapis peut passer sous un meuble, mais pas sous un autre tapis.
@@ -525,18 +591,48 @@ func _placement_problem(ghost: PlacedObject, moving: PlacedObject) -> String:
 	for y in range(rect.position.y, rect.end.y):
 		for x in range(rect.position.x, rect.end.x):
 			var cell := Vector2i(x, y)
-			if x + 1 < rect.end.x and lot.has_wall(Edges.between(cell, cell + Vector2i.RIGHT)):
+			if x + 1 < rect.end.x and lot.has_wall(Edges.between(cell, cell + Vector2i.RIGHT), level_index):
 				return "Un mur traverse l'objet"
-			if y + 1 < rect.end.y and lot.has_wall(Edges.between(cell, cell + Vector2i.DOWN)):
+			if y + 1 < rect.end.y and lot.has_wall(Edges.between(cell, cell + Vector2i.DOWN), level_index):
 				return "Un mur traverse l'objet"
+	# À l'étage, un objet se pose sur le plancher.
+	if level_index > 0:
+		for y in range(rect.position.y, rect.end.y):
+			for x in range(rect.position.x, rect.end.x):
+				if lot.floor_at(Vector2i(x, y), level_index) == null:
+					return "Il faut un plancher dessous"
+	if ghost.definition.is_stairs:
+		var problem := _stairs_problem(ghost)
+		if problem != "":
+			return problem
 	if ghost.definition.blocks_movement:
 		for character in world.people:
-			if rect.has_point(character.get_cell()):
+			var at := character.get_cell()
+			if Levels.level_of(at) == level_index and rect.has_point(Levels.flat(at)):
 				return "Un Mouz est dans le passage"
 	# Un objet traversable (tapis de yoga) s'utilise en se tenant dessus.
 	if not ghost.definition.actions.is_empty() and ghost.definition.blocks_movement:
 		if _usable_spots(rect, moving).is_empty():
 			return "Aucune place pour l'utiliser"
+	return ""
+
+
+## Un escalier monte au niveau suivant : il faut que ce niveau existe, un plancher au bout
+## de la dernière marche, et rien à l'étage au-dessus des marches (la cage d'escalier).
+func _stairs_problem(ghost: PlacedObject) -> String:
+	if level_index >= Levels.COUNT - 1:
+		return "Pas d'étage au-dessus"
+	var path := GridNavigation.stairs_path(ghost, level_index)
+	var exit := Levels.flat(path["exit"])
+	if not lot.contains(exit) or lot.level(level_index + 1).floors.get(exit) == null:
+		return "Il faut un plancher à l'étage, au bout de l'escalier"
+	var above := lot.level(level_index + 1)
+	for placed in above.objects:
+		if placed.footprint().intersects(ghost.footprint()):
+			return "Un objet de l'étage est au-dessus"
+	var entry := Levels.flat(path["entry"])
+	if not lot.contains(entry):
+		return "Pas de place devant la première marche"
 	return ""
 
 
@@ -548,9 +644,11 @@ func _usable_spots(rect: Rect2i, moving: PlacedObject) -> Array[Vector2i]:
 			var inner := Vector2i(x, y)
 			for direction in [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP]:
 				var outer: Vector2i = inner + direction
-				if rect.has_point(outer) or not lot.contains(outer) or lot.blocks_passage(inner, outer):
+				if rect.has_point(outer) or not lot.contains(outer) or lot.blocks_passage(inner, outer, level_index):
 					continue
-				var blocker := lot.blocking_object_at(outer)
+				if level_index > 0 and lot.floor_at(outer, level_index) == null:
+					continue
+				var blocker := lot.blocking_object_at(outer, level_index)
 				if blocker == null or blocker == moving:
 					spots.append(outer)
 	return spots

@@ -92,7 +92,9 @@ func _update_lights() -> void:
 			_lights.erase(smart_object)
 	for smart_object in world.smart_objects:
 		var spec: Array = LIGHTS.get(smart_object.definition.id, [])
-		var lit := not spec.is_empty() and smart_object.is_active() and night > 0.02
+		# Les lumières des étages cachés (au-dessus de celui qu'on regarde) ne se voient pas.
+		var lit := not spec.is_empty() and smart_object.is_active() and night > 0.02 \
+				and smart_object.level <= world.view_level
 		if not lit:
 			if _lights.has(smart_object):
 				_lights[smart_object].queue_free()

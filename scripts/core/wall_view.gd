@@ -21,6 +21,9 @@ const FACE_BOTTOM := 6.0
 static var _textures: Dictionary = {}
 
 var _lot: Lot
+## Niveau dessiné (voir Levels) et ses données.
+var _level_index := 0
+var _data: LotLevel
 var _characters: Array = []
 ## Portes posées : { "sprite", "opening", "cells", "name", "open" }.
 var _doors: Array[Dictionary] = []
@@ -33,9 +36,12 @@ func _ready() -> void:
 	GameMode.wall_mode_changed.connect(_on_view_changed)
 
 
-## `characters` : la liste (partagée) des personnages, pour ouvrir les portes.
-func render(lot: Lot, characters: Array = []) -> void:
+## `characters` : la liste (partagée) des personnages, pour ouvrir les portes ;
+## `level` : le niveau à dessiner.
+func render(lot: Lot, characters: Array = [], level := 0) -> void:
 	_lot = lot
+	_level_index = level
+	_data = lot.level(level)
 	_characters = characters
 	_rebuild()
 
@@ -49,33 +55,34 @@ func _rebuild() -> void:
 	for child in get_children():
 		child.queue_free()
 	_doors.clear()
-	_interior = _lot.interior_cells()
+	_interior = _lot.interior_cells(_level_index)
 	var nodes: Dictionary = {}
-	for edge: Vector3i in _lot.walls:
+	for edge: Vector3i in _data.walls:
 		_add_segment(edge)
 		nodes[Vector2i(edge.x, edge.y)] = true
 		nodes[Vector2i(edge.x, edge.y) + (Vector2i.RIGHT if edge.z == Edges.HORIZONTAL else Vector2i.DOWN)] = true
 	for node: Vector2i in nodes:
 		_add_pole(node)
-	for opening in _lot.openings:
+	for opening in _data.openings:
 		if not opening.definition.on_fence:
 			_add_opening(opening)
-	for edge: Vector3i in _lot.fences:
-		_add_fence(edge)
+	if _level_index == 0:
+		for edge: Vector3i in _lot.fences:
+			_add_fence(edge)
 
 
 # --- Morceaux -----------------------------------------------------------------------
 
 func _add_segment(edge: Vector3i) -> void:
-	var style: StringName = _lot.walls[edge].style.id
+	var style: StringName = _data.walls[edge].style.id
 	var cs := float(_lot.cell_size)
 	var point := Vector2(edge.x, edge.y) * cs
 	if edge.z == Edges.HORIZONTAL:
 		var inside := _interior.has(Vector2i(edge.x, edge.y))
 		var name_ := "mur_%s_%s_h_%s" % [style, _level(_is_full(edge)), "int" if inside else "ext"]
 		var sprite := _add_sprite(name_, WALL_PATH, Vector2(point.x + HALF, point.y + HALF))
-		if inside and sprite != null and _lot.wallpapers.has(edge):
-			_add_wallpaper(_lot.wallpapers[edge].definition, point, sprite.texture.get_height())
+		if inside and sprite != null and _data.wallpapers.has(edge):
+			_add_wallpaper(_data.wallpapers[edge].definition, point, sprite.texture.get_height())
 	else:
 		var name_ := "mur_%s_%s_v" % [style, _level(_is_full(edge))]
 		_add_sprite(name_, WALL_PATH, Vector2(point.x - HALF, point.y + cs - HALF))
@@ -107,12 +114,12 @@ func _add_pole(node: Vector2i) -> void:
 	var full := false
 	for letter in ["e", "o", "n", "s"]:
 		var edge: Vector3i = around[letter]
-		if _lot.walls.has(edge):
+		if _data.walls.has(edge):
 			if style == &"":
-				style = _lot.walls[edge].style.id
+				style = _data.walls[edge].style.id
 			full = full or _is_full(edge)
 	for letter in ["n", "e", "s", "o"]:
-		if _lot.walls.has(around[letter]):
+		if _data.walls.has(around[letter]):
 			mask += letter
 	if mask == "":
 		return
@@ -133,7 +140,7 @@ func _add_fence(edge: Vector3i) -> void:
 	piece.length = cs
 	var point := Vector2(edge.x, edge.y) * cs
 	piece.position = point + (Vector2(0, 1) if piece.horizontal else Vector2(0, cs))
-	var opening := _lot.opening_at(edge)
+	var opening := _lot.opening_at(edge, _level_index)
 	if opening != null and opening.definition.on_fence:
 		piece.gate = true
 		_doors.append({"piece": piece, "cells": Edges.sides(edge), "open": false})
@@ -212,7 +219,7 @@ func _process(_delta: float) -> void:
 		return
 	var occupied := {}
 	for character in _characters:
-		if is_instance_valid(character):
+		if is_instance_valid(character) and character.level == _level_index:
 			occupied[Vector2i((character.standing_position() / float(_lot.cell_size)).floor())] = true
 	for door in _doors:
 		var open := false

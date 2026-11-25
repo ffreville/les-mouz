@@ -13,6 +13,7 @@ var _selected: Character
 @onready var needs_panel: NeedsPanel = %NeedsPanel
 var skills_panel := SkillsPanel.new()
 var bills_button := BillsButton.new()
+var level_selector := LevelSelector.new()
 @onready var relationship_panel: RelationshipPanel = %RelationshipPanel
 @onready var queue_panel: ActionQueuePanel = %ActionQueuePanel
 @onready var queue_help: Label = %QueueHelp
@@ -42,6 +43,10 @@ func _ready() -> void:
 	_on_mode_changed(GameMode.mode)
 	_setup_game_menu()
 	_setup_skills_tab()
+	# Étage regardé, juste après les onglets Vivre / Construire / Acheter.
+	var tabs := root.get_node("TopBar/Row/ModeTabs")
+	tabs.get_parent().add_child(level_selector)
+	tabs.get_parent().move_child(level_selector, tabs.get_index() + 1)
 	# Factures, juste avant l'argent dans la barre du haut.
 	var funds := root.get_node("TopBar/Row/FundsDisplay")
 	funds.get_parent().add_child(bills_button)
@@ -61,6 +66,7 @@ func _on_character_selected(character: Node) -> void:
 	if build_panel.editor == null:
 		build_panel.setup(character.world.editor)
 		bills_button.setup(character.world.bills)
+		level_selector.setup(character.world)
 		pause_menu.setup(character.world)
 	if _selected != null:
 		_selected.brain.enabled_changed.disconnect(_on_brain_enabled_changed)

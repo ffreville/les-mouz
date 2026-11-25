@@ -95,6 +95,11 @@ signal job_board_requested(character: Node, source: StringName)
 ## Un Mouz rentre du travail et touche son salaire.
 @warning_ignore("unused_signal")
 signal salary_paid(character: Node, amount: int)
+## Le niveau regardé change ; un Mouz change de niveau (escalier).
+@warning_ignore("unused_signal")
+signal view_level_changed(level: int)
+@warning_ignore("unused_signal")
+signal character_level_changed(character: Node, level: int)
 ## Un objet tombe en panne / est réparé.
 @warning_ignore("unused_signal")
 signal object_broke(smart_object: Node)

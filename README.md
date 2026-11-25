@@ -108,6 +108,7 @@ Un ordre du joueur remplace toujours les actions choisies par l'autonomie.
 | Gomme | Glisser pour remettre de l'herbe (revêtement revendu) |
 | Papier | Clic dans une pièce fermée : le papier peint choisi habille la face visible de ses murs (le mur du haut de chaque case, vue trois quarts) ; « Retirer » le revend. Les portes séparent les pièces. Démolir un mur revend aussi son papier |
 | Déplacer | Clic sur un objet pour le reprendre, puis le reposer |
+| ▼ RDC ▲ (barre du haut) ou Page bas / Page haut | Change d'étage : on construit et on achète à l'étage regardé (voir « Les étages ») |
 | Annuler (ou Ctrl+Z) | Annule la dernière opération, argent compris |
 
 Échap ou clic droit annule le geste en cours. L'étiquette près du pointeur affiche le coût, et ce qui manque si l'argent ne suffit pas.
@@ -404,6 +405,17 @@ Les familles du quartier se rendent visite.
 
 Les relations avec les voisins sont gardées dans le quartier (`"relationships"` de la sauvegarde, une valeur par paire de Mouz) : on retrouve ses amis d'une visite à l'autre, et quand on joue l'autre famille. Deux membres d'une même famille venus ensemble gardent leur relation de famille. Les visiteurs ne sont pas sauvegardés : une partie rechargée repart sans eux. Réglages : `scripts/neighborhood/visits.gd`.
 
+## Les étages
+
+Une maison peut avoir **deux étages** au-dessus du rez-de-chaussée.
+
+- **Regarder un étage** : le sélecteur ▼ RDC ▲ de la barre du haut, ou Page haut / Page bas. L'étage regardé est dessiné normalement ; ceux du dessous restent visibles, voilés, là où il n'a pas de sol ; ceux du dessus sont cachés. En mode Vivre, la vue suit le Mouz contrôlé quand il change d'étage.
+- **Construire à l'étage** : un sol d'étage se pose au-dessus d'une **pièce fermée** de l'étage du dessous (en mode Construire, ces cases sont teintées ; le vide est hachuré). L'outil Pièce y marche aussi. Murs, portes, fenêtres et papier peint se posent au bord du plancher ; les objets, sur le plancher. Les clôtures restent au jardin (rez-de-chaussée).
+- **L'escalier** (catalogue, catégorie Construction, 900 Mz) : 1 × 3 cases, il monte d'un étage. On le pose à l'étage du bas, la marche du bas du côté de sa face avant ; il faut un plancher à l'étage, au bout de la dernière marche. Les cases au-dessus des marches deviennent la cage d'escalier (pas de sol, on voit l'escalier en dessous).
+- **Les Mouz** prennent l'escalier tout seuls quand ce qu'ils vont faire est à un autre étage (ordres du joueur, autonomie, visiteurs, départ au travail) ; ils changent d'étage à mi-hauteur.
+
+Les escaliers et le bord des planchers sont dessinés provisoirement ; leurs vrais dessins sont demandés à Claude Design (`docs/brief-claude-design-7.md`). Côté code : `Levels` (cases de navigation, un décalage de `Levels.STRIDE` lignes par étage), `LotLevel` (les données d'un niveau), `GridNavigation` (un seul graphe pour tous les niveaux, relié par les escaliers).
+
 ## Gagner de l'argent à la maison
 
 Sans métier, ou en plus, un Mouz peut travailler chez lui. Ces activités se lancent depuis l'objet et rapportent à la fin, selon son niveau dans la compétence de l'activité. Le menu de l'objet affiche ce qu'elles rapporteront (« Peindre un tableau à vendre · 92 Mz »).
@@ -526,6 +538,8 @@ Le jeu passe progressivement en vue trois quarts (brief n° 6, livré par lots ;
 - Les Mouz peuvent se traverser : ils ne bloquent pas la navigation.
 - Deux Mouz peuvent viser le même objet. Le premier arrivé le réserve, et l'action du second est annulée ; son autonomie choisit alors autre chose.
 - La file d'actions des Mouz n'est pas sauvegardée : au chargement, ils repartent les mains vides (l'autonomie reprend vite la main).
+- Rien n'empêche de démolir les murs du dessous d'un étage, ni de revendre l'escalier quand un Mouz est en haut : l'étage reste en l'air, et le Mouz y reste jusqu'à ce qu'on repose un escalier.
+- Les étages sont dessinés au même endroit que le rez-de-chaussée (pas de décalage en hauteur) ; un Mouz dans l'escalier ne s'élève pas à l'écran.
 - Au travail, un Mouz est simplement absent : on ne le voit pas travailler. Une mauvaise performance fait redescendre d'un grade, jamais renvoyer.
 
 ## Crédits

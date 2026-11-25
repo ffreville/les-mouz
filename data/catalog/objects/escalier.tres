@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="SmartObjectDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/smart_object_definition.gd" id="1_object"]
+[ext_resource type="Texture2D" path="res://assets/sprites/escalier_nature.svg" id="2_nature"]
+[ext_resource type="Texture2D" path="res://assets/sprites/escalier_retro.svg" id="3_retro"]
+[ext_resource type="Texture2D" path="res://assets/sprites/escalier_moderne.svg" id="4_moderne"]
+
+[resource]
+script = ExtResource("1_object")
+id = &"escalier"
+display_name = "Escalier"
+sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("2_nature"), &"retro": ExtResource("3_retro"), &"moderne": ExtResource("4_moderne")})
+size = Vector2i(1, 3)
+blocks_movement = true
+price = 900
+category = &"construire"
+is_stairs = true

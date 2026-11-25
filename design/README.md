@@ -1159,3 +1159,76 @@ Elles passent à la vue bas : 150 fichiers `svg/vignettes/<clé>_<collection>.sv
 ### Planche finale
 
 Une maison par collection, sur 22 × 15 cases : salon, cuisine, chambre des parents, chambre des enfants, salle de bain et jardin. Le mur du fond est plein, les autres sont baissés. La famille de 4 est installée avec les règles ci-dessus : Léa sur le canapé, Samir à table, Théo à l'ordinateur, Nina dans son lit. Les lampes, la télé, la cuisinière et l'ordinateur sont allumés.
+
+## Brief n° 7 · Les étages et l'escalier
+
+Planche : « Brief 7 · Étages et escalier » sur le canvas. Planche de contrôle : `apercu_etages.png`. On y voit une maison Nature sur deux niveaux, avec salon et cuisine en bas, deux chambres et une salle de bain en haut, et l'escalier dans l'entrée. Elle est vue au rez-de-chaussée (Léa dans l'escalier), au 1er étage, puis au 1er étage en mode Construire. Chaque vue a sa barre du haut avec le sélecteur d'étage.
+
+Toutes les mesures sont dans `tokens.json` › `etages`.
+
+### 1. L'escalier droit
+
+- **Forme** : emprise 1 × 3 cases. 8 marches de 12 px de profondeur (giron) et 8 px de haut : il monte de 64 px, la hauteur d'un mur plein. La face avant est la marche du bas. Le dessous est fermé : chaque marche est un bloc plein jusqu'au fond.
+- **Rampe** : du côté gauche de l'escalier. C'est le côté vu de face en vue `gauche`, ce qui permet de livrer `droite` en miroir. La main courante passe à 20 px au-dessus du nez des marches.
+- **Collections** : Nature (bois clair, contremarches lin, balustres bois), Rétro (teck, tapis d'escalier orange avec barres laiton, balustres laiton), Moderne (marches gris clair et contremarches noires, rampe à câbles métal).
+- **Fichiers** : `escalier_<collection>_<bas|haut|gauche>.svg` dans `svg/sprites/` (`droite` = miroir de `gauche`), et `svg/vignettes/escalier_<collection>.svg` (104 × 72).
+- **Tailles** : bas et haut 32 × 182, gauche 96 × 118 (hauteur 86 avec la rampe). L'ancrage est en bas de l'emprise, comme les autres objets.
+- **Vue haut** : le dos de l'escalier est un seul panneau plein. Au-dessus, on voit la rampe et les marches qui s'éloignent.
+
+**Ligne des marches** (`ligne_marches`, en px dans l'image, pour chaque vue) : `depart` (au sol, devant la première marche), `marches` (8 points, le milieu de chaque marche, là où se posent les pieds) et `arrivee` (sur l'étage, derrière la dernière marche). Le point d'ancrage du Mouz (16, 48) suit ces points. Exemple, vue `bas` en Nature : départ [16, 190], 1re marche [16, 168.0], 8e [16, 28.0], arrivée [16, 14].
+
+**Ce qui passe devant le Mouz** (24 calques) :
+- vue `bas` : rien, le Mouz est toujours devant ;
+- vue `haut` : on regarde l'escalier de dos, donc les marches au-dessus du Mouz sont plus près de la caméra. `escalier_<collection>_haut_devant_<n>.svg` contient les marches au-dessus de la marche `n` (de 1 à 7). On dessine escalier → Mouz → calque ;
+- vue `gauche` : la rampe passe devant (`escalier_<collection>_gauche_devant.svg`) ; en `droite`, le même calque retourné.
+
+### 2. Le bord d'un étage
+
+Toutes ces pièces se dessinent **dans la case vide**, à côté de la case de sol, jamais sur le sol. (X, Y) est le coin haut-gauche de la case de sol, en pixels. Teinte unique, qui va avec les 11 sols : tranche `#CDBEA9`, bande vue de dessus `#E3D7C6`, arête éclairée `#F1E8DA`, contour `#3D3357`. Fichiers dans `svg/murs/`.
+
+| Pièce | Taille | Position | Quand |
+|---|---|---|---|
+| `dalle_bord_s` | 32 × 8 | (X, Y + 32) | sous la case de sol, si la case au sud est vide |
+| `dalle_bord_n` | 32 × 2 | (X, Y − 1) | sur l'arête nord de la case de sol, si la case au nord est vide |
+| `dalle_bord_o` | 8 × 32 | (X − 8, Y) | à gauche de la case de sol, si la case à l'ouest est vide |
+| `dalle_bord_e` | 8 × 32 | (X + 32, Y) | à droite de la case de sol, si la case à l'est est vide |
+| `dalle_angle_sortant_so` | 8 × 8 | (X − 8, Y + 32) | coin sud-ouest d'un sol : vide au sud, à l'ouest et au sud-ouest |
+| `dalle_angle_sortant_se` | 8 × 8 | (X + 32, Y + 32) | coin sud-est d'un sol : vide au sud, à l'est et au sud-est |
+| `dalle_angle_rentrant_no` | 8 × 8 | (X, Y) | case VIDE avec du sol au nord et à l'ouest |
+| `dalle_angle_rentrant_ne` | 8 × 8 | (X + 24, Y) | case VIDE avec du sol au nord et à l'est |
+| `dalle_ombre_s` | 32 × 10 | (X + 3, Y + 40) | sur l'étage du dessous, sous chaque bord sud |
+| `dalle_ombre_e` | 6 × 32 | (X + 40, Y + 3) | sur l'étage du dessous, à droite de chaque bord est |
+
+- **Ordre** : les ombres juste après le voile de l'étage du dessous, puis le sol de l'étage, puis les bords, puis les murs et objets de l'étage.
+- **Ombre portée** : `#2B2440` à 12 %, découpée, décalée de 3 px comme les autres ombres. Elle tombe au sud et à l'est, la lumière venant d'en haut à gauche.
+
+**Garde-corps** : je le propose, dans les 3 collections (`svg/murs/garde_corps_<collection>_<h|v|poteau>.svg`). Bois (Nature), laiton et teck (Rétro), verre et métal (Moderne). Il fait 22 px de haut et se pose sur la ligne du bord, comme un mur. Le jeu le place automatiquement autour de la cage d'escalier, sauf du côté de l'arrivée, et au bord des trous. Pas de garde-corps là où il y a déjà un mur.
+
+| Pièce | Taille | Position (nœud X, Y) | Tri |
+|---|---|---|---|
+| `garde_corps_<collection>_h` | 32 × 26 | (X, Y − 2 − 22) | Y + 2 |
+| `garde_corps_<collection>_v` | 4 × 54 | (X − 2, Y − 22) | Y + 32 |
+| `garde_corps_<collection>_poteau` | 6 × 30 | (X − 3, Y − 3 − 24) | Y + 3 |
+
+**Le vide en mode Construire** (`svg/sols/`, 32 × 32, par-dessus l'étage du dessous assombri) :
+- `vide_constructible.svg` : au-dessus d'une pièce fermée, sans sol encore. Vert doux à 60 %, pointillé vert, petit « + ».
+- `vide_interdit.svg` : partout ailleurs (jardin, cage d'escalier). Hachures légères à 22 % sur un voile à 10 %.
+
+### 3. Les Mouz dans l'escalier
+
+- **De profil** (escalier vu en `gauche` ou `droite`) : nouvelles images. Deux pour monter (pied avant sur la marche du dessus, puis passage), deux pour descendre (pied avant qui descend, puis passage). Les fichiers sont `corps_<sexe>_<âge>_<tenue>_gauche_<monter|descendre>_<1|2>_<calque>.svg` (352 calques, même découpage qu'au lot 2), avec `droite` en miroir. La tête et les cheveux gardent leurs fichiers : `tete_dy` vaut 0 pour l'image 1 et −1 pour l'image 2.
+- **De face et de dos** (escalier vu en `bas` ou `haut`) : **les images de marche du lot 2 suffisent**. Une marche de face monte de 20 px à l'écran (12 de profondeur + 8 de hauteur), et le pas se voit à peine à cette échelle. Le Mouz saute d'un point de `ligne_marches` au suivant, en alternant `_marche_1` et `_marche_2`. En vue `bas`, il monte en direction `haut` (on voit son dos) et descend en direction `bas`. C'est l'inverse en vue `haut`.
+- **Pas d'ombre** dans l'escalier : l'ombre au sol n'a pas de sens sur des marches.
+- **Étage regardé** : un Mouz dans l'escalier fait partie de l'étage du bas jusqu'à la dernière marche. Au 1er étage, on le voit donc assombri dans la cage d'escalier.
+
+### 4. L'interface
+
+- **Sélecteur d'étage** : dans la barre du haut, juste après les onglets Vivre / Construire / Acheter. C'est une pastille `papier_2` de 44 px de haut, avec le bouton descendre, le nom de l'étage (Baloo 2, 17 px, 800) et le bouton monter. Trois points empilés montrent l'étage regardé parmi les trois. Les boutons font 32 × 32, rayon 9 :
+  - normal : transparent ;
+  - survol : blanc, anneau `accent` 2 px ;
+  - pressé : fond `contour`, icône `papier` ;
+  - désactivé : opacité 35 % (descendre au rez-de-chaussée, monter au 2e).
+- **Version compacte** : la même pastille avec seulement « RDC », « 1er » ou « 2e » (18 px) entre les deux boutons.
+- **Icônes** : `etage_monter`, `etage_descendre` et `escalier`, en encre et en blanc, dans `svg/icones/`.
+- **Voile des étages du dessous** : uni, `#2B2440`, sans flou ni désaturation. 45 % pour l'étage juste en dessous, 60 % pour deux étages plus bas (au 2e étage, le rez-de-chaussée). Il couvre tout l'étage du dessous ; l'étage regardé se dessine ensuite par-dessus.
+- **Repère d'étage sur les portraits** : une pastille `contour` de 18 px de haut, avec le texte `papier` 11 px 800 (« RDC », « 1er », « 2e »). Elle se pose à −6, −6 du coin haut-gauche du portrait, avec un liseré `papier` de 2 px. Elle s'affiche seulement quand le Mouz n'est pas à l'étage regardé. Pour un Mouz dans l'escalier, elle s'affiche toujours, avec la petite icône escalier et l'étage vers lequel il va.

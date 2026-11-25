@@ -217,7 +217,7 @@ func _draw_line_preview(cs: float) -> void:
 	for edge in Edges.line(_drag_start, _hover_point):
 		var rect := Edges.to_rect(edge, cs, Palette.EPAISSEUR_MUR, Palette.EPAISSEUR_MUR / 2)
 		if tool == &"demolish":
-			if editor.lot.has_wall(edge) or editor.lot.fences.has(edge):
+			if editor.lot.has_wall(edge, editor.level_index) or editor.level_index == 0 and editor.lot.fences.has(edge):
 				draw_rect(rect, Color(Palette.CRITIQUE, PREVIEW_ALPHA))
 			continue
 		var allowed := editor.can_hold_fence(edge) if tool == &"fence" else editor.can_hold_wall(edge)

@@ -23,6 +23,7 @@ static func household_data(world: World) -> Dictionary:
 		characters.append({
 			"profile": String(character.profile.id),
 			"position": [character.standing_position().x, character.standing_position().y],
+			"level": character.level,
 			"needs": character.needs.snapshot(),
 			"relationships": relationships,
 			"autonomy": character.brain.enabled,
@@ -52,8 +53,10 @@ static func apply_to_world(world: World, data: Dictionary) -> void:
 			continue
 		var position: Array = entry.get("position", [])
 		if position.size() == 2:
-			var cell := world.navigation.world_to_cell(Vector2(position[0], position[1]))
-			character.position = world.navigation.cell_to_world(world.navigation.nearest_walkable(cell))
+			var level := clampi(int(entry.get("level", 0)), 0, Levels.COUNT - 1)
+			var cell := world.navigation.nearest_walkable(world.navigation.world_to_cell(Vector2(position[0], position[1]), level))
+			character.set_level(Levels.level_of(cell))
+			character.position = world.navigation.cell_to_world(cell)
 		character.needs.restore(entry.get("needs", {}))
 		character.brain.enabled = bool(entry.get("autonomy", true))
 		character.job.restore(entry.get("job", {}))

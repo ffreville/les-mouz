@@ -19,6 +19,7 @@ const CATEGORIES := [
 	[&"loisirs", "Loisirs"],
 	[&"jardin", "Jardin"],
 	[&"deco", "Déco"],
+	[&"construire", "Construction"],
 ]
 
 static var _cache: Dictionary[String, Array] = {}
