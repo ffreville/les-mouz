@@ -5,6 +5,7 @@ extends RefCounted
 const FLOORS := "res://data/catalog/floors"
 const WALLS := "res://data/catalog/walls"
 const OPENINGS := "res://data/catalog/openings"
+const WALLPAPERS := "res://data/catalog/wallpapers"
 const OBJECTS := "res://data/catalog/objects"
 const COLLECTIONS := "res://data/catalog/collections"
 
@@ -60,6 +61,6 @@ static func _price(item: Resource) -> int:
 		return item.order
 	if item is FloorDefinition:
 		return item.price_per_cell
-	if item is WallStyleDefinition:
+	if item is WallStyleDefinition or item is WallpaperDefinition:
 		return item.price_per_segment
 	return item.price

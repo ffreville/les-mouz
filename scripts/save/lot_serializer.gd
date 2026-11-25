@@ -21,6 +21,10 @@ static func to_data(lot: Lot) -> Dictionary:
 			"edge": _edge(opening.edge), "opening": String(opening.definition.id),
 			"swing_positive": opening.swing_positive, "hinge_flipped": opening.hinge_flipped,
 		}.merged(_purchase(opening)))
+	var wallpapers: Array = []
+	for edge in lot.wallpapers:
+		var paper: PlacedWallpaper = lot.wallpapers[edge]
+		wallpapers.append({"edge": _edge(edge), "wallpaper": String(paper.definition.id)}.merged(_purchase(paper)))
 	var objects: Array = []
 	for placed in lot.objects:
 		objects.append({
@@ -30,7 +34,7 @@ static func to_data(lot: Lot) -> Dictionary:
 	return {
 		"size": _cell(lot.size),
 		"default_floor": String(lot.default_floor.id) if lot.default_floor != null else "",
-		"walls": walls, "floors": floors, "openings": openings, "objects": objects,
+		"walls": walls, "floors": floors, "openings": openings, "wallpapers": wallpapers, "objects": objects,
 		"spawn_cells": lot.spawn_cells.map(_cell),
 	}
 
@@ -63,6 +67,13 @@ static func from_data(data: Dictionary) -> Lot:
 			opening.hinge_flipped = bool(entry.get("hinge_flipped", false))
 			_restore_purchase(opening, entry)
 			lot.openings.append(opening)
+	for entry in data.get("wallpapers", []):
+		var paper_definition := Catalog.find(Catalog.WALLPAPERS, StringName(entry.get("wallpaper", ""))) as WallpaperDefinition
+		if _known(paper_definition, entry, "wallpaper"):
+			var paper := PlacedWallpaper.new()
+			paper.definition = paper_definition
+			_restore_purchase(paper, entry)
+			lot.wallpapers[_to_edge(entry["edge"])] = paper
 	for entry in data.get("objects", []):
 		var definition := Catalog.find(Catalog.OBJECTS, StringName(entry.get("object", ""))) as SmartObjectDefinition
 		if _known(definition, entry, "object"):

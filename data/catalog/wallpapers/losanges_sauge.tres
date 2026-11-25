@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WallpaperDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/wallpaper_definition.gd" id="1_paper"]
+
+[resource]
+script = ExtResource("1_paper")
+id = &"losanges_sauge"
+display_name = "Losanges sauge"
+color = Color(0.8863, 0.9294, 0.8745, 1)
+pattern = &"losanges"
+pattern_color = Color(0.5765, 0.7098, 0.5412, 1)
+price_per_segment = 25

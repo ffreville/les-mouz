@@ -5,7 +5,8 @@ extends Node2D
 ##  - mur / démolir : glisser le long de la grille ;
 ##  - porte / fenêtre : cliquer sur un mur (R inverse la charnière d'une porte) ;
 ##  - sol / gomme : glisser pour couvrir un rectangle de cases ;
-##  - pièce : glisser un rectangle : murs sur le pourtour et sol dedans.
+##  - pièce : glisser un rectangle : murs sur le pourtour et sol dedans ;
+##  - papier peint : cliquer dans une pièce fermée.
 
 const HANDLE_RADIUS := 7.0
 const PREVIEW_ALPHA := 0.45
@@ -84,6 +85,9 @@ func _on_left_button(pressed: bool) -> void:
 	if tool in OPENING_TOOLS:
 		if pressed and option is OpeningDefinition:
 			editor.place_opening(_hover_edge, option, _swing_positive, _hinge_flipped)
+	elif tool == &"wallpaper":
+		if pressed and option is WallpaperDefinition:
+			editor.apply_wallpaper(_hover_cell, option)
 	elif tool in LINE_TOOLS or tool in AREA_TOOLS:
 		if pressed:
 			_drag_start = _hover_point if tool in LINE_TOOLS else _hover_cell
@@ -143,6 +147,11 @@ func _update_preview() -> void:
 	if tool in OPENING_TOOLS and option is OpeningDefinition:
 		text = option.display_name
 		cost = option.price
+	elif tool == &"wallpaper" and option is WallpaperDefinition:
+		var quote := editor.quote_wallpaper(_hover_cell, option)
+		text = (("Retirer · " if option.id == LotEditor.NO_WALLPAPER else "") + _count(quote["edges"].size(), "pan")) \
+				if quote["valid"] else quote["reason"]
+		cost = quote["cost"]
 	elif _dragging:
 		match tool:
 			&"wall":
@@ -188,6 +197,8 @@ func _draw() -> void:
 		_draw_area_preview(cs)
 	elif tool in OPENING_TOOLS and option is OpeningDefinition:
 		_draw_opening_preview(cs)
+	elif tool == &"wallpaper" and option is WallpaperDefinition:
+		_draw_wallpaper_preview(cs)
 
 
 func _draw_line_preview(cs: float) -> void:
@@ -239,6 +250,24 @@ func _draw_room_preview(rect: Rect2i, cs: float) -> void:
 		var wall_rect := Edges.to_rect(edge, cs, Palette.EPAISSEUR_MUR, Palette.EPAISSEUR_MUR / 2)
 		draw_rect(wall_rect, Color(option.wall.color if allowed else Palette.CRITIQUE, 0.7))
 	_draw_dashed_rect(Rect2(Vector2(rect.position) * cs, Vector2(rect.size) * cs).grow(Palette.EPAISSEUR_MUR / 2), Palette.ACCENT)
+
+
+## La pièce visée, et les murs qui recevront le papier peint.
+func _draw_wallpaper_preview(cs: float) -> void:
+	var quote := editor.quote_wallpaper(_hover_cell, option)
+	var room: Array[Vector2i] = quote["room"]
+	if room.is_empty():
+		draw_rect(Rect2(Vector2(_hover_cell) * cs, Vector2(cs, cs)), Color(Palette.CRITIQUE, 0.18))
+		return
+	for cell in room:
+		draw_rect(Rect2(Vector2(cell) * cs, Vector2(cs, cs)), Color(Palette.ACCENT, 0.12))
+	for edge in quote["edges"]:
+		var rect := Edges.to_rect(edge, cs, Palette.EPAISSEUR_MUR + 6)
+		if option.id == LotEditor.NO_WALLPAPER:
+			draw_rect(rect, Color(Palette.CRITIQUE, 0.5))
+		else:
+			option.draw(self, rect)
+		_draw_dashed_rect(rect, Palette.ACCENT)
 
 
 func _draw_opening_preview(cs: float) -> void:

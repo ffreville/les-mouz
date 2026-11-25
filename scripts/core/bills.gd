@@ -48,6 +48,8 @@ func house_value() -> int:
 		total += floor_piece.price
 	for opening in world.lot.openings:
 		total += opening.price
+	for paper in world.lot.wallpapers.values():
+		total += paper.price
 	for placed in world.lot.objects:
 		total += placed.price
 	return total

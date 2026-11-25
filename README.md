@@ -105,6 +105,7 @@ Un ordre du joueur remplace toujours les actions choisies par l'autonomie.
 | Porte, Fenêtre | Clic sur un mur. Le battant s'ouvre du côté du pointeur ; **R** inverse la charnière |
 | Sol | Glisser pour peindre un rectangle ; l'ancien revêtement est revendu |
 | Gomme | Glisser pour remettre de l'herbe (revêtement revendu) |
+| Papier | Clic dans une pièce fermée : le papier peint choisi habille la face visible de ses murs (le mur du haut de chaque case, vue trois quarts) ; « Retirer » le revend. Les portes séparent les pièces. Démolir un mur revend aussi son papier |
 | Déplacer | Clic sur un objet pour le reprendre, puis le reposer |
 | Annuler (ou Ctrl+Z) | Annule la dernière opération, argent compris |
 
@@ -255,6 +256,7 @@ C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catal
 | Vitesse de baisse d'un besoin, poids dans l'humeur, seuil critique, valeur de départ | `data/needs/*.tres` (`decay_per_hour`, `mood_weight`, `critical_threshold`, `start_value`) |
 | Durée et gains d'une action | `data/actions/*.tres` (`duration_minutes`, `need_gains`, `relationship_gain`) |
 | Coût des repas (courses) | `data/actions/*.tres` (`cost`) |
+| Papiers peints (couleur, motif, prix par pan) | `data/catalog/wallpapers/*.tres` (`pattern` : uni, rayures, pois, losanges, carreaux) |
 | Recette du travail à la maison | `data/actions/*.tres` (`earning_base`, `earning_per_level`) |
 | Nombre d'utilisateurs simultanés d'un objet | `data/catalog/objects/*.tres` (`capacity`) |
 | Bonus des activités partagées, distance d'un objet voisin | `data/actions/*.tres` (`shared_need_gains`, `shared_relationship_gain`, `nearby_radius`) |

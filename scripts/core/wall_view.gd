@@ -12,6 +12,11 @@ const OPENING_PATH := "res://assets/ouvertures/%s.svg"
 const HALF := 4.0
 ## Les ouvertures sont triées juste après le mur qu'elles recouvrent.
 const OPENING_SORT_SHIFT := 0.5
+## Le papier peint passe juste après le mur et ses poteaux, avant les ouvertures.
+const WALLPAPER_SORT_SHIFT := 0.2
+## Face visible d'un segment horizontal : sous le chaperon, au-dessus de la plinthe.
+const FACE_TOP := 9.0
+const FACE_BOTTOM := 6.0
 
 static var _textures: Dictionary = {}
 
@@ -44,7 +49,7 @@ func _rebuild() -> void:
 	for child in get_children():
 		child.queue_free()
 	_doors.clear()
-	_interior = _find_interior()
+	_interior = _lot.interior_cells()
 	var nodes: Dictionary = {}
 	for edge: Vector3i in _lot.walls:
 		_add_segment(edge)
@@ -63,12 +68,27 @@ func _add_segment(edge: Vector3i) -> void:
 	var cs := float(_lot.cell_size)
 	var point := Vector2(edge.x, edge.y) * cs
 	if edge.z == Edges.HORIZONTAL:
-		var face := "int" if _interior.has(Vector2i(edge.x, edge.y)) else "ext"
-		var name_ := "mur_%s_%s_h_%s" % [style, _level(_is_full(edge)), face]
-		_add_sprite(name_, WALL_PATH, Vector2(point.x + HALF, point.y + HALF))
+		var inside := _interior.has(Vector2i(edge.x, edge.y))
+		var name_ := "mur_%s_%s_h_%s" % [style, _level(_is_full(edge)), "int" if inside else "ext"]
+		var sprite := _add_sprite(name_, WALL_PATH, Vector2(point.x + HALF, point.y + HALF))
+		if inside and sprite != null and _lot.wallpapers.has(edge):
+			_add_wallpaper(_lot.wallpapers[edge].definition, point, sprite.texture.get_height())
 	else:
 		var name_ := "mur_%s_%s_v" % [style, _level(_is_full(edge))]
 		_add_sprite(name_, WALL_PATH, Vector2(point.x - HALF, point.y + cs - HALF))
+
+
+## Papier peint sur la face visible du segment (entre le chaperon et la plinthe), qui déborde
+## d'un demi-poteau de chaque côté pour que les segments voisins se raccordent.
+func _add_wallpaper(definition: WallpaperDefinition, point: Vector2, height: float) -> void:
+	var patch := WallpaperPatch.new()
+	patch.definition = definition
+	patch.width = float(_lot.cell_size)
+	patch.height = height - FACE_TOP - FACE_BOTTOM
+	patch.top = -height + FACE_TOP
+	patch.position = Vector2(point.x, point.y + HALF + WALLPAPER_SORT_SHIFT)
+	patch.top -= WALLPAPER_SORT_SHIFT
+	add_child(patch)
 
 
 ## Poteau à un nœud de la grille : sa forme dépend des murs qui en partent.
@@ -164,30 +184,6 @@ func _is_full(edge: Vector3i) -> bool:
 	if edge.z == Edges.VERTICAL:
 		return true
 	return not _interior.has(Vector2i(edge.x, edge.y - 1))
-
-
-## Cases enfermées par des murs : celles qu'on ne peut pas atteindre depuis l'extérieur
-## du terrain sans traverser un mur (une porte compte comme un mur ici).
-func _find_interior() -> Dictionary:
-	var size := _lot.size
-	var outside := {Vector2i(-1, -1): true}
-	var todo: Array[Vector2i] = [Vector2i(-1, -1)]
-	while not todo.is_empty():
-		var cell: Vector2i = todo.pop_back()
-		for step in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
-			var next: Vector2i = cell + step
-			if next.x < -1 or next.y < -1 or next.x > size.x or next.y > size.y or outside.has(next):
-				continue
-			if _lot.walls.has(Edges.between(cell, next)):
-				continue
-			outside[next] = true
-			todo.append(next)
-	var inside := {}
-	for y in size.y:
-		for x in size.x:
-			if not outside.has(Vector2i(x, y)):
-				inside[Vector2i(x, y)] = true
-	return inside
 
 
 # --- Portes -------------------------------------------------------------------------

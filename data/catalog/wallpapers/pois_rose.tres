@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WallpaperDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/wallpaper_definition.gd" id="1_paper"]
+
+[resource]
+script = ExtResource("1_paper")
+id = &"pois_rose"
+display_name = "Pois rose"
+color = Color(0.9725, 0.8824, 0.8941, 1)
+pattern = &"pois"
+pattern_color = Color(0.8510, 0.5490, 0.6039, 1)
+price_per_segment = 22

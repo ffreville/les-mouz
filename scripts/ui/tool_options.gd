@@ -34,6 +34,10 @@ func show_for(tool: StringName) -> void:
 		&"room":
 			_show_room()
 			return
+		&"wallpaper":
+			columns = 2
+			items = [_no_wallpaper()]
+			items.append_array(Catalog.load_folder(Catalog.WALLPAPERS))
 		&"door", &"window":
 			columns = 2
 			var kind := OpeningDefinition.Kind.DOOR if tool == &"door" else OpeningDefinition.Kind.WINDOW
@@ -44,7 +48,9 @@ func show_for(tool: StringName) -> void:
 	var group := ButtonGroup.new()
 	for item in items:
 		var card: Button
-		if item is WallStyleDefinition:
+		if item is WallpaperDefinition:
+			card = _wallpaper_card(item)
+		elif item is WallStyleDefinition:
 			card = _wall_card(item)
 		elif item is FloorDefinition:
 			card = _floor_card(item)
@@ -142,6 +148,50 @@ func _floor_card(definition: FloorDefinition) -> Button:
 	column.add_child(price)
 	_fill(card, column)
 	card.tooltip_text = "%s · %s par case" % [definition.display_name, Palette.format_mz(definition.price_per_cell)]
+	return card
+
+
+## L'option « Retirer » du papier peint (revend celui de la pièce).
+static var _remove_paper: WallpaperDefinition
+
+
+static func _no_wallpaper() -> WallpaperDefinition:
+	if _remove_paper == null:
+		_remove_paper = WallpaperDefinition.new()
+		_remove_paper.id = LotEditor.NO_WALLPAPER
+		_remove_paper.display_name = "Retirer"
+		_remove_paper.price_per_segment = 0
+	return _remove_paper
+
+
+## Carte d'un papier peint : échantillon, nom et prix par pan de mur.
+func _wallpaper_card(definition: WallpaperDefinition) -> Button:
+	var card := _card(Vector2(113, 48))
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var swatch := Control.new()
+	swatch.custom_minimum_size = Vector2(22, 30)
+	swatch.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var paint := func() -> void:
+		if definition.id == LotEditor.NO_WALLPAPER:
+			swatch.draw_rect(Rect2(Vector2.ZERO, swatch.size), Palette.PAPIER_2)
+			swatch.draw_line(Vector2(3, 3), swatch.size - Vector2(3, 3), Palette.CRITIQUE, 2.0)
+		else:
+			definition.draw(swatch, Rect2(Vector2.ZERO, swatch.size))
+		swatch.draw_rect(Rect2(Vector2.ZERO, swatch.size), Palette.TRAIT, false, 1.0)
+	swatch.draw.connect(paint)
+	row.add_child(swatch)
+	if definition.id == LotEditor.NO_WALLPAPER:
+		var label := Label.new()
+		label.text = "Retirer"
+		label.theme_type_variation = &"StrongLabel"
+		label.add_theme_font_size_override("font_size", 12)
+		label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(label)
+	else:
+		row.add_child(_name_and_price(definition.display_name, definition.price_per_segment))
+	_fill(card, row)
+	card.tooltip_text = definition.display_name
 	return card
 
 

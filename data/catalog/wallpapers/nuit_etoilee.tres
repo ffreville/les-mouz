@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WallpaperDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/wallpaper_definition.gd" id="1_paper"]
+
+[resource]
+script = ExtResource("1_paper")
+id = &"nuit_etoilee"
+display_name = "Nuit étoilée"
+color = Color(0.2431, 0.2902, 0.4471, 1)
+pattern = &"pois"
+pattern_color = Color(0.9529, 0.8431, 0.4784, 1)
+price_per_segment = 30

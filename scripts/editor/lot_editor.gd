@@ -127,6 +127,8 @@ func quote_demolish(edges: Array[Vector3i]) -> Dictionary:
 			continue
 		walls.append(edge)
 		refund += Wallet.resale_value(lot.walls[edge])
+		if lot.wallpapers.has(edge):
+			refund += Wallet.resale_value(lot.wallpapers[edge])
 		var opening := lot.opening_at(edge)
 		if opening != null and opening not in openings:
 			openings.append(opening)
@@ -139,10 +141,14 @@ func demolish_walls(edges: Array[Vector3i]) -> bool:
 	if not quote["valid"]:
 		return false
 	var removed: Dictionary[Vector3i, PlacedWall] = {}
+	var papers: Dictionary[Vector3i, PlacedWallpaper] = {}
 	for edge in quote["edges"]:
 		removed[edge] = lot.walls[edge]
 		lot.walls.erase(edge)
 		EventBus.item_sold.emit(removed[edge], Wallet.resale_value(removed[edge]))
+		if lot.wallpapers.has(edge):
+			papers[edge] = lot.wallpapers[edge]
+			lot.wallpapers.erase(edge)
 	var openings: Array[PlacedOpening] = quote["openings"]
 	for opening in openings:
 		lot.openings.erase(opening)
@@ -151,6 +157,8 @@ func demolish_walls(edges: Array[Vector3i]) -> bool:
 	var revert := func() -> void:
 		for edge in removed:
 			lot.walls[edge] = removed[edge]
+		for edge in papers:
+			lot.wallpapers[edge] = papers[edge]
 		lot.openings.append_array(openings)
 	_commit(revert, quote["refund"])
 	return true
@@ -191,6 +199,64 @@ func place_opening(edge: Vector3i, definition: OpeningDefinition, swing_positive
 	lot.openings.append(opening)
 	EventBus.item_bought.emit(opening, opening.price)
 	_commit(func() -> void: lot.openings.erase(opening), -quote["cost"])
+	return true
+
+
+# --- Papier peint ---------------------------------------------------------------
+
+## Option « retirer le papier peint » de l'outil (identifiant réservé).
+const NO_WALLPAPER := &"retirer"
+
+
+## Devis pour tapisser la pièce qui contient `cell` (ou retirer son papier peint) :
+## segments concernés, coût net (l'ancien papier est revendu), validité et raison d'un refus.
+func quote_wallpaper(cell: Vector2i, definition: WallpaperDefinition) -> Dictionary:
+	var room := lot.room_cells(cell)
+	if room.is_empty():
+		return {"room": room, "edges": [], "cost": 0, "valid": false, "reason": "Clique dans une pièce fermée"}
+	var removing := definition.id == NO_WALLPAPER
+	var edges: Array[Vector3i] = []
+	var cost := 0
+	for edge in lot.room_wall_faces(room):
+		var current: PlacedWallpaper = lot.wallpapers.get(edge)
+		if removing and current == null or not removing and current != null and current.definition == definition:
+			continue
+		edges.append(edge)
+		if not removing:
+			cost += definition.price_per_segment
+		if current != null:
+			cost -= Wallet.resale_value(current)
+	var reason := "" if not edges.is_empty() else ("Pas de papier peint ici" if removing else "Déjà tapissée")
+	return {"room": room, "edges": edges, "cost": cost, "valid": not edges.is_empty(), "reason": reason}
+
+
+func apply_wallpaper(cell: Vector2i, definition: WallpaperDefinition) -> bool:
+	var quote := quote_wallpaper(cell, definition)
+	var cost: int = quote["cost"]
+	if not quote["valid"] or (cost > 0 and not Wallet.pay(cost)):
+		return false
+	if cost < 0:
+		Wallet.receive(-cost)
+	var previous: Dictionary = {}
+	for edge in quote["edges"]:
+		previous[edge] = lot.wallpapers.get(edge)
+		if previous[edge] != null:
+			EventBus.item_sold.emit(previous[edge], Wallet.resale_value(previous[edge]))
+		if definition.id == NO_WALLPAPER:
+			lot.wallpapers.erase(edge)
+			continue
+		var paper := PlacedWallpaper.new()
+		paper.definition = definition
+		Wallet.stamp(paper, definition.price_per_segment)
+		lot.wallpapers[edge] = paper
+		EventBus.item_bought.emit(paper, paper.price)
+	var revert := func() -> void:
+		for edge in previous:
+			if previous[edge] == null:
+				lot.wallpapers.erase(edge)
+			else:
+				lot.wallpapers[edge] = previous[edge]
+	_commit(revert, -cost)
 	return true
 
 

@@ -11,6 +11,7 @@ const TOOLS := [
 	[&"door", "Porte", "porte", "Clique sur un mur. Le battant s'ouvre du côté du pointeur ; R inverse la charnière."],
 	[&"window", "Fenêtre", "fenetre", "Clique sur un mur pour y poser la fenêtre."],
 	[&"floor", "Sol", "sol", "Glisse pour peindre un rectangle de sol."],
+	[&"wallpaper", "Papier", "peindre", "Clique dans une pièce fermée : ses murs prennent le papier peint choisi."],
 	[&"eraser", "Gomme", "gomme", "Glisse pour retirer le sol (l'herbe revient, le prix est rendu)."],
 	[&"move", "Déplacer", "deplacer", "Clique sur un objet pour le reprendre, puis repose-le."],
 	[&"undo", "Annuler", "annuler", "Annule la dernière opération (Ctrl+Z)."],
