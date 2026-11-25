@@ -409,12 +409,12 @@ Les relations avec les voisins sont gardées dans le quartier (`"relationships"`
 
 Une maison peut avoir **deux étages** au-dessus du rez-de-chaussée.
 
-- **Regarder un étage** : le sélecteur ▼ RDC ▲ de la barre du haut, ou Page haut / Page bas. L'étage regardé est dessiné normalement ; ceux du dessous restent visibles, voilés, là où il n'a pas de sol ; ceux du dessus sont cachés. En mode Vivre, la vue suit le Mouz contrôlé quand il change d'étage.
-- **Construire à l'étage** : un sol d'étage se pose au-dessus d'une **pièce fermée** de l'étage du dessous (en mode Construire, ces cases sont teintées ; le vide est hachuré). L'outil Pièce y marche aussi. Murs, portes, fenêtres et papier peint se posent au bord du plancher ; les objets, sur le plancher. Les clôtures restent au jardin (rez-de-chaussée).
-- **L'escalier** (catalogue, catégorie Construction, 900 Mz) : 1 × 3 cases, il monte d'un étage. On le pose à l'étage du bas, la marche du bas du côté de sa face avant ; il faut un plancher à l'étage, au bout de la dernière marche. Les cases au-dessus des marches deviennent la cage d'escalier (pas de sol, on voit l'escalier en dessous).
-- **Les Mouz** prennent l'escalier tout seuls quand ce qu'ils vont faire est à un autre étage (ordres du joueur, autonomie, visiteurs, départ au travail) ; ils changent d'étage à mi-hauteur.
+- **Regarder un étage** : le sélecteur de la barre du haut (descendre, trois points pour l'étage regardé, « RDC », « 1er » ou « 2e », monter), ou Page haut / Page bas. L'étage regardé est dessiné normalement ; ceux du dessous restent visibles sous un voile (45 % pour l'étage juste en dessous, 60 % deux étages plus bas), là où il n'a pas de sol ; ceux du dessus sont cachés. En mode Vivre, la vue suit le Mouz contrôlé quand il change d'étage, et le portrait d'un Mouz qui n'est pas à l'étage regardé porte un badge « RDC », « 1er » ou « 2e ».
+- **Construire à l'étage** : un sol d'étage se pose au-dessus d'une **pièce fermée** de l'étage du dessous (en mode Construire, ces cases portent un « + » vert ; ailleurs, le vide est hachuré). Le bord d'un plancher montre sa tranche et son ombre sur l'étage du dessous ; un garde-corps se pose tout seul autour de la cage d'escalier (sauf du côté de l'arrivée) et au bord du plancher là où il n'y a pas de mur. L'outil Pièce y marche aussi. Murs, portes, fenêtres et papier peint se posent au bord du plancher ; les objets, sur le plancher. Les clôtures restent au jardin (rez-de-chaussée).
+- **L'escalier** (catalogue, catégorie Construction, 900 Mz, en Nature, Rétro et Moderne) : 1 × 3 cases, 8 marches, il monte d'un étage. On le pose à l'étage du bas, la marche du bas du côté de sa face avant ; il faut un plancher à l'étage, au bout de la dernière marche. Les cases au-dessus des marches deviennent la cage d'escalier (pas de sol, on voit l'escalier en dessous).
+- **Les Mouz** prennent l'escalier tout seuls quand ce qu'ils vont faire est à un autre étage (ordres du joueur, autonomie, visiteurs, départ au travail). Ils montent marche par marche le long du dessin (`data/vue34/escalier.json`, la « ligne des marches » de chaque vue) : de profil avec leurs images « monter » et « descendre », de face ou de dos avec celles de la marche, sans ombre. Ils restent de l'étage du bas jusqu'à la dernière marche. La rampe (de profil) et les marches du dessus (de dos) passent devant eux.
 
-Les escaliers et le bord des planchers sont dessinés provisoirement ; leurs vrais dessins sont demandés à Claude Design (`docs/brief-claude-design-7.md`). Côté code : `Levels` (cases de navigation, un décalage de `Levels.STRIDE` lignes par étage), `LotLevel` (les données d'un niveau), `GridNavigation` (un seul graphe pour tous les niveaux, relié par les escaliers).
+Dessins : brief n° 7 (`docs/brief-claude-design-7.md`, livraison dans `design/`). Côté code : `Levels` (cases de navigation, un décalage de `Levels.STRIDE` lignes par étage), `LotLevel` (les données d'un niveau), `GridNavigation` (un seul graphe pour tous les niveaux, relié par les escaliers).
 
 ## Gagner de l'argent à la maison
 
@@ -539,7 +539,7 @@ Le jeu passe progressivement en vue trois quarts (brief n° 6, livré par lots ;
 - Deux Mouz peuvent viser le même objet. Le premier arrivé le réserve, et l'action du second est annulée ; son autonomie choisit alors autre chose.
 - La file d'actions des Mouz n'est pas sauvegardée : au chargement, ils repartent les mains vides (l'autonomie reprend vite la main).
 - Rien n'empêche de démolir les murs du dessous d'un étage, ni de revendre l'escalier quand un Mouz est en haut : l'étage reste en l'air, et le Mouz y reste jusqu'à ce qu'on repose un escalier.
-- Les étages sont dessinés au même endroit que le rez-de-chaussée (pas de décalage en hauteur) ; un Mouz dans l'escalier ne s'élève pas à l'écran.
+- Les étages sont dessinés au même endroit que le rez-de-chaussée (pas de décalage en hauteur) : en haut de l'escalier, le Mouz redescend de quelques pixels pour rejoindre le plancher de l'étage. Le badge des portraits ne montre pas encore l'icône d'escalier pendant la montée.
 - Au travail, un Mouz est simplement absent : on ne le voit pas travailler. Une mauvaise performance fait redescendre d'un grade, jamais renvoyer.
 
 ## Crédits

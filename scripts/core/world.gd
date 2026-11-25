@@ -18,8 +18,10 @@ extends Node2D
 const WALL_MARGIN := 80.0
 ## Écart d'ordre d'affichage entre deux niveaux (tout un étage passe devant celui du dessous).
 const LEVEL_Z := 10
-## Voile sur les niveaux du dessous quand on regarde un étage.
-const LOWER_LEVEL_TINT := Color(0.62, 0.62, 0.7)
+## Voile sur les niveaux du dessous quand on regarde un étage (brief n° 7) : 45 % pour l'étage
+## juste en dessous, 60 % deux étages plus bas.
+const VEIL_COLOR := Color("#2B2440")
+const VEIL_OPACITY := [0.0, 0.45, 0.6]
 
 ## Le terrain en cours de partie.
 var lot: Lot
@@ -135,7 +137,13 @@ func _make_layers() -> void:
 		node.z_index = level * LEVEL_Z
 		add_child(node)
 		move_child(node, floor_view.get_index())
-		var layer := {"node": node}
+		var veil := Polygon2D.new()
+		var area := Rect2(Vector2.ZERO, Vector2(lot.size * lot.cell_size)).grow(FloorView.OUTSIDE_MARGIN)
+		veil.polygon = PackedVector2Array([area.position, Vector2(area.end.x, area.position.y), area.end,
+				Vector2(area.position.x, area.end.y)])
+		veil.z_index = LEVEL_Z - 1
+		node.add_child(veil)
+		var layer := {"node": node, "veil": veil}
 		if level == 0:
 			for part in [floor_view, wall_view, objects_root, characters_root]:
 				part.reparent(node, false)
@@ -182,7 +190,10 @@ func _apply_view() -> void:
 	for level in _layers.size():
 		var node: Node2D = _layers[level]["node"]
 		node.visible = level <= view_level
-		node.modulate = Color.WHITE if level == view_level else LOWER_LEVEL_TINT
+		var veil: Polygon2D = _layers[level]["veil"]
+		veil.visible = level < view_level
+		veil.color = Color(VEIL_COLOR, VEIL_OPACITY[mini(view_level - level, VEIL_OPACITY.size() - 1)]) \
+				if level < view_level else Color.TRANSPARENT
 	grid_overlay.show_level(view_level)
 	# Grille et aperçus de l'éditeur passent au-dessus du niveau regardé.
 	for overlay in [grid_overlay, build_controller, buy_controller]:
@@ -261,6 +272,14 @@ func _apply_family_links() -> void:
 	for link in family.links:
 		if by_id.has(link["a"]) and by_id.has(link["b"]):
 			by_id[link["a"]].relationships.restore_with(by_id[link["b"]], Family.LINK_START.get(link["kind"], 0.0))
+
+
+## Le nœud d'un objet posé (null s'il n'est pas sur le terrain).
+func smart_object_for(placed: PlacedObject) -> SmartObject:
+	for smart_object in smart_objects:
+		if smart_object.placed == placed:
+			return smart_object
+	return null
 
 
 ## Case de la rue par où l'on part et arrive : bas du terrain, sous la première case de départ.

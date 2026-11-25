@@ -1,0 +1,647 @@
+{
+ "marches": 8,
+ "collections": {
+  "nature": {
+   "bas": {
+    "taille": [
+     32,
+     182
+    ],
+    "ligne_marches": {
+     "depart": [
+      16,
+      190
+     ],
+     "marches": [
+      [
+       16,
+       168.0
+      ],
+      [
+       16,
+       148.0
+      ],
+      [
+       16,
+       128.0
+      ],
+      [
+       16,
+       108.0
+      ],
+      [
+       16,
+       88.0
+      ],
+      [
+       16,
+       68.0
+      ],
+      [
+       16,
+       48.0
+      ],
+      [
+       16,
+       28.0
+      ]
+     ],
+     "arrivee": [
+      16,
+      14
+     ]
+    },
+    "devant": []
+   },
+   "haut": {
+    "taille": [
+     32,
+     182
+    ],
+    "ligne_marches": {
+     "depart": [
+      16,
+      78
+     ],
+     "marches": [
+      [
+       16,
+       84.0
+      ],
+      [
+       16,
+       88.0
+      ],
+      [
+       16,
+       92.0
+      ],
+      [
+       16,
+       96.0
+      ],
+      [
+       16,
+       100.0
+      ],
+      [
+       16,
+       104.0
+      ],
+      [
+       16,
+       108.0
+      ],
+      [
+       16,
+       112.0
+      ]
+     ],
+     "arrivee": [
+      16,
+      126
+     ]
+    },
+    "devant": [
+     "escalier_nature_haut_devant_1.svg",
+     "escalier_nature_haut_devant_2.svg",
+     "escalier_nature_haut_devant_3.svg",
+     "escalier_nature_haut_devant_4.svg",
+     "escalier_nature_haut_devant_5.svg",
+     "escalier_nature_haut_devant_6.svg",
+     "escalier_nature_haut_devant_7.svg"
+    ]
+   },
+   "gauche": {
+    "taille": [
+     96,
+     118
+    ],
+    "ligne_marches": {
+     "depart": [
+      -8,
+      102
+     ],
+     "marches": [
+      [
+       6.0,
+       94
+      ],
+      [
+       18.0,
+       86
+      ],
+      [
+       30.0,
+       78
+      ],
+      [
+       42.0,
+       70
+      ],
+      [
+       54.0,
+       62
+      ],
+      [
+       66.0,
+       54
+      ],
+      [
+       78.0,
+       46
+      ],
+      [
+       90.0,
+       38
+      ]
+     ],
+     "arrivee": [
+      104,
+      38
+     ]
+    },
+    "devant": "escalier_nature_gauche_devant.svg"
+   },
+   "droite": {
+    "taille": [
+     96,
+     118
+    ],
+    "ligne_marches": {
+     "depart": [
+      104,
+      102
+     ],
+     "marches": [
+      [
+       90.0,
+       94
+      ],
+      [
+       78.0,
+       86
+      ],
+      [
+       66.0,
+       78
+      ],
+      [
+       54.0,
+       70
+      ],
+      [
+       42.0,
+       62
+      ],
+      [
+       30.0,
+       54
+      ],
+      [
+       18.0,
+       46
+      ],
+      [
+       6.0,
+       38
+      ]
+     ],
+     "arrivee": [
+      -8,
+      38
+     ]
+    },
+    "devant": "escalier_nature_gauche_devant.svg (retourné)"
+   }
+  },
+  "retro": {
+   "bas": {
+    "taille": [
+     32,
+     182
+    ],
+    "ligne_marches": {
+     "depart": [
+      16,
+      190
+     ],
+     "marches": [
+      [
+       16,
+       168.0
+      ],
+      [
+       16,
+       148.0
+      ],
+      [
+       16,
+       128.0
+      ],
+      [
+       16,
+       108.0
+      ],
+      [
+       16,
+       88.0
+      ],
+      [
+       16,
+       68.0
+      ],
+      [
+       16,
+       48.0
+      ],
+      [
+       16,
+       28.0
+      ]
+     ],
+     "arrivee": [
+      16,
+      14
+     ]
+    },
+    "devant": []
+   },
+   "haut": {
+    "taille": [
+     32,
+     182
+    ],
+    "ligne_marches": {
+     "depart": [
+      16,
+      78
+     ],
+     "marches": [
+      [
+       16,
+       84.0
+      ],
+      [
+       16,
+       88.0
+      ],
+      [
+       16,
+       92.0
+      ],
+      [
+       16,
+       96.0
+      ],
+      [
+       16,
+       100.0
+      ],
+      [
+       16,
+       104.0
+      ],
+      [
+       16,
+       108.0
+      ],
+      [
+       16,
+       112.0
+      ]
+     ],
+     "arrivee": [
+      16,
+      126
+     ]
+    },
+    "devant": [
+     "escalier_retro_haut_devant_1.svg",
+     "escalier_retro_haut_devant_2.svg",
+     "escalier_retro_haut_devant_3.svg",
+     "escalier_retro_haut_devant_4.svg",
+     "escalier_retro_haut_devant_5.svg",
+     "escalier_retro_haut_devant_6.svg",
+     "escalier_retro_haut_devant_7.svg"
+    ]
+   },
+   "gauche": {
+    "taille": [
+     96,
+     118
+    ],
+    "ligne_marches": {
+     "depart": [
+      -8,
+      102
+     ],
+     "marches": [
+      [
+       6.0,
+       94
+      ],
+      [
+       18.0,
+       86
+      ],
+      [
+       30.0,
+       78
+      ],
+      [
+       42.0,
+       70
+      ],
+      [
+       54.0,
+       62
+      ],
+      [
+       66.0,
+       54
+      ],
+      [
+       78.0,
+       46
+      ],
+      [
+       90.0,
+       38
+      ]
+     ],
+     "arrivee": [
+      104,
+      38
+     ]
+    },
+    "devant": "escalier_retro_gauche_devant.svg"
+   },
+   "droite": {
+    "taille": [
+     96,
+     118
+    ],
+    "ligne_marches": {
+     "depart": [
+      104,
+      102
+     ],
+     "marches": [
+      [
+       90.0,
+       94
+      ],
+      [
+       78.0,
+       86
+      ],
+      [
+       66.0,
+       78
+      ],
+      [
+       54.0,
+       70
+      ],
+      [
+       42.0,
+       62
+      ],
+      [
+       30.0,
+       54
+      ],
+      [
+       18.0,
+       46
+      ],
+      [
+       6.0,
+       38
+      ]
+     ],
+     "arrivee": [
+      -8,
+      38
+     ]
+    },
+    "devant": "escalier_retro_gauche_devant.svg (retourné)"
+   }
+  },
+  "moderne": {
+   "bas": {
+    "taille": [
+     32,
+     182
+    ],
+    "ligne_marches": {
+     "depart": [
+      16,
+      190
+     ],
+     "marches": [
+      [
+       16,
+       168.0
+      ],
+      [
+       16,
+       148.0
+      ],
+      [
+       16,
+       128.0
+      ],
+      [
+       16,
+       108.0
+      ],
+      [
+       16,
+       88.0
+      ],
+      [
+       16,
+       68.0
+      ],
+      [
+       16,
+       48.0
+      ],
+      [
+       16,
+       28.0
+      ]
+     ],
+     "arrivee": [
+      16,
+      14
+     ]
+    },
+    "devant": []
+   },
+   "haut": {
+    "taille": [
+     32,
+     182
+    ],
+    "ligne_marches": {
+     "depart": [
+      16,
+      78
+     ],
+     "marches": [
+      [
+       16,
+       84.0
+      ],
+      [
+       16,
+       88.0
+      ],
+      [
+       16,
+       92.0
+      ],
+      [
+       16,
+       96.0
+      ],
+      [
+       16,
+       100.0
+      ],
+      [
+       16,
+       104.0
+      ],
+      [
+       16,
+       108.0
+      ],
+      [
+       16,
+       112.0
+      ]
+     ],
+     "arrivee": [
+      16,
+      126
+     ]
+    },
+    "devant": [
+     "escalier_moderne_haut_devant_1.svg",
+     "escalier_moderne_haut_devant_2.svg",
+     "escalier_moderne_haut_devant_3.svg",
+     "escalier_moderne_haut_devant_4.svg",
+     "escalier_moderne_haut_devant_5.svg",
+     "escalier_moderne_haut_devant_6.svg",
+     "escalier_moderne_haut_devant_7.svg"
+    ]
+   },
+   "gauche": {
+    "taille": [
+     96,
+     118
+    ],
+    "ligne_marches": {
+     "depart": [
+      -8,
+      102
+     ],
+     "marches": [
+      [
+       6.0,
+       94
+      ],
+      [
+       18.0,
+       86
+      ],
+      [
+       30.0,
+       78
+      ],
+      [
+       42.0,
+       70
+      ],
+      [
+       54.0,
+       62
+      ],
+      [
+       66.0,
+       54
+      ],
+      [
+       78.0,
+       46
+      ],
+      [
+       90.0,
+       38
+      ]
+     ],
+     "arrivee": [
+      104,
+      38
+     ]
+    },
+    "devant": "escalier_moderne_gauche_devant.svg"
+   },
+   "droite": {
+    "taille": [
+     96,
+     118
+    ],
+    "ligne_marches": {
+     "depart": [
+      104,
+      102
+     ],
+     "marches": [
+      [
+       90.0,
+       94
+      ],
+      [
+       78.0,
+       86
+      ],
+      [
+       66.0,
+       78
+      ],
+      [
+       54.0,
+       70
+      ],
+      [
+       42.0,
+       62
+      ],
+      [
+       30.0,
+       54
+      ],
+      [
+       18.0,
+       46
+      ],
+      [
+       6.0,
+       38
+      ]
+     ],
+     "arrivee": [
+      -8,
+      38
+     ]
+    },
+    "devant": "escalier_moderne_gauche_devant.svg (retourné)"
+   }
+  }
+ }
+}

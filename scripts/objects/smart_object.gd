@@ -19,6 +19,8 @@ var _users: Array[Node] = []
 var _seats: Dictionary[Node, int] = {}
 ## Personnages qui font fonctionner l'objet à distance (la télé pour le canapé).
 var _powered_by: Array[Node] = []
+## Escalier : ce qui passe devant les Mouz qui le prennent (voir StairsFront).
+var front: StairsFront
 
 
 func setup(p_placed: PlacedObject, cell_size: int) -> void:
@@ -30,7 +32,27 @@ func setup(p_placed: PlacedObject, cell_size: int) -> void:
 	# Le nœud est posé au bas de l'emprise : c'est ce point qui fixe l'ordre d'affichage.
 	position = Vector2(footprint.position.x, footprint.end.y) * cell_size
 	z_index = FLOOR_OBJECT_Z if not definition.blocks_movement else 0
+	if definition.is_stairs:
+		_update_front.call_deferred()
 	queue_redraw()
+
+
+## Le calque de devant de l'escalier, posé à côté de lui (juste après lui dans l'ordre d'affichage).
+func _update_front() -> void:
+	if not is_inside_tree():
+		return
+	if front == null:
+		front = StairsFront.new()
+		front.stairs = self
+		get_parent().add_child(front)
+	front.position = position + Vector2(0, 0.02)
+	front.queue_redraw()
+
+
+func _exit_tree() -> void:
+	if front != null and is_instance_valid(front):
+		front.queue_free()
+		front = null
 
 
 ## Dessine un objet tourné de `rotation` quarts de tour, emprise posée à `origin` (coin haut-gauche).

@@ -5,9 +5,9 @@ extends Node2D
 const LINE_COLOR := Color(0.169, 0.141, 0.251, 0.10)
 const BORDER_COLOR := Color(0.239, 0.2, 0.341, 0.5)
 
-## À l'étage : teinte des cases où l'on peut poser un plancher, hachures sur le vide.
-const CAN_BUILD := Color(0.91, 0.475, 0.29, 0.16)
-const VOID_LINE := Color(0.169, 0.141, 0.251, 0.16)
+## À l'étage, sur le vide : où l'on peut poser un plancher, et où l'on ne peut pas (brief n° 7).
+const CAN_BUILD := preload("res://assets/floors/vide_constructible.svg")
+const CANNOT_BUILD := preload("res://assets/floors/vide_interdit.svg")
 
 var _lot: Lot
 var _level := 0
@@ -51,9 +51,5 @@ func _draw_upper_hints(cs: float) -> void:
 			var cell := Vector2i(x, y)
 			if _lot.floor_at(cell, _level) != null:
 				continue
-			var rect := Rect2(Vector2(cell) * cs, Vector2(cs, cs))
-			if below.has(cell) and not _lot.is_stairwell(cell, _level):
-				draw_rect(rect, CAN_BUILD)
-			else:
-				for k in range(0, int(cs), 8):
-					draw_line(rect.position + Vector2(k, 0), rect.position + Vector2(0, k), VOID_LINE, 1.0)
+			var can := below.has(cell) and not _lot.is_stairwell(cell, _level)
+			draw_texture(CAN_BUILD if can else CANNOT_BUILD, Vector2(cell) * cs)

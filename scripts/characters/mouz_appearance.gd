@@ -67,7 +67,7 @@ func describe() -> String:
 ## Calques du sprite en jeu, du fond vers le dessus : [chemin, teinte, remonte_en_marche].
 ## `direction` : bas, haut ou gauche (droite = gauche retourné) ; `pose` : "", "marche_1", "marche_2",
 ## "assis", "tailleur", "genoux" ou "allonge".
-func body_layers(direction: StringName, pose: String = "") -> Array:
+func body_layers(direction: StringName, pose: String = "", shadow := true) -> Array:
 	# Allongé : les calques debout de face, sans ombre (le corps les fait pivoter).
 	var lying := pose == "allonge"
 	if lying:
@@ -78,9 +78,9 @@ func body_layers(direction: StringName, pose: String = "") -> Array:
 	var head := "tete_%s_%s" % [age, direction]
 	var hair_base := "cheveux_%s_%s_%s" % [hair, age, direction]
 	var layers: Array = []
-	if not lying:
-		var shadow := "ombre_%s_%s%s.svg" % [sex, age, "_tailleur" if pose == "tailleur" else ""]
-		layers.append([FOLDER + shadow, Color.WHITE, false])
+	if not lying and shadow:
+		var shadow_file := "ombre_%s_%s%s.svg" % [sex, age, "_tailleur" if pose == "tailleur" else ""]
+		layers.append([FOLDER + shadow_file, Color.WHITE, false])
 	if direction == &"bas":
 		layers.append([FOLDER + hair_base + "_arriere.svg", hair_color, true])
 		layers.append([FOLDER + hair_base + "_arriere_contour.svg", Color.WHITE, true])

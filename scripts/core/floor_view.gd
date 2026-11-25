@@ -7,10 +7,8 @@ extends Node2D
 const OUTSIDE_MARGIN := 1200.0
 const HEDGE_WIDTH := 10.0
 
-## Couleur et épaisseur de la tranche d'un plancher d'étage au-dessus du vide (provisoire,
-## en attendant les dessins du brief n° 7).
-const SLAB := Color("#CDBFAA")
-const SLAB_DEPTH := 8.0
+## Pièces du bord d'un plancher d'étage (brief n° 7), posées dans les cases vides voisines.
+const EDGE_PATH := "res://assets/murs/%s.svg"
 
 var _lot: Lot
 var _level := 0
@@ -43,26 +41,62 @@ func _draw() -> void:
 				draw_rect(rect, Palette.JARDIN)
 
 
-## Étage : seulement les cases qui ont un sol, et la tranche du plancher là où il s'arrête.
+## Étage : l'ombre des planchers sur le niveau du dessous, les cases qui ont un sol, puis la tranche
+## des planchers là où ils s'arrêtent (bords, angles sortants et rentrants).
 func _draw_upper() -> void:
 	var cs := float(_lot.cell_size)
+	var cells: Array[Vector2i] = []
+	for y in _lot.size.y:
+		for x in _lot.size.x:
+			if _has_floor(Vector2i(x, y)):
+				cells.append(Vector2i(x, y))
+	for cell in cells:
+		var origin := Vector2(cell) * cs
+		if not _has_floor(cell + Vector2i.DOWN):
+			_piece("dalle_ombre_s", origin + Vector2(3, 40))
+		if not _has_floor(cell + Vector2i.RIGHT):
+			_piece("dalle_ombre_e", origin + Vector2(40, 3))
+	for cell in cells:
+		var rect := Rect2(Vector2(cell) * cs, Vector2(cs, cs))
+		var floor_definition := _lot.floor_at(cell, _level)
+		if floor_definition.texture != null:
+			draw_texture_rect(floor_definition.texture, rect, false)
+		else:
+			draw_rect(rect, Palette.PISTE)
+	for cell in cells:
+		var origin := Vector2(cell) * cs
+		var south := not _has_floor(cell + Vector2i.DOWN)
+		var west := not _has_floor(cell + Vector2i.LEFT)
+		var east := not _has_floor(cell + Vector2i.RIGHT)
+		if south:
+			_piece("dalle_bord_s", origin + Vector2(0, 32))
+		if not _has_floor(cell + Vector2i.UP):
+			_piece("dalle_bord_n", origin + Vector2(0, -1))
+		if west:
+			_piece("dalle_bord_o", origin + Vector2(-8, 0))
+		if east:
+			_piece("dalle_bord_e", origin + Vector2(32, 0))
+		if south and west and not _has_floor(cell + Vector2i(-1, 1)):
+			_piece("dalle_angle_sortant_so", origin + Vector2(-8, 32))
+		if south and east and not _has_floor(cell + Vector2i(1, 1)):
+			_piece("dalle_angle_sortant_se", origin + Vector2(32, 32))
 	for y in _lot.size.y:
 		for x in _lot.size.x:
 			var cell := Vector2i(x, y)
-			var floor_definition := _lot.floor_at(cell, _level)
-			if floor_definition == null:
+			if _has_floor(cell) or not _has_floor(cell + Vector2i.UP):
 				continue
-			var rect := Rect2(Vector2(cell) * cs, Vector2(cs, cs))
-			if floor_definition.texture != null:
-				draw_texture_rect(floor_definition.texture, rect, false)
-			else:
-				draw_rect(rect, Palette.PISTE)
-			if _lot.floor_at(cell + Vector2i.DOWN, _level) == null:
-				var slab := Rect2(rect.position.x, rect.end.y, cs, SLAB_DEPTH)
-				draw_rect(slab, SLAB)
-				draw_line(slab.position + Vector2(0, SLAB_DEPTH), slab.end, Palette.CONTOUR, 1.5)
-			for side in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP]:
-				if _lot.floor_at(cell + side, _level) == null:
-					var a := rect.position + (Vector2(cs, 0) if side == Vector2i.RIGHT else Vector2.ZERO)
-					var b := a + (Vector2(cs, 0) if side == Vector2i.UP else Vector2(0, cs))
-					draw_line(a, b, Palette.CONTOUR, 1.5)
+			var origin := Vector2(cell) * cs
+			if _has_floor(cell + Vector2i.LEFT):
+				_piece("dalle_angle_rentrant_no", origin)
+			if _has_floor(cell + Vector2i.RIGHT):
+				_piece("dalle_angle_rentrant_ne", origin + Vector2(24, 0))
+
+
+func _has_floor(cell: Vector2i) -> bool:
+	return _lot.contains(cell) and _lot.floor_at(cell, _level) != null
+
+
+func _piece(file: String, top_left: Vector2) -> void:
+	var texture := WallView._texture(EDGE_PATH % file)
+	if texture != null:
+		draw_texture(texture, top_left)

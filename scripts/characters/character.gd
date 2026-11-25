@@ -28,6 +28,8 @@ var skills := MouzSkills.new()
 var _seat: Dictionary = {}
 var _seat_object: SmartObject
 var _stand_position := Vector2.ZERO
+## Escalier pris en ce moment (null sinon) : le corps suit les marches.
+var _stairs: SmartObject
 var _front := SeatFront.new()
 var _name_tag_base := Vector2.ZERO
 var _bubble_base := Vector2.ZERO
@@ -108,7 +110,38 @@ func set_level(value: int) -> void:
 
 ## Position des pieds quand le Mouz est debout (celle d'avant de s'installer s'il est assis).
 func standing_position() -> Vector2:
+	if _stairs != null:
+		return position + body.position
 	return _stand_position if is_seated() else position
+
+
+## Dans l'escalier : le point de tri reste au pied de l'escalier (le Mouz passe devant lui,
+## et derrière ce qui doit le cacher) et le corps se pose sur la marche.
+func place_on_stairs(stairs: SmartObject, feet: Vector2, step: int) -> void:
+	if _stairs != stairs:
+		leave_stairs()
+		_stairs = stairs
+		body.shadow = false
+	position = stairs.position + Vector2(0, 0.01)
+	body.position = feet - position
+	name_tag.position = _name_tag_base + body.position
+	bubble.position = _bubble_base + body.position
+	if stairs.front != null:
+		stairs.front.set_climber(self, step)
+	queue_redraw()
+
+
+func leave_stairs() -> void:
+	if _stairs == null:
+		return
+	if is_instance_valid(_stairs) and _stairs.front != null:
+		_stairs.front.remove_climber(self)
+	_stairs = null
+	body.position = Vector2.ZERO
+	body.shadow = true
+	name_tag.position = _name_tag_base
+	bubble.position = _bubble_base
+	queue_redraw()
 
 
 ## Un voisin en visite (pas de la famille jouée).
@@ -207,6 +240,9 @@ func _update_body() -> void:
 	if is_seated():
 		body.show_pose(StringName(_seat.get("direction", "bas")), _seat["pose"])
 		return
+	if mover.is_on_stairs():
+		_update_body_on_stairs(mover.stairs_state())
+		return
 	var facing := mover.facing
 	var view := &"bas"
 	if absf(facing.x) > absf(facing.y):
@@ -219,9 +255,21 @@ func _update_body() -> void:
 	body.show_pose(view, pose)
 
 
+## Dans l'escalier (brief n° 7) : de profil, les images « monter » et « descendre » ; de face
+## ou de dos, celles de la marche. Une image par marche, en alternance.
+func _update_body_on_stairs(state: Dictionary) -> void:
+	var view := StairsArt.view(state["stairs"])
+	var up: bool = state["up"]
+	var direction: StringName = {&"bas": &"haut", &"haut": &"bas", &"gauche": &"droite", &"droite": &"gauche"}[view] if up \
+			else {&"bas": &"bas", &"haut": &"haut", &"gauche": &"gauche", &"droite": &"droite"}[view]
+	var frame := 1 + int(state["step"]) % 2
+	var profile := view == &"gauche" or view == &"droite"
+	body.show_pose(direction, ("%s_%d" % ["monter" if up else "descendre", frame]) if profile else "marche_%d" % frame)
+
+
 ## Ellipse de sélection en tirets, posée au sol sous les pieds.
 func _draw() -> void:
-	if not is_selected or is_seated():
+	if not is_selected or is_seated() or _stairs != null:
 		return
 	var accent := Palette.ACCENT
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1, SELECTION_RADII.y / SELECTION_RADII.x))

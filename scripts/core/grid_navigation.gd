@@ -17,8 +17,8 @@ var cell_size: int = 32
 var _astar := AStar2D.new()
 var _lot: Lot
 var _blocked: Dictionary[Vector2i, bool] = {}
-## Escaliers : par paire de points reliés (« id|id »), les cases de l'escalier du premier au second.
-var _stairs: Dictionary[String, Array] = {}
+## Escaliers : par paire de points reliés (« id|id »), { "placed", "up" (on monte) }.
+var _stairs: Dictionary[String, Dictionary] = {}
 
 
 ## Construit le graphe. `blocked_cells` : cases de navigation occupées par des meubles.
@@ -67,16 +67,13 @@ func _connect_stairs(placed: PlacedObject, level: int) -> void:
 	if not is_walkable(entry) or not is_walkable(exit):
 		return
 	_astar.connect_points(_id(entry), _id(exit))
-	var up: Array = stairs["cells"]
-	var down: Array = up.duplicate()
-	down.reverse()
-	_stairs["%d|%d" % [_id(entry), _id(exit)]] = up
-	_stairs["%d|%d" % [_id(exit), _id(entry)]] = down
+	_stairs["%d|%d" % [_id(entry), _id(exit)]] = {"placed": placed, "up": true}
+	_stairs["%d|%d" % [_id(exit), _id(entry)]] = {"placed": placed, "up": false}
 
 
-## Cases (du terrain) de l'escalier pris pour aller de `a` à `b`, ou [] si ce n'est pas un escalier.
-func stairs_between(a: Vector2i, b: Vector2i) -> Array:
-	return _stairs.get("%d|%d" % [_id(a), _id(b)], [])
+## L'escalier pris pour aller de `a` à `b` : { "placed", "up" }, ou {} si ce n'est pas un escalier.
+func stairs_between(a: Vector2i, b: Vector2i) -> Dictionary:
+	return _stairs.get("%d|%d" % [_id(a), _id(b)], {})
 
 
 func is_walkable(cell: Vector2i) -> bool:

@@ -7,6 +7,7 @@ const PORTRAIT_SIZE := 40.0
 
 var _world: World
 var _portraits: Dictionary[Node, MouzPortrait] = {}
+var _badges: Dictionary[Node, PanelContainer] = {}
 
 
 func _ready() -> void:
@@ -51,6 +52,10 @@ func _build(world: World) -> void:
 		portrait.background = character.profile.color.lightened(0.6)
 		portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		column.add_child(portrait)
+		# Repère d'étage (brief n° 7), seulement quand le Mouz n'est pas à l'étage regardé.
+		var badge := _level_badge()
+		portrait.add_child(badge)
+		_badges[character] = badge
 		var label := Label.new()
 		label.text = character.get_display_name()
 		label.theme_type_variation = &"StrongLabel"
@@ -63,3 +68,36 @@ func _build(world: World) -> void:
 		button.pressed.connect(world.selection.select.bind(character))
 		add_child(button)
 		_portraits[character] = portrait
+	EventBus.view_level_changed.connect(func(_level: int) -> void: _refresh_badges())
+	EventBus.character_level_changed.connect(func(_character: Node, _level: int) -> void: _refresh_badges())
+	_refresh_badges()
+
+
+## Pastille « RDC », « 1er », « 2e » à −6, −6 du coin du portrait, liseré papier.
+func _level_badge() -> PanelContainer:
+	var badge := PanelContainer.new()
+	var style := HudTheme.box(Palette.CONTOUR, 9, Palette.PAPIER, 2)
+	style.content_margin_left = 5
+	style.content_margin_right = 5
+	style.content_margin_top = 0
+	style.content_margin_bottom = 0
+	badge.add_theme_stylebox_override("panel", style)
+	badge.position = Vector2(-6, -6)
+	badge.custom_minimum_size.y = 18
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var label := Label.new()
+	label.add_theme_font_override("font", HudTheme.font(HudTheme.NUNITO, 800))
+	label.add_theme_font_size_override("font_size", 11)
+	label.add_theme_color_override("font_color", Palette.PAPIER)
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	badge.add_child(label)
+	return badge
+
+
+func _refresh_badges() -> void:
+	for character in _badges:
+		if not is_instance_valid(character):
+			continue
+		var badge: PanelContainer = _badges[character]
+		badge.visible = character.level != _world.view_level
+		(badge.get_child(0) as Label).text = Levels.SHORT_NAMES[character.level]

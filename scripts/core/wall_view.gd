@@ -69,6 +69,8 @@ func _rebuild() -> void:
 	if _level_index == 0:
 		for edge: Vector3i in _lot.fences:
 			_add_fence(edge)
+	else:
+		_add_railings()
 
 
 # --- Morceaux -----------------------------------------------------------------------
@@ -129,6 +131,56 @@ func _add_pole(node: Vector2i) -> void:
 		name_ += "_int" if inside else "_ext"
 	var point := Vector2(node) * float(_lot.cell_size)
 	_add_sprite(name_, WALL_PATH, Vector2(point.x - HALF, point.y + HALF))
+
+
+## Garde-corps d'étage (brief n° 7) : posé tout seul au bord du plancher, là où il n'y a pas
+## de mur — autour de la cage d'escalier (sauf du côté de l'arrivée) et au bord des trous.
+func _add_railings() -> void:
+	var cs := float(_lot.cell_size)
+	var collection := &"nature"
+	var arrivals := {}
+	for placed in _lot.stairs_on(_level_index - 1):
+		collection = placed.get_collection()
+		var path := GridNavigation.stairs_path(placed, _level_index - 1)
+		var cells: Array = path["cells"]
+		arrivals[Edges.between(cells[-1], Levels.flat(path["exit"]))] = true
+	var nodes := {}
+	for y in _lot.size.y:
+		for x in _lot.size.x:
+			var cell := Vector2i(x, y)
+			if _lot.floor_at(cell, _level_index) == null:
+				continue
+			for step in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+				var other: Vector2i = cell + step
+				if not _lot.contains(other) or _lot.floor_at(other, _level_index) != null:
+					continue
+				var edge := Edges.between(cell, other)
+				if _data.walls.has(edge) or arrivals.has(edge):
+					continue
+				var node := Vector2(edge.x, edge.y) * cs
+				if edge.z == Edges.HORIZONTAL:
+					_add_piece("garde_corps_%s_h" % collection, node + Vector2(0, 2), Vector2(0, -2 - 22 - 2))
+					nodes[Vector2i(edge.x + 1, edge.y)] = true
+				else:
+					_add_piece("garde_corps_%s_v" % collection, node + Vector2(0, 32), Vector2(-2, -22 - 32))
+					nodes[Vector2i(edge.x, edge.y + 1)] = true
+				nodes[Vector2i(edge.x, edge.y)] = true
+	for node_point: Vector2i in nodes:
+		var at := Vector2(node_point) * cs
+		_add_piece("garde_corps_%s_poteau" % collection, at + Vector2(0, 3), Vector2(-3, -3 - 24 - 3))
+
+
+## Une pièce de garde-corps : son point de tri, et son coin haut-gauche par rapport à lui.
+func _add_piece(file: String, sort_point: Vector2, offset: Vector2) -> void:
+	var texture := _texture(WALL_PATH % file)
+	if texture == null:
+		return
+	var sprite := Sprite2D.new()
+	sprite.texture = texture
+	sprite.centered = false
+	sprite.position = sort_point
+	sprite.offset = offset
+	add_child(sprite)
 
 
 ## Segment de clôture (ou portail), trié sur son pied comme un mur.

@@ -19,6 +19,12 @@ var appearance: MouzAppearance:
 var direction: StringName = &"bas"
 var pose: String = ""
 var flipped := false
+## Ombre au sol (pas dans un escalier).
+var shadow := true:
+	set(value):
+		if value != shadow:
+			shadow = value
+			_refresh()
 ## Descente de la tête dans les poses assises (px).
 var head_drop := 0.0
 ## Allongé : rotation (degrés, sens horaire) et centre de la tête dans l'image 32 × 64.
@@ -41,7 +47,7 @@ func show_pose(p_direction: StringName, p_pose: String) -> void:
 
 
 func _refresh() -> void:
-	_layers = appearance.body_layers(direction, pose) if appearance != null else []
+	_layers = appearance.body_layers(direction, pose, shadow) if appearance != null else []
 	queue_redraw()
 
 
@@ -54,6 +60,9 @@ func _draw() -> void:
 	var bob := 0.0
 	if pose.begins_with("marche"):
 		bob = WALK_BOB
+	elif pose.begins_with("monter") or pose.begins_with("descendre"):
+		# Escalier de profil : la tête remonte d'un pixel sur la deuxième image.
+		bob = WALK_BOB if pose.ends_with("_2") else 0.0
 	elif pose != "":
 		bob = -head_drop
 	MouzLayers.draw(self, _layers, Rect2(Vector2(-SIZE.x / 2, -FEET_FROM_TOP), SIZE), flipped, bob)
