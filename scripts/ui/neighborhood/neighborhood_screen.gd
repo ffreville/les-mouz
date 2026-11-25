@@ -5,6 +5,8 @@ extends Control
 ##  - Une famille y vit : ses membres, son argent, « Jouer cette famille ».
 ##  - Maison à vendre ou terrain libre : son prix, « Faire emménager une famille ».
 ## Double-clic sur un emplacement : même chose que le bouton de la fiche.
+## « Déménager… » : on choisit sur la carte une maison à vendre ou un terrain libre ; la fiche
+## montre la vente de l'ancienne maison, le prix de la nouvelle et ce qu'il restera.
 
 const GRASS := preload("res://assets/floors/herbe.svg")
 const COIN := preload("res://assets/sprites/piece_mz.svg")
@@ -22,6 +24,8 @@ var _plots: Array = []
 var _lots: Dictionary = {}
 var _cards: Dictionary = {}
 var _selected := ""
+## Emplacement de la famille qui déménage ("" hors déménagement).
+var _moving_from := ""
 var _side := VBoxContainer.new()
 
 
@@ -188,7 +192,7 @@ func _status_text(plot: Dictionary) -> String:
 
 func _on_card_input(event: InputEvent, plot_id: String) -> void:
 	var click := event as InputEventMouseButton
-	if click != null and click.double_click and click.button_index == MOUSE_BUTTON_LEFT:
+	if click != null and click.double_click and click.button_index == MOUSE_BUTTON_LEFT and _moving_from == "":
 		_activate(plot_id)
 
 
@@ -212,9 +216,12 @@ func _select(plot_id: String) -> void:
 	_side.add_child(_label("%s · %d × %d cases" % [plot["address"], lot.size.x, lot.size.y], &"MutedLabel", 13))
 	var frame := PanelContainer.new()
 	frame.add_theme_stylebox_override("panel", HudTheme.box(Palette.JARDIN, 10))
-	frame.add_child(LotPlan.new(lot, SIDE_PLAN))
+	# Pendant un déménagement, le devis prend de la place : le plan rétrécit.
+	frame.add_child(LotPlan.new(lot, SIDE_PLAN if _moving_from == "" else Vector2(SIDE_PLAN.x, 140)))
 	_side.add_child(frame)
-	if Neighborhood.has_household(plot):
+	if _moving_from != "":
+		_move_details(plot)
+	elif Neighborhood.has_household(plot):
 		_household_details(plot)
 	else:
 		_sale_details(plot)
@@ -247,9 +254,64 @@ func _household_details(plot: Dictionary) -> void:
 	_side.add_child(members)
 	_side.add_child(_money_row("Argent du foyer", int(household.get("funds", 0))))
 	_side.add_child(_spacer())
+	var move := _action_button("Déménager…", MOVE_IN_ICON)
+	move.theme_type_variation = &"SecondaryButton"
+	move.tooltip_text = "Vendre cette maison et en choisir une autre dans le quartier."
+	move.pressed.connect(_start_move.bind(plot["id"]))
+	_side.add_child(move)
 	var play := _action_button("Jouer cette famille", PLAY_ICON)
 	play.pressed.connect(_activate.bind(plot["id"]))
 	_side.add_child(play)
+
+
+# --- Déménager -------------------------------------------------------------------------
+
+func _start_move(plot_id: String) -> void:
+	_moving_from = plot_id
+	_select(plot_id)
+
+
+func _cancel_move() -> void:
+	var from := _moving_from
+	_moving_from = ""
+	_select(from)
+
+
+## Fiche pendant un déménagement : le devis si l'emplacement est libre.
+func _move_details(plot: Dictionary) -> void:
+	var from := Neighborhood.plot(SaveManager.neighborhood, _moving_from)
+	var family := Family.from_dict(from["household"]["family"])
+	var section := Label.new()
+	section.text = "DÉMÉNAGEMENT · %s" % family.display_name().to_upper()
+	section.theme_type_variation = &"SectionTitle"
+	_side.add_child(section)
+	var quote := Neighborhood.move_quote(SaveManager.neighborhood, _moving_from, plot["id"])
+	if plot["id"] == _moving_from:
+		_side.add_child(_wrapped("Choisis sur la carte une maison à vendre ou un terrain libre."))
+	elif Neighborhood.has_household(plot):
+		_side.add_child(_wrapped("Une famille vit déjà ici. Choisis une maison à vendre ou un terrain libre."))
+	else:
+		_side.add_child(_money_row("Argent du foyer", quote["funds"]))
+		_side.add_child(_money_row("Vente de la maison (%s)" % from["address"], quote["sale"], "+"))
+		_side.add_child(_money_row("Prix ici", quote["price"], "−"))
+		_side.add_child(_money_row("Il restera", quote["after"]))
+		if quote["problem"] != "":
+			var problem := _wrapped("⚠ " + quote["problem"])
+			problem.add_theme_color_override("font_color", Palette.CRITIQUE)
+			_side.add_child(problem)
+		else:
+			_side.add_child(_wrapped("Les Mouz emportent tout ce qu'ils sont (métiers, compétences, amitiés) ; les meubles restent avec la maison vendue."))
+	_side.add_child(_spacer())
+	var cancel := _action_button("Annuler", MENU_ICON)
+	cancel.icon = null
+	cancel.theme_type_variation = &"SecondaryButton"
+	cancel.pressed.connect(_cancel_move)
+	_side.add_child(cancel)
+	if plot["id"] != _moving_from and not Neighborhood.has_household(plot):
+		var confirm := _action_button("Déménager ici", MOVE_IN_ICON)
+		confirm.disabled = quote["problem"] != ""
+		confirm.pressed.connect(func() -> void: SaveManager.move_family(_moving_from, plot["id"]))
+		_side.add_child(confirm)
 
 
 func _sale_details(plot: Dictionary) -> void:
@@ -281,7 +343,7 @@ func _activate(plot_id: String) -> void:
 
 # --- Petits éléments ----------------------------------------------------------------
 
-func _money_row(text: String, amount: int) -> Control:
+func _money_row(text: String, amount: int, sign := "") -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 	var label := _label(text, &"MutedLabel", 13)
@@ -294,7 +356,12 @@ func _money_row(text: String, amount: int) -> Control:
 	coin.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	coin.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(coin)
-	row.add_child(_label("Gratuit" if amount == 0 else Palette.format_mz(amount), &"StrongLabel", 14))
+	var value := _label("Gratuit" if amount == 0 and sign == "" else sign + Palette.format_mz(amount), &"StrongLabel", 14)
+	if sign == "+":
+		value.add_theme_color_override("font_color", Palette.GAIN)
+	elif sign == "−":
+		value.add_theme_color_override("font_color", Palette.CRITIQUE)
+	row.add_child(value)
 	return row
 
 
@@ -332,5 +399,8 @@ func _label(text: String, variation: StringName, font_size: int) -> Label:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		SaveManager.go_to_title()
+		if _moving_from != "":
+			_cancel_move()
+		else:
+			SaveManager.go_to_title()
 		get_viewport().set_input_as_handled()

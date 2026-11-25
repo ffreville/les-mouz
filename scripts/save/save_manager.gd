@@ -106,6 +106,16 @@ func move_in(plot_id: String, family: Family) -> void:
 	play(plot_id)
 
 
+## Déménage la famille de `from_id` vers `to_id` (voir Neighborhood.move), enregistre, puis la joue.
+func move_family(from_id: String, to_id: String) -> bool:
+	if not Neighborhood.move(neighborhood, from_id, to_id, GameClock.get_day()):
+		return false
+	active_plot = to_id
+	_write_data(current_slot, current_name, _game_data())
+	play(to_id)
+	return true
+
+
 ## Emplacement de la famille jouée ({} sans famille jouée).
 func active_plot_data() -> Dictionary:
 	return Neighborhood.plot(neighborhood, active_plot)

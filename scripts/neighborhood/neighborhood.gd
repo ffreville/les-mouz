@@ -81,6 +81,75 @@ static func household_count(data: Dictionary) -> int:
 	return data.get("plots", []).filter(has_household).size()
 
 
+# --- Déménager -----------------------------------------------------------------------
+
+## Ce que rapporte la vente d'une maison, meubles compris (au prix d'une maison à vendre).
+static func sale_value(plot_data: Dictionary) -> int:
+	return price_of(LotSerializer.from_data(plot_data["lot"]))
+
+
+## Devis d'un déménagement de l'emplacement `from_id` vers `to_id` :
+## { "sale", "price", "funds", "after", "problem" ("" s'il est possible) }.
+static func move_quote(data: Dictionary, from_id: String, to_id: String) -> Dictionary:
+	var from := plot(data, from_id)
+	var to := plot(data, to_id)
+	var quote := {"sale": 0, "price": 0, "funds": 0, "after": 0, "problem": ""}
+	if not has_household(from) or to.is_empty() or from_id == to_id:
+		quote["problem"] = "Choisis un autre emplacement."
+		return quote
+	if has_household(to):
+		quote["problem"] = "Une famille vit déjà ici."
+		return quote
+	quote["sale"] = sale_value(from)
+	quote["price"] = int(to["price"])
+	quote["funds"] = int(from["household"].get("funds", 0))
+	quote["after"] = quote["funds"] + quote["sale"] - quote["price"]
+	if quote["after"] < 0:
+		quote["problem"] = "Il manque %s." % Palette.format_mz(-quote["after"])
+	return quote
+
+
+## Déménage la famille de `from_id` vers `to_id` : elle vend sa maison (qui est remise en vente),
+## paie la nouvelle et y emporte tout ce qu'elle est (Mouz, métiers, compétences, relations).
+static func move(data: Dictionary, from_id: String, to_id: String, day: int) -> bool:
+	var quote := move_quote(data, from_id, to_id)
+	if quote["problem"] != "":
+		return false
+	var from := plot(data, from_id)
+	var to := plot(data, to_id)
+	var household: Dictionary = from["household"]
+	household["funds"] = quote["after"]
+	household["moved_in_day"] = day
+	# Dans la nouvelle maison, on repart des cases d'arrivée et d'une caméra neuve.
+	for entry in household.get("characters", []):
+		entry.erase("position")
+	household.erase("camera")
+	to["household"] = household
+	from["household"] = {}
+	# L'ancienne maison est à vendre ; une maison bâtie sur un terrain libre prend un nom.
+	var lot := LotSerializer.from_data(from["lot"])
+	from["price"] = price_of(lot)
+	if from["house_name"] == "" and (not lot.walls.is_empty() or not lot.objects.is_empty()):
+		from["house_name"] = "La maison des %s" % Family.from_dict(household["family"]).family_name
+	elif lot.walls.is_empty() and lot.objects.is_empty():
+		from["house_name"] = ""
+	# Les relations avec les voisins suivent la famille (elles sont rangées par emplacement).
+	var relations: Dictionary = data.get("relationships", {})
+	for key in relations.keys():
+		var parts: PackedStringArray = key.split("|")
+		var changed := false
+		for i in parts.size():
+			if parts[i].get_slice("/", 0) == from_id:
+				parts[i] = to_id + "/" + parts[i].get_slice("/", 1)
+				changed = true
+		if changed:
+			var value = relations[key]
+			relations.erase(key)
+			parts.sort()
+			relations["|".join(parts)] = value
+	return true
+
+
 ## Ce qu'ont coûté les murs, sols, ouvertures et objets d'un terrain.
 static func lot_value(lot: Lot) -> int:
 	var total := 0
