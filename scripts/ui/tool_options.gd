@@ -31,6 +31,9 @@ func show_for(tool: StringName) -> void:
 			columns = 3
 			# L'herbe est le sol par défaut : on l'obtient avec la gomme.
 			items = Catalog.load_folder(Catalog.FLOORS).filter(func(f): return f.price_per_cell > 0)
+		&"room":
+			_show_room()
+			return
 		&"door", &"window":
 			columns = 2
 			var kind := OpeningDefinition.Kind.DOOR if tool == &"door" else OpeningDefinition.Kind.WINDOW
@@ -51,6 +54,47 @@ func show_for(tool: StringName) -> void:
 		card.button_pressed = item == selected
 		card.pressed.connect(_choose.bind(item))
 		add_child(card)
+
+
+## Pièce : deux listes, la couleur des murs puis le sol (le dernier choix des outils Mur et Sol).
+func _show_room() -> void:
+	columns = 1
+	var style: RoomStyle = _memory.get(&"room")
+	var walls := Catalog.load_folder(Catalog.WALLS)
+	var floors := Catalog.load_folder(Catalog.FLOORS).filter(func(f): return f.price_per_cell > 0)
+	if style == null:
+		style = RoomStyle.new()
+		style.wall = _memory.get(&"wall", walls[0])
+		style.floor = _memory.get(&"floor", floors[0])
+		_memory[&"room"] = style
+	selected = style
+	for part in [["MURS", walls, 2], ["SOL", floors, 4]]:
+		var title := Label.new()
+		title.text = part[0]
+		title.theme_type_variation = &"SectionTitle"
+		add_child(title)
+		var grid := GridContainer.new()
+		grid.columns = part[2]
+		grid.add_theme_constant_override("h_separation", 6)
+		grid.add_theme_constant_override("v_separation", 6)
+		add_child(grid)
+		var group := ButtonGroup.new()
+		for item in part[1]:
+			var card: Button = _wall_card(item) if item is WallStyleDefinition else _floor_swatch(item)
+			card.button_group = group
+			card.button_pressed = item == style.wall or item == style.floor
+			card.pressed.connect(_choose_room_part.bind(item))
+			grid.add_child(card)
+
+
+func _choose_room_part(item: Resource) -> void:
+	var style: RoomStyle = _memory[&"room"]
+	if item is WallStyleDefinition:
+		style.wall = item
+	else:
+		style.floor = item
+	selected = style
+	option_selected.emit(style)
 
 
 func _choose(item: Resource) -> void:
@@ -97,6 +141,19 @@ func _floor_card(definition: FloorDefinition) -> Button:
 	price.add_theme_font_size_override("font_size", 11)
 	column.add_child(price)
 	_fill(card, column)
+	card.tooltip_text = "%s · %s par case" % [definition.display_name, Palette.format_mz(definition.price_per_cell)]
+	return card
+
+
+## Petite vignette de sol (outil Pièce) : le nom et le prix sont dans l'info-bulle.
+func _floor_swatch(definition: FloorDefinition) -> Button:
+	var card := _card(Vector2(56, 56))
+	var preview := TextureRect.new()
+	preview.texture = definition.texture
+	preview.stretch_mode = TextureRect.STRETCH_TILE
+	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview.custom_minimum_size = Vector2(36, 36)
+	_fill(card, preview)
 	card.tooltip_text = "%s · %s par case" % [definition.display_name, Palette.format_mz(definition.price_per_cell)]
 	return card
 

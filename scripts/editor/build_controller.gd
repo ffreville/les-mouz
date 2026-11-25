@@ -4,12 +4,13 @@ extends Node2D
 ## et dessine l'aperçu. Échap ou clic droit annule le geste en cours.
 ##  - mur / démolir : glisser le long de la grille ;
 ##  - porte / fenêtre : cliquer sur un mur (R inverse la charnière d'une porte) ;
-##  - sol / gomme : glisser pour couvrir un rectangle de cases.
+##  - sol / gomme : glisser pour couvrir un rectangle de cases ;
+##  - pièce : glisser un rectangle : murs sur le pourtour et sol dedans.
 
 const HANDLE_RADIUS := 7.0
 const PREVIEW_ALPHA := 0.45
 const LINE_TOOLS: Array[StringName] = [&"wall", &"demolish"]
-const AREA_TOOLS: Array[StringName] = [&"floor", &"eraser"]
+const AREA_TOOLS: Array[StringName] = [&"floor", &"eraser", &"room"]
 const OPENING_TOOLS: Array[StringName] = [&"door", &"window"]
 
 var editor: LotEditor
@@ -123,6 +124,9 @@ func _apply_drag() -> void:
 				editor.paint_floor(_drag_rect(), option)
 		&"eraser":
 			editor.erase_floor(_drag_rect())
+		&"room":
+			if option is RoomStyle:
+				editor.build_room(_drag_rect(), option)
 
 
 func _cancel() -> void:
@@ -159,6 +163,12 @@ func _update_preview() -> void:
 				var quote := editor.quote_erase(_drag_rect())
 				text = "Gommer " + _count(quote["cells"].size(), "case")
 				cost = -quote["refund"]
+			&"room":
+				if option is RoomStyle:
+					var quote := editor.quote_room(_drag_rect(), option)
+					var size := _drag_rect().size
+					text = "Pièce %d × %d" % [size.x, size.y] if quote["valid"] else quote["reason"]
+					cost = quote["cost"]
 	EventBus.cost_preview_changed.emit(text, cost)
 
 
@@ -204,6 +214,9 @@ func _draw_area_preview(cs: float) -> void:
 	if rect.size == Vector2i.ZERO:
 		return
 	var area := Rect2(Vector2(rect.position) * cs, Vector2(rect.size) * cs)
+	if tool == &"room" and option is RoomStyle:
+		_draw_room_preview(rect, cs)
+		return
 	if tool == &"floor" and option is FloorDefinition and option.texture != null:
 		for y in range(rect.position.y, rect.end.y):
 			for x in range(rect.position.x, rect.end.x):
@@ -213,6 +226,19 @@ func _draw_area_preview(cs: float) -> void:
 	else:
 		draw_rect(area, Color(Palette.CRITIQUE, 0.18))
 		_draw_dashed_rect(area, Palette.CRITIQUE)
+
+
+## Sol de la pièce et murs du pourtour (en rouge là où un meuble gêne).
+func _draw_room_preview(rect: Rect2i, cs: float) -> void:
+	if option.floor.texture != null:
+		for y in range(rect.position.y, rect.end.y):
+			for x in range(rect.position.x, rect.end.x):
+				draw_texture_rect(option.floor.texture, Rect2(Vector2(x, y) * cs, Vector2(cs, cs)), false, Color(1, 1, 1, 0.7))
+	for edge in LotEditor.room_edges(rect):
+		var allowed := editor.can_hold_wall(edge)
+		var wall_rect := Edges.to_rect(edge, cs, Palette.EPAISSEUR_MUR, Palette.EPAISSEUR_MUR / 2)
+		draw_rect(wall_rect, Color(option.wall.color if allowed else Palette.CRITIQUE, 0.7))
+	_draw_dashed_rect(Rect2(Vector2(rect.position) * cs, Vector2(rect.size) * cs).grow(Palette.EPAISSEUR_MUR / 2), Palette.ACCENT)
 
 
 func _draw_opening_preview(cs: float) -> void:

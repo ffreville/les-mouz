@@ -58,17 +58,62 @@ func build_walls(edges: Array[Vector3i], style: WallStyleDefinition) -> bool:
 	var quote := quote_walls(edges, style)
 	if not quote["valid"] or not Wallet.pay(quote["cost"]):
 		return false
-	var fresh: Array[Vector3i] = quote["edges"]
+	_commit(_place_walls(quote["edges"], style), -quote["cost"])
+	return true
+
+
+## Pose les murs (déjà payés) ; renvoie de quoi les retirer.
+func _place_walls(fresh: Array[Vector3i], style: WallStyleDefinition) -> Callable:
 	for edge in fresh:
 		var wall := PlacedWall.new()
 		wall.style = style
 		Wallet.stamp(wall, style.price_per_segment)
 		lot.walls[edge] = wall
 		EventBus.item_bought.emit(wall, wall.price)
-	var revert := func() -> void:
+	return func() -> void:
 		for edge in fresh:
 			lot.walls.erase(edge)
-	_commit(revert, -quote["cost"])
+
+
+# --- Pièces ----------------------------------------------------------------------
+
+## Les arêtes du pourtour d'un rectangle de cases.
+static func room_edges(rect: Rect2i) -> Array[Vector3i]:
+	var edges: Array[Vector3i] = []
+	for x in range(rect.position.x, rect.end.x):
+		edges.append(Vector3i(x, rect.position.y, Edges.HORIZONTAL))
+		edges.append(Vector3i(x, rect.end.y, Edges.HORIZONTAL))
+	for y in range(rect.position.y, rect.end.y):
+		edges.append(Vector3i(rect.position.x, y, Edges.VERTICAL))
+		edges.append(Vector3i(rect.end.x, y, Edges.VERTICAL))
+	return edges
+
+
+## Devis d'une pièce : murs neufs sur le pourtour et sol à l'intérieur, en une fois.
+func quote_room(rect: Rect2i, style: RoomStyle) -> Dictionary:
+	var inside := rect.intersection(Rect2i(Vector2i.ZERO, lot.size)) == rect
+	var walls := quote_walls(room_edges(rect), style.wall)
+	var floors := quote_floor(rect, style.floor)
+	var holds := room_edges(rect).all(can_hold_wall)
+	var fresh: Array[Vector3i] = walls["edges"]
+	var valid: bool = inside and holds and (not fresh.is_empty() or floors["valid"])
+	return {"edges": fresh, "cells": floors["cells"], "cost": walls["cost"] + floors["cost"], "valid": valid,
+			"reason": "" if valid else ("Hors du terrain" if not inside else ("Un meuble est sur le tracé" if not holds else "Déjà construite"))}
+
+
+func build_room(rect: Rect2i, style: RoomStyle) -> bool:
+	var quote := quote_room(rect, style)
+	var cost: int = quote["cost"]
+	if not quote["valid"] or (cost > 0 and not Wallet.pay(cost)):
+		return false
+	if cost < 0:
+		Wallet.receive(-cost)
+	var remove_walls := _place_walls(quote["edges"], style.wall)
+	var previous := _replace_floors(quote["cells"], style.floor)
+	var revert := func() -> void:
+		remove_walls.call()
+		_restore_floors(previous)
+	_commit(revert, -cost)
 	return true
 
 

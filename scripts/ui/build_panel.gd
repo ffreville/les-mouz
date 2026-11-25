@@ -5,6 +5,7 @@ extends PanelContainer
 
 ## [identifiant, libellé, icône, aide]. « undo » est une action immédiate, pas un outil.
 const TOOLS := [
+	[&"room", "Pièce", "murs", "Glisse pour tracer une pièce : murs tout autour et sol dedans, en une fois."],
 	[&"wall", "Mur", "mur", "Glisse le long de la grille pour tracer un mur droit."],
 	[&"demolish", "Démolir", "demolir", "Glisse sur des murs pour les démolir (portes et fenêtres comprises)."],
 	[&"door", "Porte", "porte", "Clique sur un mur. Le battant s'ouvre du côté du pointeur ; R inverse la charnière."],

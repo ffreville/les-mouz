@@ -99,6 +99,7 @@ Un ordre du joueur remplace toujours les actions choisies par l'autonomie.
 
 | Outil | Geste |
 |---|---|
+| Pièce | Glisser un rectangle : murs tout autour et sol dedans, en une seule opération (une seule annulation). On choisit la couleur des murs et le sol dans le panneau ; un mur déjà là (pièce voisine) n'est pas repayé |
 | Mur | Glisser le long de la grille : un mur droit, payé par segment |
 | Démolir | Glisser sur des murs : ils sont revendus, avec leurs portes et fenêtres |
 | Porte, Fenêtre | Clic sur un mur. Le battant s'ouvre du côté du pointeur ; **R** inverse la charnière |
