@@ -7,6 +7,24 @@ extends RefCounted
 
 
 static func to_data(lot: Lot) -> Dictionary:
+	var fences: Array = []
+	for edge in lot.fences:
+		var fence: PlacedFence = lot.fences[edge]
+		fences.append({"edge": _edge(edge), "fence": String(fence.definition.id)}.merged(_purchase(fence)))
+	var levels: Array = []
+	for index in lot.used_levels():
+		levels.append(_level_to_data(lot.level(index)))
+	return {
+		"size": _cell(lot.size),
+		"default_floor": String(lot.default_floor.id) if lot.default_floor != null else "",
+		"fences": fences,
+		"levels": levels,
+		"spawn_cells": lot.spawn_cells.map(_cell),
+	}
+
+
+## Un niveau : murs, sols, ouvertures, papiers peints, objets.
+static func _level_to_data(lot: LotLevel) -> Dictionary:
 	var walls: Array = []
 	for edge in lot.walls:
 		var wall: PlacedWall = lot.walls[edge]
@@ -21,10 +39,6 @@ static func to_data(lot: Lot) -> Dictionary:
 			"edge": _edge(opening.edge), "opening": String(opening.definition.id),
 			"swing_positive": opening.swing_positive, "hinge_flipped": opening.hinge_flipped,
 		}.merged(_purchase(opening)))
-	var fences: Array = []
-	for edge in lot.fences:
-		var fence: PlacedFence = lot.fences[edge]
-		fences.append({"edge": _edge(edge), "fence": String(fence.definition.id)}.merged(_purchase(fence)))
 	var wallpapers: Array = []
 	for edge in lot.wallpapers:
 		var paper: PlacedWallpaper = lot.wallpapers[edge]
@@ -36,19 +50,34 @@ static func to_data(lot: Lot) -> Dictionary:
 			"style": String(placed.get_collection()), "on": placed.switched_on,
 			"wear": snappedf(placed.wear, 0.01), "repair_at": placed.repair_at,
 		}.merged(_purchase(placed)))
-	return {
-		"size": _cell(lot.size),
-		"default_floor": String(lot.default_floor.id) if lot.default_floor != null else "",
-		"walls": walls, "floors": floors, "openings": openings, "wallpapers": wallpapers, "fences": fences,
-		"objects": objects,
-		"spawn_cells": lot.spawn_cells.map(_cell),
-	}
+	return {"walls": walls, "floors": floors, "openings": openings, "wallpapers": wallpapers, "objects": objects}
 
 
 static func from_data(data: Dictionary) -> Lot:
 	var lot := Lot.new()
 	lot.size = _to_cell(data.get("size", [30, 20]))
 	lot.default_floor = Catalog.find(Catalog.FLOORS, StringName(data.get("default_floor", "herbe")))
+	for entry in data.get("fences", []):
+		var fence_definition := Catalog.find(Catalog.FENCES, StringName(entry.get("fence", ""))) as FenceDefinition
+		if _known(fence_definition, entry, "fence"):
+			var fence := PlacedFence.new()
+			fence.definition = fence_definition
+			_restore_purchase(fence, entry)
+			lot.fences[_to_edge(entry["edge"])] = fence
+	# Avant les étages, le terrain gardait son unique niveau à la racine.
+	var levels: Array = data.get("levels", [data])
+	for index in levels.size():
+		_level_from_data(lot.level(index), levels[index])
+	var spawns: Array[Vector2i] = []
+	for cell in data.get("spawn_cells", []):
+		spawns.append(_to_cell(cell))
+	if not spawns.is_empty():
+		lot.spawn_cells = spawns
+	return lot
+
+
+## Remplit un niveau depuis ses données.
+static func _level_from_data(lot: LotLevel, data: Dictionary) -> void:
 	for entry in data.get("walls", []):
 		var style := Catalog.find(Catalog.WALLS, StringName(entry.get("style", ""))) as WallStyleDefinition
 		if _known(style, entry, "style"):
@@ -73,13 +102,6 @@ static func from_data(data: Dictionary) -> Lot:
 			opening.hinge_flipped = bool(entry.get("hinge_flipped", false))
 			_restore_purchase(opening, entry)
 			lot.openings.append(opening)
-	for entry in data.get("fences", []):
-		var fence_definition := Catalog.find(Catalog.FENCES, StringName(entry.get("fence", ""))) as FenceDefinition
-		if _known(fence_definition, entry, "fence"):
-			var fence := PlacedFence.new()
-			fence.definition = fence_definition
-			_restore_purchase(fence, entry)
-			lot.fences[_to_edge(entry["edge"])] = fence
 	for entry in data.get("wallpapers", []):
 		var paper_definition := Catalog.find(Catalog.WALLPAPERS, StringName(entry.get("wallpaper", ""))) as WallpaperDefinition
 		if _known(paper_definition, entry, "wallpaper"):
@@ -100,12 +122,6 @@ static func from_data(data: Dictionary) -> Lot:
 			placed.repair_at = float(entry.get("repair_at", 0.0))
 			_restore_purchase(placed, entry)
 			lot.objects.append(placed)
-	var spawns: Array[Vector2i] = []
-	for cell in data.get("spawn_cells", []):
-		spawns.append(_to_cell(cell))
-	if not spawns.is_empty():
-		lot.spawn_cells = spawns
-	return lot
 
 
 static func _purchase(item: Purchase) -> Dictionary:

@@ -39,22 +39,9 @@ func setup(p_world: World) -> void:
 	GameClock.minute_changed.connect(_on_minute_changed)
 
 
-## Valeur de la maison : ce qu'ont coûté ses murs, sols, ouvertures et objets.
+## Valeur de la maison : ce qu'ont coûté ses murs, sols, ouvertures et objets, à tous les étages.
 func house_value() -> int:
-	var total := 0
-	for wall in world.lot.walls.values():
-		total += wall.price
-	for floor_piece in world.lot.floors.values():
-		total += floor_piece.price
-	for opening in world.lot.openings:
-		total += opening.price
-	for paper in world.lot.wallpapers.values():
-		total += paper.price
-	for fence in world.lot.fences.values():
-		total += fence.price
-	for placed in world.lot.objects:
-		total += placed.price
-	return total
+	return Neighborhood.lot_value(world.lot)
 
 
 ## Montant de la prochaine facture.

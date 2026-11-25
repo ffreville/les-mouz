@@ -26,6 +26,8 @@ extends Resource
 @export var category: StringName = &"deco"
 ## Usure par heure d'utilisation (0 : ne s'use pas). À 100, l'objet tombe en panne (voir Upkeep).
 @export var wear_per_hour: float = 0.0
+## Escalier : relie son niveau au suivant (voir Levels et GridNavigation).
+@export var is_stairs: bool = false
 
 
 ## Collections disponibles, dans l'ordre des sprites.

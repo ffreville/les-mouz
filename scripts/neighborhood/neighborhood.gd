@@ -153,18 +153,19 @@ static func move(data: Dictionary, from_id: String, to_id: String, day: int) -> 
 ## Ce qu'ont coûté les murs, sols, ouvertures et objets d'un terrain.
 static func lot_value(lot: Lot) -> int:
 	var total := 0
-	for wall in lot.walls.values():
-		total += wall.price
-	for floor_piece in lot.floors.values():
-		total += floor_piece.price
-	for opening in lot.openings:
-		total += opening.price
-	for paper in lot.wallpapers.values():
-		total += paper.price
 	for fence in lot.fences.values():
 		total += fence.price
-	for placed in lot.objects:
-		total += placed.price
+	for level in lot.levels:
+		for wall in level.walls.values():
+			total += wall.price
+		for floor_piece in level.floors.values():
+			total += floor_piece.price
+		for opening in level.openings:
+			total += opening.price
+		for paper in level.wallpapers.values():
+			total += paper.price
+		for placed in level.objects:
+			total += placed.price
 	return total
 
 
