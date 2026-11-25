@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="FenceDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/fence_definition.gd" id="1_fence"]
+
+[resource]
+script = ExtResource("1_fence")
+id = &"piquets_blancs"
+display_name = "Piquets blancs"
+look = 0
+color = Color(0.9647, 0.9451, 0.9059, 1)
+post_color = Color(0.8118, 0.7647, 0.6863, 1)
+price_per_segment = 25

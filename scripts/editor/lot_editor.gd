@@ -117,23 +117,29 @@ func build_room(rect: Rect2i, style: RoomStyle) -> bool:
 	return true
 
 
-## Devis de démolition : murs et ouvertures concernés, montant rendu.
+## Devis de démolition : murs, clôtures et ouvertures concernés, montant rendu.
 func quote_demolish(edges: Array[Vector3i]) -> Dictionary:
 	var walls: Array[Vector3i] = []
+	var fences: Array[Vector3i] = []
 	var openings: Array[PlacedOpening] = []
 	var refund := 0
 	for edge in edges:
-		if not lot.has_wall(edge):
+		if lot.fences.has(edge):
+			fences.append(edge)
+			refund += Wallet.resale_value(lot.fences[edge])
+		elif not lot.has_wall(edge):
 			continue
-		walls.append(edge)
-		refund += Wallet.resale_value(lot.walls[edge])
-		if lot.wallpapers.has(edge):
-			refund += Wallet.resale_value(lot.wallpapers[edge])
+		else:
+			walls.append(edge)
+			refund += Wallet.resale_value(lot.walls[edge])
+			if lot.wallpapers.has(edge):
+				refund += Wallet.resale_value(lot.wallpapers[edge])
 		var opening := lot.opening_at(edge)
 		if opening != null and opening not in openings:
 			openings.append(opening)
 			refund += Wallet.resale_value(opening)
-	return {"edges": walls, "openings": openings, "refund": refund, "valid": not walls.is_empty()}
+	return {"edges": walls, "fences": fences, "openings": openings, "refund": refund,
+			"valid": not walls.is_empty() or not fences.is_empty()}
 
 
 func demolish_walls(edges: Array[Vector3i]) -> bool:
@@ -149,6 +155,11 @@ func demolish_walls(edges: Array[Vector3i]) -> bool:
 		if lot.wallpapers.has(edge):
 			papers[edge] = lot.wallpapers[edge]
 			lot.wallpapers.erase(edge)
+	var fences: Dictionary[Vector3i, PlacedFence] = {}
+	for edge in quote["fences"]:
+		fences[edge] = lot.fences[edge]
+		lot.fences.erase(edge)
+		EventBus.item_sold.emit(fences[edge], Wallet.resale_value(fences[edge]))
 	var openings: Array[PlacedOpening] = quote["openings"]
 	for opening in openings:
 		lot.openings.erase(opening)
@@ -159,28 +170,85 @@ func demolish_walls(edges: Array[Vector3i]) -> bool:
 			lot.walls[edge] = removed[edge]
 		for edge in papers:
 			lot.wallpapers[edge] = papers[edge]
+		for edge in fences:
+			lot.fences[edge] = fences[edge]
 		lot.openings.append_array(openings)
 	_commit(revert, quote["refund"])
 	return true
 
 
-## Un mur ne peut pas couper un objet en deux ni sortir du terrain.
+## Un mur (ou une clôture) ne peut pas couper un objet en deux, sortir du terrain,
+## ni se poser là où il y a déjà une clôture (ou un mur).
 func can_hold_wall(edge: Vector3i) -> bool:
-	if not lot.contains_edge(edge):
+	if not lot.contains_edge(edge) or lot.fences.has(edge):
 		return false
 	var sides := Edges.sides(edge)
 	var a := lot.blocking_object_at(sides[0])
 	return a == null or a != lot.blocking_object_at(sides[1])
 
 
+# --- Clôtures ---------------------------------------------------------------------
+
+func can_hold_fence(edge: Vector3i) -> bool:
+	if not lot.contains_edge(edge) or lot.has_wall(edge):
+		return false
+	var sides := Edges.sides(edge)
+	var a := lot.blocking_object_at(sides[0])
+	return a == null or a != lot.blocking_object_at(sides[1])
+
+
+## Devis pour une clôture : segments nouveaux (ou d'un autre style, l'ancien est revendu), coût, validité.
+func quote_fences(edges: Array[Vector3i], definition: FenceDefinition) -> Dictionary:
+	var fresh: Array[Vector3i] = []
+	var cost := 0
+	var valid := not edges.is_empty()
+	for edge in edges:
+		if not can_hold_fence(edge):
+			valid = false
+			continue
+		var current: PlacedFence = lot.fences.get(edge)
+		if current != null and current.definition == definition:
+			continue
+		fresh.append(edge)
+		cost += definition.price_per_segment - (Wallet.resale_value(current) if current != null else 0)
+	return {"edges": fresh, "cost": cost, "valid": valid and not fresh.is_empty()}
+
+
+func build_fences(edges: Array[Vector3i], definition: FenceDefinition) -> bool:
+	var quote := quote_fences(edges, definition)
+	var cost: int = quote["cost"]
+	if not quote["valid"] or (cost > 0 and not Wallet.pay(cost)):
+		return false
+	if cost < 0:
+		Wallet.receive(-cost)
+	var previous: Dictionary = {}
+	for edge in quote["edges"]:
+		previous[edge] = lot.fences.get(edge)
+		var fence := PlacedFence.new()
+		fence.definition = definition
+		Wallet.stamp(fence, definition.price_per_segment)
+		lot.fences[edge] = fence
+		EventBus.item_bought.emit(fence, fence.price)
+	var revert := func() -> void:
+		for edge in previous:
+			if previous[edge] == null:
+				lot.fences.erase(edge)
+			else:
+				lot.fences[edge] = previous[edge]
+	_commit(revert, -cost)
+	return true
+
+
 # --- Portes et fenêtres ---------------------------------------------------------
 
-## Devis pour poser une ouverture à partir de `edge` : il faut un mur sans ouverture sur chaque segment.
+## Devis pour poser une ouverture à partir de `edge` : il faut un mur (une clôture pour un portail)
+## sans ouverture sur chaque segment.
 func quote_opening(edge: Vector3i, definition: OpeningDefinition) -> Dictionary:
 	var valid := true
 	for i in definition.width_segments:
 		var segment := Edges.next_along(edge, i)
-		if not lot.has_wall(segment) or lot.opening_at(segment) != null:
+		var holder := lot.fences.has(segment) if definition.on_fence else lot.has_wall(segment)
+		if not holder or lot.opening_at(segment) != null:
 			valid = false
 	return {"cost": definition.price, "valid": valid}
 

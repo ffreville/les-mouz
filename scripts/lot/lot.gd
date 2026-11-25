@@ -12,6 +12,8 @@ extends Resource
 @export var walls: Dictionary[Vector3i, PlacedWall] = {}
 @export var floors: Dictionary[Vector2i, PlacedFloor] = {}
 @export var openings: Array[PlacedOpening] = []
+## Clôtures, posées sur les arêtes comme les murs (mais elles ne ferment pas de pièce).
+@export var fences: Dictionary[Vector3i, PlacedFence] = {}
 ## Papiers peints, par segment de mur horizontal (ils habillent sa face sud, visible).
 @export var wallpapers: Dictionary[Vector3i, PlacedWallpaper] = {}
 @export var objects: Array[PlacedObject] = []
@@ -42,10 +44,10 @@ func opening_at(edge: Vector3i) -> PlacedOpening:
 	return null
 
 
-## Vrai si l'on ne peut pas passer de la case `a` à sa voisine `b` (mur sans porte).
+## Vrai si l'on ne peut pas passer de la case `a` à sa voisine `b` (mur ou clôture sans porte ni portail).
 func blocks_passage(a: Vector2i, b: Vector2i) -> bool:
 	var edge := Edges.between(a, b)
-	if not has_wall(edge):
+	if not has_wall(edge) and not fences.has(edge):
 		return false
 	var opening := opening_at(edge)
 	return opening == null or not opening.definition.is_passable()

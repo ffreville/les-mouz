@@ -1,6 +1,6 @@
 class_name OpeningDefinition
 extends Resource
-## Une porte ou une fenêtre du catalogue, posée sur un mur.
+## Une porte ou une fenêtre du catalogue, posée sur un mur (ou un portail, posé sur une clôture).
 
 enum Kind { DOOR, WINDOW }
 
@@ -13,6 +13,8 @@ enum Kind { DOOR, WINDOW }
 ## Nombre de segments de mur occupés.
 @export var width_segments: int = 1
 @export var price: int = 250
+## Se pose sur une clôture (portail) au lieu d'un mur.
+@export var on_fence: bool = false
 
 
 ## Les portes laissent passer les personnages, pas les fenêtres.

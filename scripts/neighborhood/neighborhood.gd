@@ -92,6 +92,8 @@ static func lot_value(lot: Lot) -> int:
 		total += opening.price
 	for paper in lot.wallpapers.values():
 		total += paper.price
+	for fence in lot.fences.values():
+		total += fence.price
 	for placed in lot.objects:
 		total += placed.price
 	return total

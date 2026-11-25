@@ -37,6 +37,9 @@ func _draw() -> void:
 	for edge in lot.walls:
 		var segment := _segment(edge, origin, cell)
 		draw_line(segment[0], segment[1], lot.walls[edge].style.color, width)
+	for edge in lot.fences:
+		var segment := _segment(edge, origin, cell)
+		draw_line(segment[0], segment[1], lot.fences[edge].definition.post_color, maxf(width * 0.6, 1.0))
 	for opening in lot.openings:
 		var color := DOOR if opening.definition.is_passable() else WINDOW
 		for edge in opening.edges():

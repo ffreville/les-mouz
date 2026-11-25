@@ -21,6 +21,10 @@ static func to_data(lot: Lot) -> Dictionary:
 			"edge": _edge(opening.edge), "opening": String(opening.definition.id),
 			"swing_positive": opening.swing_positive, "hinge_flipped": opening.hinge_flipped,
 		}.merged(_purchase(opening)))
+	var fences: Array = []
+	for edge in lot.fences:
+		var fence: PlacedFence = lot.fences[edge]
+		fences.append({"edge": _edge(edge), "fence": String(fence.definition.id)}.merged(_purchase(fence)))
 	var wallpapers: Array = []
 	for edge in lot.wallpapers:
 		var paper: PlacedWallpaper = lot.wallpapers[edge]
@@ -34,7 +38,8 @@ static func to_data(lot: Lot) -> Dictionary:
 	return {
 		"size": _cell(lot.size),
 		"default_floor": String(lot.default_floor.id) if lot.default_floor != null else "",
-		"walls": walls, "floors": floors, "openings": openings, "wallpapers": wallpapers, "objects": objects,
+		"walls": walls, "floors": floors, "openings": openings, "wallpapers": wallpapers, "fences": fences,
+		"objects": objects,
 		"spawn_cells": lot.spawn_cells.map(_cell),
 	}
 
@@ -67,6 +72,13 @@ static func from_data(data: Dictionary) -> Lot:
 			opening.hinge_flipped = bool(entry.get("hinge_flipped", false))
 			_restore_purchase(opening, entry)
 			lot.openings.append(opening)
+	for entry in data.get("fences", []):
+		var fence_definition := Catalog.find(Catalog.FENCES, StringName(entry.get("fence", ""))) as FenceDefinition
+		if _known(fence_definition, entry, "fence"):
+			var fence := PlacedFence.new()
+			fence.definition = fence_definition
+			_restore_purchase(fence, entry)
+			lot.fences[_to_edge(entry["edge"])] = fence
 	for entry in data.get("wallpapers", []):
 		var paper_definition := Catalog.find(Catalog.WALLPAPERS, StringName(entry.get("wallpaper", ""))) as WallpaperDefinition
 		if _known(paper_definition, entry, "wallpaper"):

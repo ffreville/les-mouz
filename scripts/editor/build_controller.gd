@@ -2,7 +2,7 @@ class_name BuildController
 extends Node2D
 ## Mode Construire : traduit la souris en opérations de l'éditeur selon l'outil choisi,
 ## et dessine l'aperçu. Échap ou clic droit annule le geste en cours.
-##  - mur / démolir : glisser le long de la grille ;
+##  - mur / clôture / démolir : glisser le long de la grille ;
 ##  - porte / fenêtre : cliquer sur un mur (R inverse la charnière d'une porte) ;
 ##  - sol / gomme : glisser pour couvrir un rectangle de cases ;
 ##  - pièce : glisser un rectangle : murs sur le pourtour et sol dedans ;
@@ -10,7 +10,7 @@ extends Node2D
 
 const HANDLE_RADIUS := 7.0
 const PREVIEW_ALPHA := 0.45
-const LINE_TOOLS: Array[StringName] = [&"wall", &"demolish"]
+const LINE_TOOLS: Array[StringName] = [&"wall", &"fence", &"demolish"]
 const AREA_TOOLS: Array[StringName] = [&"floor", &"eraser", &"room"]
 const OPENING_TOOLS: Array[StringName] = [&"door", &"window"]
 
@@ -121,6 +121,9 @@ func _apply_drag() -> void:
 		&"wall":
 			if option is WallStyleDefinition:
 				editor.build_walls(Edges.line(_drag_start, _hover_point), option)
+		&"fence":
+			if option is FenceDefinition:
+				editor.build_fences(Edges.line(_drag_start, _hover_point), option)
 		&"demolish":
 			editor.demolish_walls(Edges.line(_drag_start, _hover_point))
 		&"floor":
@@ -159,9 +162,15 @@ func _update_preview() -> void:
 					var quote := editor.quote_walls(Edges.line(_drag_start, _hover_point), option)
 					text = _count(quote["edges"].size(), "mur")
 					cost = quote["cost"]
+			&"fence":
+				if option is FenceDefinition:
+					var quote := editor.quote_fences(Edges.line(_drag_start, _hover_point), option)
+					text = _count(quote["edges"].size(), "segment") + " de clôture"
+					cost = quote["cost"]
 			&"demolish":
 				var quote := editor.quote_demolish(Edges.line(_drag_start, _hover_point))
-				text = "Démolir " + _count(quote["edges"].size(), "mur")
+				var count: int = quote["edges"].size() + quote["fences"].size()
+				text = "Démolir " + _count(count, "segment")
 				cost = -quote["refund"]
 			&"floor":
 				if option is FloorDefinition:
@@ -208,11 +217,11 @@ func _draw_line_preview(cs: float) -> void:
 	for edge in Edges.line(_drag_start, _hover_point):
 		var rect := Edges.to_rect(edge, cs, Palette.EPAISSEUR_MUR, Palette.EPAISSEUR_MUR / 2)
 		if tool == &"demolish":
-			if editor.lot.has_wall(edge):
+			if editor.lot.has_wall(edge) or editor.lot.fences.has(edge):
 				draw_rect(rect, Color(Palette.CRITIQUE, PREVIEW_ALPHA))
 			continue
-		var allowed := editor.can_hold_wall(edge)
-		var color: Color = option.color if option is WallStyleDefinition else Palette.MUR
+		var allowed := editor.can_hold_fence(edge) if tool == &"fence" else editor.can_hold_wall(edge)
+		var color: Color = option.color if option is WallStyleDefinition or option is FenceDefinition else Palette.MUR
 		draw_rect(rect, Color(color if allowed else Palette.CRITIQUE, PREVIEW_ALPHA))
 		_draw_dashed_rect(rect.grow(1), Palette.ACCENT if allowed else Palette.CRITIQUE)
 	_draw_handle(Vector2(_drag_start) * cs)

@@ -7,8 +7,9 @@ extends PanelContainer
 const TOOLS := [
 	[&"room", "Pièce", "murs", "Glisse pour tracer une pièce : murs tout autour et sol dedans, en une fois."],
 	[&"wall", "Mur", "mur", "Glisse le long de la grille pour tracer un mur droit."],
-	[&"demolish", "Démolir", "demolir", "Glisse sur des murs pour les démolir (portes et fenêtres comprises)."],
-	[&"door", "Porte", "porte", "Clique sur un mur. Le battant s'ouvre du côté du pointeur ; R inverse la charnière."],
+	[&"fence", "Clôture", "jardin", "Glisse le long de la grille pour tracer une clôture. Elle ne ferme pas de pièce ; pose un portail pour passer."],
+	[&"demolish", "Démolir", "demolir", "Glisse sur des murs ou des clôtures pour les démolir (portes, fenêtres et portails compris)."],
+	[&"door", "Porte", "porte", "Clique sur un mur (ou sur une clôture pour un portail). Le battant s'ouvre du côté du pointeur ; R inverse la charnière."],
 	[&"window", "Fenêtre", "fenetre", "Clique sur un mur pour y poser la fenêtre."],
 	[&"floor", "Sol", "sol", "Glisse pour peindre un rectangle de sol."],
 	[&"wallpaper", "Papier", "peindre", "Clique dans une pièce fermée : ses murs prennent le papier peint choisi."],

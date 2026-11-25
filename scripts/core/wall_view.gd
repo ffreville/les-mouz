@@ -58,7 +58,10 @@ func _rebuild() -> void:
 	for node: Vector2i in nodes:
 		_add_pole(node)
 	for opening in _lot.openings:
-		_add_opening(opening)
+		if not opening.definition.on_fence:
+			_add_opening(opening)
+	for edge: Vector3i in _lot.fences:
+		_add_fence(edge)
 
 
 # --- Morceaux -----------------------------------------------------------------------
@@ -119,6 +122,22 @@ func _add_pole(node: Vector2i) -> void:
 		name_ += "_int" if inside else "_ext"
 	var point := Vector2(node) * float(_lot.cell_size)
 	_add_sprite(name_, WALL_PATH, Vector2(point.x - HALF, point.y + HALF))
+
+
+## Segment de clôture (ou portail), trié sur son pied comme un mur.
+func _add_fence(edge: Vector3i) -> void:
+	var cs := float(_lot.cell_size)
+	var piece := FencePiece.new()
+	piece.definition = _lot.fences[edge].definition
+	piece.horizontal = edge.z == Edges.HORIZONTAL
+	piece.length = cs
+	var point := Vector2(edge.x, edge.y) * cs
+	piece.position = point + (Vector2(0, 1) if piece.horizontal else Vector2(0, cs))
+	var opening := _lot.opening_at(edge)
+	if opening != null and opening.definition.on_fence:
+		piece.gate = true
+		_doors.append({"piece": piece, "cells": Edges.sides(edge), "open": false})
+	add_child(piece)
 
 
 ## Calque de porte ou de fenêtre, posé sur le mur juste après lui.
@@ -204,6 +223,11 @@ func _process(_delta: float) -> void:
 		if open == door["open"]:
 			continue
 		door["open"] = open
+		if door.has("piece"):
+			door["piece"].gate_open = open
+			if open:
+				Sfx.play_at(&"porte", door["piece"].global_position)
+			continue
 		var texture := _texture(OPENING_PATH % (door["name"] + ("_ouverte" if open else "")))
 		if texture != null:
 			door["sprite"].texture = texture

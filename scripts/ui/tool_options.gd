@@ -27,6 +27,9 @@ func show_for(tool: StringName) -> void:
 		&"wall":
 			columns = 2
 			items = Catalog.load_folder(Catalog.WALLS)
+		&"fence":
+			columns = 2
+			items = Catalog.load_folder(Catalog.FENCES)
 		&"floor":
 			columns = 3
 			# L'herbe est le sol par défaut : on l'obtient avec la gomme.
@@ -50,7 +53,7 @@ func show_for(tool: StringName) -> void:
 		var card: Button
 		if item is WallpaperDefinition:
 			card = _wallpaper_card(item)
-		elif item is WallStyleDefinition:
+		elif item is WallStyleDefinition or item is FenceDefinition:
 			card = _wall_card(item)
 		elif item is FloorDefinition:
 			card = _floor_card(item)
@@ -110,7 +113,7 @@ func _choose(item: Resource) -> void:
 
 
 ## Carte d'une couleur de mur : pastille, nom et prix par segment.
-func _wall_card(style: WallStyleDefinition) -> Button:
+func _wall_card(style: Resource) -> Button:
 	var card := _card(Vector2(113, 48))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
