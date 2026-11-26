@@ -76,6 +76,9 @@ const MIN_PAID_RATIO := 0.25
 
 # --- Interrupteur -------------------------------------------------------------------
 
+## Construit l'objet (voir `SmartObjectDefinition.built`) : plus proposée une fois l'objet fini.
+@export var builds: bool = false
+
 enum Switch { NONE, TURN_ON, TURN_OFF }
 ## Allumer ou éteindre l'objet (lampes) à la fin de l'action.
 @export var switch: Switch = Switch.NONE

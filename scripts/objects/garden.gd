@@ -6,6 +6,8 @@ extends Node
 ##  - Arroser : l'eau revient au plein (et la plantation reprend).
 ##  - Jardiner : la pousse avance de TEND_BOOST.
 ##  - Récolter, vendre les légumes : seulement mûr ; la plantation repart des graines.
+## Dehors, les saisons et la météo s'en mêlent (voir Weather) : pousse plus rapide au printemps,
+## au repos l'hiver ; la pluie arrose, la canicule assèche.
 ## Dessin (brief n° 8) : le bac ou la bordure de l'objet, un calque par état par-dessus
 ## (`<objet>_<vue>_<état>.svg`), et la jauge d'eau quand la plantation a soif.
 
@@ -63,9 +65,13 @@ func _on_ticked(minutes: float) -> void:
 			continue
 		var before := stage(placed)
 		var was_thirsty := placed.water < THIRSTY
-		placed.water = maxf(placed.water - 100.0 / WATER_HOURS * minutes / 60.0, 0.0)
+		# Dehors, la saison règle la pousse et le temps l'eau (la pluie arrose, la canicule assèche).
+		var outdoor := world.weather.is_outdoor(smart_object)
+		var drain := world.weather.water_factor(outdoor)
+		placed.water = clampf(placed.water - 100.0 / WATER_HOURS * drain * minutes / 60.0, 0.0, 100.0)
 		if placed.water > 0.0:
-			placed.growth = minf(placed.growth + 100.0 / (GROW_DAYS * 24.0) * minutes / 60.0, 100.0)
+			placed.growth = minf(placed.growth + 100.0 / (GROW_DAYS * 24.0) * world.weather.growth_factor(outdoor) \
+					* minutes / 60.0, 100.0)
 		var after := stage(placed)
 		if after != before or (placed.water < THIRSTY) != was_thirsty:
 			smart_object.queue_redraw()

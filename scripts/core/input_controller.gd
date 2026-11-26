@@ -110,6 +110,14 @@ func _open_phone_menu(actor: Character, screen_position: Vector2) -> void:
 		"icon": load("res://assets/icons/ink/surfer.svg"),
 		"callback": func() -> void: EventBus.job_board_requested.emit(actor, &"telephone"),
 	}]
+	if world.weather.snow >= Weather.SNOWMAN_SNOW:
+		var problem := world.weather.snowman_problem(actor)
+		options.append({
+			"label": "Faire un bonhomme de neige%s" % (" (%s)" % problem if problem != "" else ""),
+			"icon": Weather.BUILD_SNOWMAN.icon,
+			"disabled": problem != "",
+			"callback": world.weather.build_snowman.bind(actor),
+		})
 	if not world.visits.neighbors().is_empty():
 		options.append({
 			"label": "Inviter un voisin…",

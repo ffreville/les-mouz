@@ -25,6 +25,9 @@ var front: StairsFront
 var _fire_frame := 0
 var _fire_time := 0.0
 
+## Objets qui changent avec les saisons, et leur teinte en attendant leurs dessins de saison.
+const SEASONAL: Array[StringName] = [&"arbre"]
+const SEASON_TINT := {&"ete": Color(1.0, 0.98, 0.86), &"automne": Color(1.0, 0.78, 0.5), &"hiver": Color(0.86, 0.88, 0.92)}
 ## Flammes dessinées par Claude Design (3 images), sinon dessinées ici.
 const FIRE_FRAMES := "res://assets/sprites/feu_%d.svg"
 const FIRE_FRAME_TIME := 0.14
@@ -121,6 +124,8 @@ func get_actions() -> Array[ActionDefinition]:
 		var actions: Array[ActionDefinition] = [Upkeep.REPAIR_ACTION]
 		actions.append_array(definition.actions)
 		return actions
+	if definition.built and placed != null and placed.growth >= 100.0:
+		return definition.actions.filter(func(action: ActionDefinition) -> bool: return not action.builds)
 	return definition.actions
 
 
@@ -237,6 +242,9 @@ func action_problem(action: ActionDefinition, world: World) -> String:
 			return "fané : à arroser"
 		if not Garden.is_ripe(placed):
 			return "pas encore mûr" if definition.id == &"potager" else "pas encore fleuri"
+	var weather := world.weather.problem_for(self, action)
+	if weather != "":
+		return weather
 	if action == Upkeep.REPAIR_ACTION:
 		return "réparateur appelé" if placed.repair_at > 0.0 else ""
 	if placed.is_broken():
@@ -326,7 +334,11 @@ func power_off(user: Node) -> void:
 func _draw() -> void:
 	if placed != null:
 		var designed := definition.grows and Garden.draw_design(self, placed, _origin(), _cell_size)
-		if not designed:
+		if definition.built and placed.growth < 100.0:
+			_draw_partly_built()
+		elif not designed and _draw_season():
+			pass
+		elif not designed:
 			draw_definition(self, definition, placed.rotation, _origin(), _cell_size, Color.WHITE,
 					placed.get_collection(), is_active())
 			if definition.grows:
@@ -392,6 +404,46 @@ static func _flame_points(base: Vector2, height: float, half_width: float, sway:
 	points.append(base + Vector2(sway * 1.5, -height))
 	points.append(base + Vector2(-half_width * 0.6 + sway, -height * 0.5))
 	return points
+
+
+## Objet en construction : seul le bas de l'image est dessiné, selon l'avancement.
+func _draw_partly_built() -> void:
+	var view := definition.get_view(placed.get_collection(), placed.rotation)
+	if view.is_empty():
+		return
+	var rect := view_rect(definition, placed.rotation, _origin(), _cell_size, view[0])
+	var shown := clampf(0.25 + 0.75 * placed.growth / 100.0, 0.0, 1.0)
+	var texture: Texture2D = view[0]
+	var source := Rect2(0, texture.get_height() * (1.0 - shown), texture.get_width(), texture.get_height() * shown)
+	draw_texture_rect_region(texture, Rect2(rect.position.x, rect.end.y - rect.size.y * shown, rect.size.x, rect.size.y * shown), source)
+
+
+## Objet qui change avec les saisons (l'arbre) : son image de saison si Claude Design l'a dessinée
+## (`<id>_<collection>_<vue>_<saison>.svg`), sinon l'image habituelle teintée. Renvoie false pour
+## les autres objets.
+func _draw_season() -> bool:
+	if not definition.id in SEASONAL:
+		return false
+	var season := Weather.season()
+	var views := definition.get_view(placed.get_collection(), placed.rotation)
+	if views.is_empty():
+		return false
+	var view_name := SmartObjectDefinition.VIEWS[posmod(placed.rotation, 4)]
+	var flip: bool = views[1]
+	if view_name == &"droite":
+		view_name = &"gauche"
+	var texture := MouzLayers.texture(SmartObjectDefinition.VIEW_PATH % [definition.id, placed.get_collection(),
+			view_name, "_" + String(season)])
+	var tint := Color.WHITE
+	if texture == null:
+		texture = views[0]
+		tint = SEASON_TINT.get(season, Color.WHITE)
+	var rect := view_rect(definition, placed.rotation, _origin(), _cell_size, texture)
+	if flip:
+		draw_set_transform(Vector2(rect.position.x * 2 + rect.size.x, 0), 0.0, Vector2(-1, 1))
+	draw_texture_rect(texture, rect, false, tint)
+	draw_set_transform_matrix(Transform2D.IDENTITY)
+	return true
 
 
 ## Signe « en panne » au-dessus de l'objet : un panneau rouge avec un point d'exclamation.

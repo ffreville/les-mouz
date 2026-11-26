@@ -114,8 +114,9 @@ func burning() -> Array[SmartObject]:
 	return result
 
 
-## Met le feu à un objet. `character` : le Mouz qui cuisinait (null si le feu s'est propagé).
-func start_fire(smart_object: SmartObject, character: Character = null) -> void:
+## Met le feu à un objet. `character` : le Mouz qui cuisinait (null si le feu s'est propagé) ;
+## `cause` : le message à afficher à la place (la foudre…).
+func start_fire(smart_object: SmartObject, character: Character = null, cause := "") -> void:
 	if smart_object.placed.is_burning():
 		return
 	var first := burning().is_empty()
@@ -126,7 +127,9 @@ func start_fire(smart_object: SmartObject, character: Character = null) -> void:
 	_stop_users(smart_object)
 	smart_object.queue_redraw()
 	Sfx.play(&"alerte")
-	if character != null:
+	if cause != "":
+		EventBus.notice.emit(cause)
+	elif character != null:
 		EventBus.notice.emit("%s a mis le feu à %s !" % [character.get_display_name(), Upkeep.the_lower(smart_object)])
 	else:
 		EventBus.notice.emit("Le feu gagne %s !" % Upkeep.the_lower(smart_object))

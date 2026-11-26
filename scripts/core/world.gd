@@ -52,6 +52,11 @@ var upkeep := Upkeep.new()
 var garden := Garden.new()
 ## Coups durs : feu, inondation, cambriolage.
 var mishaps := Mishaps.new()
+## Saisons et météo.
+var weather := Weather.new()
+## Le temps dessiné : saison et neige au sol, pluie et neige qui tombent.
+var weather_ground := WeatherGround.new()
+var weather_sky := WeatherSky.new()
 
 @onready var floor_view: FloorView = $FloorView
 @onready var wall_view: WallView = $WallView
@@ -94,6 +99,8 @@ func _ready() -> void:
 	_make_layers()
 	# Les murs du haut du terrain montent de 64 px au-dessus de leur ligne.
 	camera.set_bounds(Rect2(Vector2(0, -WALL_MARGIN), Vector2(lot.size * lot.cell_size) + Vector2(0, WALL_MARGIN)))
+	add_child(weather)
+	weather.setup(self)
 	refresh_lot()
 	day_night.setup(self)
 	# Connecté avant la création des personnages : le monde se met à jour avant leurs files.
@@ -119,6 +126,9 @@ func _ready() -> void:
 	visits.setup(self, use_save and not played_before)
 	add_child(mishaps)
 	mishaps.setup(self, not played_before)
+	weather_sky.z_index = LEVEL_Z * Levels.COUNT + 5
+	add_child(weather_sky)
+	weather_sky.setup(self)
 	if played_before:
 		WorldSerializer.apply_to_world(self, household)
 	elif lot.walls.is_empty() and lot.objects.is_empty():
@@ -133,6 +143,7 @@ func refresh_lot() -> void:
 		_layers[level]["walls"].render(lot, people, level)
 	grid_overlay.render(lot)
 	pool_view.render(lot)
+	weather_ground.render(self)
 	_sync_objects()
 	_build_navigation()
 	_apply_view()
@@ -165,6 +176,8 @@ func _make_layers() -> void:
 				part.reparent(node, false)
 			node.add_child(pool_view)
 			node.move_child(pool_view, floor_view.get_index() + 1)
+			node.add_child(weather_ground)
+			node.move_child(weather_ground, pool_view.get_index() + 1)
 			layer.merge({"floor": floor_view, "walls": wall_view, "objects": objects_root, "characters": characters_root})
 		else:
 			var floor_part := FloorView.new()

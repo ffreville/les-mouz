@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActionDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="1_action"]
+[ext_resource type="Texture2D" path="res://assets/icons/ink/bonhomme_neige.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_action")
+id = &"faire_bonhomme_neige"
+display_name = "Faire un bonhomme de neige"
+icon = ExtResource("2_icon")
+duration_minutes = 45.0
+need_gains = Dictionary[StringName, float]({&"plaisir": 35.0, &"energie": -10.0, &"hygiene": -5.0})
+autonomous = false
+builds = true

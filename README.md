@@ -269,6 +269,8 @@ C'est tout : le catalogue charge automatiquement tous les `.tres` de `data/catal
 | Rythme du temps, heure de départ, multiplicateurs de vitesse | `data/settings/clock_settings.tres` |
 | Autonomie : fréquence de réflexion, poids de la distance, priorité des besoins bas, score minimal | `data/settings/autonomy_settings.tres` |
 | Vitesse de marche, autonomie par défaut | `data/characters/*.tres` (`walk_speed`, `autonomy_enabled`) |
+| Coups durs : risques, pompiers, flaques, cambriolage | constantes en tête de `scripts/core/mishaps.gd` |
+| Saisons, chances de chaque temps, effets dehors, neige | constantes en tête de `scripts/core/weather.gd` |
 | Défilement et zoom de la caméra | nœud `World/Camera` de `scenes/main.tscn` (variables exportées) |
 
 L'autonomie calcule, pour chaque action possible :
@@ -481,6 +483,26 @@ Un objet en panne se revend moitié moins cher. L'usure et le réparateur attend
 
 Le feu, les flaques, les pompiers attendus et la date du dernier cambriolage sont sauvegardés. Le cambrioleur ne l'est pas : une partie rechargée repart sans lui. Les factures à part (pompiers, dégâts des eaux) portent un libellé dans le menu des factures (`Bills.add_bill`). Réglages : constantes en tête de `scripts/core/mishaps.gd`.
 
+## Les saisons et la météo
+
+`Weather` (`scripts/core/weather.gd`, enfant du monde) tient le calendrier et le temps qu'il fait.
+
+- **L'année** a 4 saisons de 7 jours : printemps (jours 1 à 7), été, automne, hiver, puis on recommence. L'horloge affiche la saison, une icône du temps et la température. Son infobulle donne les prévisions des 4 prochaines tranches.
+- **Le temps** change toutes les 6 heures : soleil, nuageux, pluie, orage, neige (l'hiver) ou canicule (l'été). Les chances dépendent de la saison (`ODDS`), et chaque journée a une tendance que la plupart des tranches suivent. Le tirage dépend du quartier (`weather_seed`, rangé dans la sauvegarde du quartier) : toutes les maisons ont le même temps, et les prévisions sont justes.
+- **Le ciel** s'assombrit sous les nuages, la pluie et l'orage (`SKY_TINT`, combiné à la teinte de l'heure). La pluie et la neige tombent à l'écran, et l'orage fait des éclairs. Rien ne tombe en Construire et en Acheter.
+- **Le sol** change de teinte avec la saison : herbe sèche l'été, rousse l'automne, terne l'hiver. La neige tient au sol (+25 % par heure de neige) et fond quand elle s'arrête (plus vite sous la pluie). L'arbre se teinte aussi selon la saison.
+
+| Effet | Détail |
+|---|---|
+| Jardin | Dehors, il pousse 30 % plus vite au printemps, 30 % moins vite en automne, et pas du tout l'hiver. La pluie l'arrose, la canicule l'assèche deux fois plus vite, et l'hiver il boit moitié moins |
+| Activités dehors | Sous la pluie, l'orage ou la neige, les objets du jardin sont grisés (« il pleut », « orage », « il neige »), et l'autonomie ne sort plus. La piscine est fermée l'hiver (« trop froid »). Le transat veut du soleil, et le télescope un ciel dégagé |
+| Mouz dehors | Par heure passée dehors : pluie, Hygiène −6 et Plaisir −4 ; orage, Hygiène −8 et Plaisir −6 ; neige, Énergie −4 et Plaisir −2 ; canicule, Énergie −6 ; soleil (hors hiver), Plaisir +2 |
+| Factures | Le chauffage ajoute 15 % à la facture en automne et 40 % en hiver (`Bills.HEATING`) |
+| Bonhomme de neige | Avec assez de neige au sol, le téléphone du Mouz propose « Faire un bonhomme de neige » : il le monte dehors en 45 min (Plaisir +35), et le bonhomme fond avec la neige |
+| Foudre | Pendant un orage, la foudre peut tomber sur un arbre du jardin (4 % par heure) et y mettre le feu (voir « Les coups durs ») |
+
+La couche de neige est sauvegardée, et le temps se recalcule à partir de l'heure. Pour essayer un temps donné, `Weather.forced_kind = &"neige"` l'impose. Les dessins de saison (herbe, neige, arbre, bonhomme) sont provisoires en attendant le brief n° 9.
+
 ## Les courses
 
 Manger coûte : les actions qui nourrissent ont un `cost` (`data/actions/*.tres`), payé quand le Mouz s'y met. Sans assez d'argent, elles sont grisées (« pas assez d'argent ») et l'autonomie les ignore.
@@ -499,7 +521,7 @@ Pendant qu'un Mouz est au travail, ses besoins baissent moitié moins vite (il m
 
 ## Les factures
 
-Tous les 3 jours (jours 3, 6, 9…) à 8 h, une facture arrive : **50 Mz + 1,5 % de la valeur de la maison** (ce qu'ont coûté ses murs, sols, portes, fenêtres et objets). La maison de démo (19 136 Mz) reçoit ainsi 337 Mz tous les 3 jours, à comparer à 60 – 640 Mz de salaire par jour travaillé.
+Tous les 3 jours (jours 3, 6, 9…) à 8 h, une facture arrive : **50 Mz + 1,5 % de la valeur de la maison** (ce qu'ont coûté ses murs, sols, portes, fenêtres et objets), plus le **chauffage** en automne (+15 %) et en hiver (+40 %). La maison de démo (19 136 Mz) reçoit ainsi 337 Mz tous les 3 jours, à comparer à 60 – 640 Mz de salaire par jour travaillé.
 
 - Les factures à payer s'affichent à côté de l'argent, en haut de l'écran. Un clic montre le détail et propose « Tout payer ».
 - Une facture est à payer dans les 3 jours. En retard, elle est **majorée de 10 %** et **l'électricité est coupée** : le bouton passe au rouge, les objets électriques (frigo, cuisinière, micro-ondes, machine à café, lave-vaisselle, machine à laver, télé, ordinateur, console, chaîne hi-fi, lampes, aquarium) ne servent plus, les lampes s'éteignent et l'autonomie les ignore. Tout payer rétablit le courant.

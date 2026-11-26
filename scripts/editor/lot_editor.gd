@@ -561,7 +561,7 @@ func erase_floor(rect: Rect2i) -> bool:
 ## L'objet posé sur cette case du niveau regardé (tapis compris), ou null.
 func _object_on(cell: Vector2i) -> PlacedObject:
 	for placed in data.objects:
-		if placed.footprint().has_point(cell) and placed.definition.category != &"incident":
+		if placed.footprint().has_point(cell) and Catalog.is_sold(placed.definition):
 			return placed
 	return null
 
@@ -692,7 +692,7 @@ func restyle_object(placed: PlacedObject, collection: StringName) -> bool:
 ## L'objet posé sous une case (les objets solides passent avant les tapis), ou null.
 func object_at(cell: Vector2i) -> PlacedObject:
 	var found: PlacedObject = lot.blocking_object_at(cell, level_index)
-	if found != null:
+	if found != null and Catalog.is_sold(found.definition):
 		return found
 	for placed in data.objects:
 		if placed.footprint().has_point(cell):

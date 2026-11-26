@@ -55,6 +55,14 @@ static func collections() -> Array:
 	return items
 
 
+## Vrai pour ce qu'on achète et revend : pas les flaques ni les bonshommes de neige, posés par le jeu.
+static func is_sold(definition: SmartObjectDefinition) -> bool:
+	for spec in CATEGORIES:
+		if spec[0] == definition.category:
+			return true
+	return false
+
+
 ## Objets d'une catégorie.
 static func objects_in(category: StringName) -> Array:
 	return load_folder(OBJECTS).filter(func(o): return o.category == category)

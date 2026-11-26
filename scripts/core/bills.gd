@@ -2,7 +2,8 @@ class_name Bills
 extends Node
 ## Les factures de la maison (enfant du monde).
 ##  - Tous les BILL_INTERVAL jours, à BILL_HOUR, une facture arrive : un forfait plus un
-##    pourcentage de la valeur de la maison (murs, sols, portes, fenêtres, objets).
+##    pourcentage de la valeur de la maison (murs, sols, portes, fenêtres, objets), plus le
+##    chauffage en automne et en hiver (HEATING).
 ##  - Elle est à payer dans les DUE_DAYS jours (bouton « Factures » en haut de l'écran).
 ##  - Passé ce délai, elle est majorée de LATE_FEE et l'électricité est coupée : les objets
 ##    électriques ne servent plus et les lampes s'éteignent, jusqu'à ce que tout soit payé.
@@ -17,6 +18,8 @@ const BASE_AMOUNT := 50
 ## Part de la valeur de la maison facturée à chaque fois.
 const VALUE_RATE := 0.015
 const LATE_FEE := 0.10
+## Chauffage : part ajoutée à la facture selon la saison.
+const HEATING := {&"automne": 0.15, &"hiver": 0.4}
 ## Objets qui ne marchent plus quand l'électricité est coupée.
 const ELECTRIC := [&"frigo", &"cuisiniere", &"micro_ondes", &"machine_cafe", &"lave_vaisselle",
 		&"machine_laver", &"tele", &"ordinateur", &"console_jeux", &"chaine_hifi", &"lampe_chevet",
@@ -52,9 +55,15 @@ func add_bill(amount: int, label: String) -> void:
 	changed.emit()
 
 
-## Montant de la prochaine facture.
+## Montant de la prochaine facture, chauffage compris.
 func next_amount() -> int:
-	return BASE_AMOUNT + int(round(house_value() * VALUE_RATE))
+	var base := BASE_AMOUNT + int(round(house_value() * VALUE_RATE))
+	return base + heating(base)
+
+
+## Part du chauffage dans une facture de `base` Mz, selon la saison (voir Weather).
+static func heating(base: int) -> int:
+	return int(round(base * HEATING.get(Weather.season(), 0.0)))
 
 
 func total_due() -> int:
@@ -92,7 +101,8 @@ func _on_minute_changed(day: int, hour: int, _minute: int) -> void:
 		var amount := next_amount()
 		pending.append({"amount": amount, "day": day, "due": day + DUE_DAYS, "late": false})
 		EventBus.bill_received.emit(amount)
-		EventBus.notice.emit("Nouvelle facture : %s, à payer avant le jour %d." % [Palette.format_mz(amount), day + DUE_DAYS])
+		var heated := " (chauffage compris)" if HEATING.has(Weather.season()) else ""
+		EventBus.notice.emit("Nouvelle facture : %s%s, à payer avant le jour %d." % [Palette.format_mz(amount), heated, day + DUE_DAYS])
 		changed.emit()
 	for bill in pending:
 		if not bill["late"] and day >= int(bill["due"]):

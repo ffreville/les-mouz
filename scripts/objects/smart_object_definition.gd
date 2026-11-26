@@ -30,6 +30,9 @@ extends Resource
 @export var grows: bool = false
 ## Escalier : relie son niveau au suivant (voir Levels et GridNavigation).
 @export var is_stairs: bool = false
+## Se construit (bonhomme de neige) : se dessine de bas en haut selon `growth` (0 à 100) de l'objet
+## posé, pendant l'action `builds` qui le monte.
+@export var built: bool = false
 ## Plongeoir : la rangée de devant (côté face avant) avance au-dessus de l'eau de la piscine.
 @export var over_water: bool = false
 

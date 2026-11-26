@@ -79,6 +79,9 @@ static func darkness(color: Color) -> float:
 
 func _update_sky() -> void:
 	var color := sky_color(hour_of_day())
+	# Le temps assombrit le ciel (nuages, pluie, orage).
+	if world != null:
+		color *= world.weather.sky_tint()
 	if GameMode.mode != GameMode.Mode.LIVE:
 		color = Color.WHITE.lerp(color, EDIT_DARKNESS)
 	_modulate.color = color
