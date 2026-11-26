@@ -38,6 +38,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	var cell := world.navigation.world_to_cell(position_in_world, world.view_level)
 	var smart_object := world.get_object_at_point(position_in_world)
+	if smart_object == null:
+		# Les flaques se traversent, mais on clique dessus pour les éponger.
+		smart_object = world.mishaps.puddle_at(cell)
 	if smart_object != null:
 		if smart_object.has_actions():
 			_open_object_menu(selected, smart_object, click.position)
@@ -59,6 +62,9 @@ func _open_object_menu(actor: Character, smart_object: SmartObject, screen_posit
 			label += " · −%s" % Palette.format_mz(action.cost)
 		elif action.earns():
 			label += " · %s" % Palette.format_mz(action.earning_for(actor.skills.level(action.skill)))
+		if action == Mishaps.EXTINGUISH and problem == "":
+			label += " · %s" % ("sûr (extincteur)" if world.mishaps.has_object(&"extincteur", smart_object.level) \
+					else "%d %% de réussite" % int(Mishaps.EXTINGUISH_CHANCE * 100))
 		if action == Upkeep.REPAIR_ACTION and problem == "":
 			label += " · %d %% de réussite" % int(Upkeep.repair_chance(actor.skills.level(&"bricolage")) * 100)
 		options.append({
@@ -69,7 +75,17 @@ func _open_object_menu(actor: Character, smart_object: SmartObject, screen_posit
 				actor.queue.enqueue(QueuedAction.use_object(action, smart_object)),
 		})
 	var title := smart_object.get_display_name()
-	if smart_object.placed.is_broken():
+	if smart_object.placed.is_burning():
+		title += " · en feu !"
+		if world.mishaps.firemen_at <= 0.0:
+			options.append({
+				"label": "Appeler les pompiers · %s" % Palette.format_mz(Mishaps.FIREMEN_FEE),
+				"icon": load("res://assets/icons/ink/alerte.svg"),
+				"callback": world.mishaps.call_firemen,
+			})
+		else:
+			options.append({"label": "Les pompiers sont en route", "disabled": true})
+	elif smart_object.placed.is_broken():
 		title += " · en panne"
 		if smart_object.placed.repair_at <= 0.0:
 			var fee := world.upkeep.repairman_fee(smart_object)

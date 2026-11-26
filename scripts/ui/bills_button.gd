@@ -42,7 +42,8 @@ func _open_menu() -> void:
 	var options: Array = []
 	for bill in _bills.pending:
 		options.append({
-			"label": "%s · reçue jour %d · %s" % [Palette.format_mz(int(bill["amount"])), int(bill["day"]),
+			"label": "%s%s · reçue jour %d · %s" % [String(bill.get("label", "")) + " : " if bill.get("label", "") != "" else "",
+					Palette.format_mz(int(bill["amount"])), int(bill["day"]),
 					"en retard (+10 %)" if bill["late"] else "avant le jour %d" % int(bill["due"])],
 			"disabled": true,
 		})

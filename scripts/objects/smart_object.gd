@@ -21,6 +21,16 @@ var _seats: Dictionary[Node, int] = {}
 var _powered_by: Array[Node] = []
 ## Escalier : ce qui passe devant les Mouz qui le prennent (voir StairsFront).
 var front: StairsFront
+## Image courante des flammes (objet en feu) et temps écoulé depuis la précédente.
+var _fire_frame := 0
+var _fire_time := 0.0
+
+## Flammes dessinées par Claude Design (3 images), sinon dessinées ici.
+const FIRE_FRAMES := "res://assets/sprites/feu_%d.svg"
+const FIRE_FRAME_TIME := 0.14
+const FLAME_OUTER := Color("#F08A24")
+const FLAME_INNER := Color("#FFD34D")
+const SMOKE := Color("#6E6680")
 
 
 func setup(p_placed: PlacedObject, cell_size: int) -> void:
@@ -101,8 +111,12 @@ func get_display_name() -> String:
 	return definition.display_name
 
 
-## Actions de l'objet ; en panne, « Réparer » passe en premier.
+## Actions de l'objet ; en feu, « Éteindre le feu » passe en premier, et en panne, « Réparer ».
 func get_actions() -> Array[ActionDefinition]:
+	if placed != null and placed.is_burning():
+		var actions: Array[ActionDefinition] = [Mishaps.EXTINGUISH]
+		actions.append_array(definition.actions)
+		return actions
 	if placed != null and placed.is_broken():
 		var actions: Array[ActionDefinition] = [Upkeep.REPAIR_ACTION]
 		actions.append_array(definition.actions)
@@ -212,6 +226,10 @@ func get_spots(navigation: GridNavigation) -> Array[Vector2i]:
 
 ## Raison pour laquelle l'action n'est pas possible ici ("" si elle l'est).
 func action_problem(action: ActionDefinition, world: World) -> String:
+	if action == Mishaps.EXTINGUISH:
+		return "" if placed.is_burning() else "pas de feu"
+	if placed.is_burning():
+		return "en feu"
 	if action.swim and pool_cells().is_empty():
 		return "pas de piscine à côté"
 	if action.needs_ripe and definition.grows:
@@ -313,8 +331,67 @@ func _draw() -> void:
 					placed.get_collection(), is_active())
 			if definition.grows:
 				Garden.draw_plants(self, placed, Rect2(_origin(), Vector2(footprint.size) * _cell_size), sprite_rect_local())
-		if placed.is_broken():
+		if placed.is_burning():
+			_draw_fire()
+		elif placed.is_broken():
 			_draw_broken_mark()
+
+
+func _process(delta: float) -> void:
+	if placed == null or not placed.is_burning():
+		return
+	_fire_time += delta
+	if _fire_time >= FIRE_FRAME_TIME:
+		_fire_time = 0.0
+		_fire_frame = (_fire_frame + 1) % 3
+		queue_redraw()
+
+
+## Les flammes au-dessus de l'objet en feu, et un peu de fumée.
+func _draw_fire() -> void:
+	var rect := sprite_rect_local()
+	if rect.size == Vector2.ZERO:
+		rect = Rect2(_origin(), Vector2(footprint.size) * _cell_size)
+	var texture := MouzLayers.texture(FIRE_FRAMES % (_fire_frame + 1))
+	if texture != null:
+		# Image de 32 px de large, posée sur le haut de l'objet, une par case de largeur.
+		for i in footprint.size.x:
+			var at := Vector2(rect.position.x + i * _cell_size, rect.position.y + rect.size.y * 0.3 - texture.get_height())
+			draw_texture(texture, at)
+		return
+	var base_y := rect.position.y + minf(rect.size.y * 0.35, 24.0)
+	var count := maxi(2, footprint.size.x * 2)
+	for i in count:
+		var x := rect.position.x + rect.size.x * (i + 0.5) / count
+		var flicker := sin((_fire_frame + i * 1.7) * 2.1)
+		var height := 18.0 + 6.0 * flicker + (4.0 if i % 2 == 0 else 0.0)
+		_draw_flame(Vector2(x, base_y), height, 7.0, flicker * 2.0)
+	for i in 3:
+		var drift := float((_fire_frame + i) % 3)
+		draw_circle(Vector2(rect.get_center().x + (i - 1) * 7 + drift, base_y - 30 - i * 7 - drift * 2),
+				5.0 + i * 1.5, Color(SMOKE, 0.45 - i * 0.1))
+
+
+func _draw_flame(base: Vector2, height: float, half_width: float, sway: float) -> void:
+	var outer := _flame_points(base, height, half_width, sway)
+	draw_colored_polygon(outer, FLAME_OUTER)
+	var closed := outer.duplicate()
+	closed.append(outer[0])
+	draw_polyline(closed, Palette.CONTOUR, 1.5, true)
+	draw_colored_polygon(_flame_points(base + Vector2(0, -1), height * 0.55, half_width * 0.5, sway), FLAME_INNER)
+
+
+static func _flame_points(base: Vector2, height: float, half_width: float, sway: float) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	for i in 9:
+		var t := float(i) / 8.0
+		var angle := PI * t
+		# Bas arrondi, haut en pointe qui ondule.
+		points.append(base + Vector2(-cos(angle) * half_width, sin(angle) * half_width * 0.6))
+	points.append(base + Vector2(half_width * 0.6 + sway, -height * 0.5))
+	points.append(base + Vector2(sway * 1.5, -height))
+	points.append(base + Vector2(-half_width * 0.6 + sway, -height * 0.5))
+	return points
 
 
 ## Signe « en panne » au-dessus de l'objet : un panneau rouge avec un point d'exclamation.

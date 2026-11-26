@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ActionDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/action_definition.gd" id="1_action"]
+[ext_resource type="Texture2D" path="res://assets/icons/ink/eteindre_feu.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_action")
+id = &"eteindre_feu"
+display_name = "Éteindre le feu"
+icon = ExtResource("2_icon")
+duration_minutes = 15.0
+need_gains = Dictionary[StringName, float]({&"hygiene": -20.0, &"energie": -10.0})
+autonomous = false

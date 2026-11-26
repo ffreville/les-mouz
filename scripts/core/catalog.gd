@@ -20,6 +20,7 @@ const CATEGORIES := [
 	[&"loisirs", "Loisirs"],
 	[&"jardin", "Jardin"],
 	[&"deco", "Déco"],
+	[&"securite", "Sécurité"],
 	[&"construire", "Construction"],
 ]
 

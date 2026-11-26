@@ -561,7 +561,7 @@ func erase_floor(rect: Rect2i) -> bool:
 ## L'objet posé sur cette case du niveau regardé (tapis compris), ou null.
 func _object_on(cell: Vector2i) -> PlacedObject:
 	for placed in data.objects:
-		if placed.footprint().has_point(cell):
+		if placed.footprint().has_point(cell) and placed.definition.category != &"incident":
 			return placed
 	return null
 

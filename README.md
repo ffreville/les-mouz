@@ -187,7 +187,7 @@ Principes à retenir :
 
 ## Le catalogue : 50 objets en trois styles
 
-Le catalogue compte **50 objets** répartis en 7 catégories : Cuisine, Chambre, Salon, Salle de bain, Loisirs, Jardin et Déco. Chaque objet existe dans trois **collections** de style :
+Le catalogue compte **50 objets** répartis en 7 catégories : Cuisine, Chambre, Salon, Salle de bain, Loisirs, Jardin et Déco. La catégorie **Sécurité** ajoute le détecteur de fumée, l'extincteur et l'alarme (voir « Les coups durs »). Chaque objet existe dans trois **collections** de style :
 
 | Collection | Clé | Idée |
 |---|---|---|
@@ -464,6 +464,22 @@ Deux façons de le remettre en état, depuis son menu :
 - **Appeler un réparateur** : 50 Mz + 15 % du prix de l'objet, payés tout de suite ; il passe une heure plus tard.
 
 Un objet en panne se revend moitié moins cher. L'usure et le réparateur attendu sont sauvegardés. Réglages : `scripts/objects/upkeep.gd`.
+
+## Les coups durs
+
+`Mishaps` (`scripts/core/mishaps.gd`, enfant du monde) fait arriver trois sortes de malheurs. Les objets qui en protègent sont dans la nouvelle catégorie **Sécurité** du catalogue.
+
+| Coup dur | Ce qui le déclenche | Ce qu'il fait | Ce qui protège |
+|---|---|---|---|
+| **Feu** | Cuisiner à la cuisinière ou au barbecue : 8 % de risque par repas au niveau 0 de Cuisine, 0,7 % de moins par niveau, +5 % si l'appareil est usé | Des flammes sur l'objet, qui gagnent un objet voisin toutes les 20 min (4 chances sur 10). Chaque Mouz de la famille perd 15 de Plaisir | **Détecteur de fumée** (60 Mz) : il appelle les pompiers tout de suite. **Extincteur** (120 Mz) : « Éteindre le feu » réussit à coup sûr à son étage, au lieu d'une fois sur deux |
+| **Inondation** | Finir une lessive ou une vaisselle sur un appareil usé : 1 % de risque par point d'usure au-delà de 50 (45 % à 95 d'usure) | L'appareil tombe en panne et laisse 3 à 5 flaques autour de lui | Réparer ou remplacer l'appareil avant qu'il soit trop usé. Cliquer sur une flaque pour l'**éponger** (10 min). Une flaque laissée 12 h abîme le sol : 40 Mz de « Dégâts des eaux » chacune |
+| **Cambriolage** | Une fois par nuit entre 1 h et 4 h, 10 % de risque, plus jusqu'à 10 % selon la valeur de la maison (au moins 4 jours entre deux cambriolages, et pas dans les 4 jours qui suivent l'emménagement) | Un cambrioleur en noir arrive par la rue, va jusqu'à l'objet le plus cher qu'il peut emporter (télé, ordinateur, console, chaîne hi-fi, micro-ondes, machine à café, télescope, chevalet, horloge, lampes, plante, fauteuil, table de jeux, table de nuit), le prend en 15 min et repart avec | **Alarme antivol** (650 Mz) : elle sonne quand il arrive, il s'enfuit les mains vides, et la police verse une prime de 100 Mz |
+
+**Les pompiers.** Sans détecteur, ce sont les voisins qui les appellent, 1 h après le début du feu. On peut aussi les appeler soi-même depuis le menu de l'objet en feu. Ils arrivent 20 min après l'appel et éteignent tout. Leur facture de **400 Mz** s'ajoute aux factures, à payer dans les 3 jours comme les autres. Si le feu est déjà éteint à leur arrivée, ils repartent sans rien facturer.
+
+**Après le feu.** Ce qui a brûlé tombe en panne : on le répare ou on appelle le réparateur, comme pour l'usure. Un objet en feu ne propose plus que « Éteindre le feu », que l'autonomie ne choisit jamais : c'est au joueur d'agir.
+
+Le feu, les flaques, les pompiers attendus et la date du dernier cambriolage sont sauvegardés. Le cambrioleur ne l'est pas : une partie rechargée repart sans lui. Les factures à part (pompiers, dégâts des eaux) portent un libellé dans le menu des factures (`Bills.add_bill`). Réglages : constantes en tête de `scripts/core/mishaps.gd`.
 
 ## Les courses
 

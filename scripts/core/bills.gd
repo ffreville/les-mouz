@@ -22,7 +22,7 @@ const ELECTRIC := [&"frigo", &"cuisiniere", &"micro_ondes", &"machine_cafe", &"l
 		&"machine_laver", &"tele", &"ordinateur", &"console_jeux", &"chaine_hifi", &"lampe_chevet",
 		&"lampe_pied", &"aquarium"]
 
-## Factures à payer : { "amount": int, "day": jour d'arrivée, "due": jour limite, "late": bool }.
+## Factures à payer : { "amount": int, "day": jour d'arrivée, "due": jour limite, "late": bool, "label": texte (facture à part, sinon "") }.
 var pending: Array[Dictionary] = []
 ## Électricité coupée (une facture est en retard). Aussi lisible sans le monde : `Bills.cut`.
 var power_cut := false
@@ -42,6 +42,14 @@ func setup(p_world: World) -> void:
 ## Valeur de la maison : ce qu'ont coûté ses murs, sols, ouvertures et objets, à tous les étages.
 func house_value() -> int:
 	return Neighborhood.lot_value(world.lot)
+
+
+## Ajoute une facture à part (pompiers, dégâts des eaux…), à payer dans les DUE_DAYS jours.
+func add_bill(amount: int, label: String) -> void:
+	var day := GameClock.get_day()
+	pending.append({"amount": amount, "day": day, "due": day + DUE_DAYS, "late": false, "label": label})
+	EventBus.bill_received.emit(amount)
+	changed.emit()
 
 
 ## Montant de la prochaine facture.
@@ -120,7 +128,7 @@ func restore(data: Dictionary) -> void:
 	pending.clear()
 	for bill in data.get("pending", []):
 		pending.append({"amount": int(bill.get("amount", 0)), "day": int(bill.get("day", 0)),
-				"due": int(bill.get("due", 0)), "late": bool(bill.get("late", false))})
+				"due": int(bill.get("due", 0)), "late": bool(bill.get("late", false)), "label": String(bill.get("label", ""))})
 	last_bill_day = int(data.get("last_bill_day", 0))
 	_set_power_cut(bool(data.get("power_cut", false)))
 	changed.emit()

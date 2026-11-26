@@ -39,17 +39,28 @@ func wear(smart_object: SmartObject, minutes: float) -> void:
 		_break(smart_object)
 
 
-func _break(smart_object: SmartObject) -> void:
+## Met l'objet en panne tout de suite (brûlé, fuite) ; `announce` : message « en panne ».
+func break_object(smart_object: SmartObject, announce := true) -> void:
+	if smart_object.placed.is_broken():
+		smart_object.queue_redraw()
+		return
+	smart_object.placed.wear = 100.0
+	_break(smart_object, announce)
+
+
+func _break(smart_object: SmartObject, announce := true) -> void:
 	# Ceux qui s'en servaient s'arrêtent (la file s'en charge à la prochaine vérification).
 	for character in world.people:
 		for action in character.queue.items.duplicate():
 			if action.target_object == smart_object and action.definition != REPAIR_ACTION:
 				character.queue.cancel(action)
 	smart_object.queue_redraw()
+	EventBus.object_broke.emit(smart_object)
+	if not announce:
+		return
 	Sfx.play(&"alerte")
 	var verb := "sont" if ARTICLES.get(smart_object.definition.id, "") == "Les " else "est"
-	EventBus.notice.emit("%s %s en panne !" % [_the(smart_object), verb])
-	EventBus.object_broke.emit(smart_object)
+	EventBus.notice.emit("%s %s en panne !" % [the(smart_object), verb])
 
 
 ## Prix du réparateur pour cet objet.
@@ -65,7 +76,7 @@ func call_repairman(smart_object: SmartObject) -> bool:
 		EventBus.notice.emit("Pas assez d'argent pour le réparateur.")
 		return false
 	smart_object.placed.repair_at = GameClock.total_minutes + REPAIRMAN_DELAY
-	EventBus.notice.emit("Le réparateur passe dans une heure pour %s." % _the_lower(smart_object))
+	EventBus.notice.emit("Le réparateur passe dans une heure pour %s." % the_lower(smart_object))
 	return true
 
 
@@ -80,7 +91,7 @@ func _on_minute_changed(_day: int, _hour: int, _minute: int) -> void:
 		if placed.repair_at > 0.0 and GameClock.total_minutes >= placed.repair_at:
 			placed.repair_at = 0.0
 			_fix(smart_object)
-			EventBus.notice.emit("Le réparateur a remis %s en état." % _the_lower(smart_object))
+			EventBus.notice.emit("Le réparateur a remis %s en état." % the_lower(smart_object))
 
 
 func _on_action_finished(character: Node, action: RefCounted) -> void:
@@ -91,10 +102,10 @@ func _on_action_finished(character: Node, action: RefCounted) -> void:
 		return
 	if _rng.randf() < repair_chance(character.skills.level(&"bricolage")):
 		_fix(smart_object)
-		EventBus.notice.emit("%s a réparé %s." % [character.get_display_name(), _the_lower(smart_object)])
+		EventBus.notice.emit("%s a réparé %s." % [character.get_display_name(), the_lower(smart_object)])
 	else:
 		EventBus.notice.emit("%s n'arrive pas à réparer %s : il faudra réessayer." % [
-				character.get_display_name(), _the_lower(smart_object)])
+				character.get_display_name(), the_lower(smart_object)])
 
 
 func _fix(smart_object: SmartObject) -> void:
@@ -104,15 +115,24 @@ func _fix(smart_object: SmartObject) -> void:
 	EventBus.object_repaired.emit(smart_object)
 
 
-## Article de chaque objet qui s'use (« Le frigo », « Les toilettes »).
-const ARTICLES := {&"baignoire": "La ", &"chaine_hifi": "La ", &"console_jeux": "La ", &"cuisiniere": "La ",
-		&"evier": "L'", &"douche": "La ", &"frigo": "Le ", &"lave_vaisselle": "Le ", &"lavabo": "Le ",
-		&"machine_laver": "La ", &"machine_cafe": "La ", &"micro_ondes": "Le ", &"ordinateur": "L'",
-		&"tele": "Le ", &"toilettes": "Les "}
+## Article de chaque objet (« Le frigo », « Les toilettes »).
+const ARTICLES := {&"alarme": "L'", &"aquarium": "L'", &"arbre": "L'", &"armoire": "L'", &"baignoire": "La ",
+		&"balancoire": "La ", &"barbecue": "Le ", &"bibliotheque": "La ", &"bureau": "Le ", &"canape": "Le ",
+		&"chaine_hifi": "La ", &"chaise": "La ", &"cheminee": "La ", &"chevalet": "Le ", &"coiffeuse": "La ",
+		&"commode": "La ", &"console_jeux": "La ", &"cuisiniere": "La ", &"detecteur_fumee": "Le ",
+		&"douche": "La ", &"echelle_piscine": "L'", &"escalier": "L'", &"evier": "L'", &"extincteur": "L'",
+		&"fauteuil": "Le ", &"flaque": "La ", &"frigo": "Le ", &"hamac": "Le ", &"horloge": "L'",
+		&"lampe_chevet": "La ", &"lampe_pied": "La ", &"lavabo": "Le ", &"lave_vaisselle": "Le ", &"lit": "Le ",
+		&"lit_simple": "Le ", &"machine_cafe": "La ", &"machine_laver": "La ", &"massif_fleurs": "Le ",
+		&"micro_ondes": "Le ", &"miroir_mural": "Le ", &"ordinateur": "L'", &"panier_linge": "Le ",
+		&"piano": "Le ", &"plan_travail": "Le ", &"plante": "La ", &"plongeoir": "Le ", &"potager": "Le ",
+		&"poubelle": "La ", &"salon_jardin": "Le ", &"table": "La ", &"table_basse": "La ", &"table_jeux": "La ",
+		&"table_nuit": "La ", &"tapis": "Le ", &"tapis_yoga": "Le ", &"tele": "Le ", &"telescope": "Le ",
+		&"toilettes": "Les ", &"transat": "Le "}
 
 
 ## « Le frigo », « Les toilettes », « L'ordinateur ».
-static func _the(smart_object: SmartObject) -> String:
+static func the(smart_object: SmartObject) -> String:
 	var name := smart_object.get_display_name()
 	if ARTICLES.has(smart_object.definition.id):
 		name = name[0].to_lower() + name.substr(1)
@@ -120,6 +140,6 @@ static func _the(smart_object: SmartObject) -> String:
 
 
 ## Même chose en milieu de phrase (« le frigo »).
-static func _the_lower(smart_object: SmartObject) -> String:
-	var text := _the(smart_object)
+static func the_lower(smart_object: SmartObject) -> String:
+	var text := the(smart_object)
 	return text[0].to_lower() + text.substr(1)

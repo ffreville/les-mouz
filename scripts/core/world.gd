@@ -50,6 +50,8 @@ var visits := Visits.new()
 var upkeep := Upkeep.new()
 ## Plantations qui poussent.
 var garden := Garden.new()
+## Coups durs : feu, inondation, cambriolage.
+var mishaps := Mishaps.new()
 
 @onready var floor_view: FloorView = $FloorView
 @onready var wall_view: WallView = $WallView
@@ -115,6 +117,8 @@ func _ready() -> void:
 	garden.setup(self)
 	add_child(visits)
 	visits.setup(self, use_save and not played_before)
+	add_child(mishaps)
+	mishaps.setup(self, not played_before)
 	if played_before:
 		WorldSerializer.apply_to_world(self, household)
 	elif lot.walls.is_empty() and lot.objects.is_empty():

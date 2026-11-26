@@ -52,6 +52,7 @@ static func _level_to_data(lot: LotLevel) -> Dictionary:
 			"style": String(placed.get_collection()), "on": placed.switched_on,
 			"wear": snappedf(placed.wear, 0.01), "repair_at": placed.repair_at,
 			"growth": snappedf(placed.growth, 0.01), "water": snappedf(placed.water, 0.01),
+			"fire": snappedf(placed.fire, 0.01), "since": placed.since,
 		}.merged(_purchase(placed)))
 	return {"walls": walls, "floors": floors, "openings": openings, "wallpapers": wallpapers, "objects": objects}
 
@@ -136,6 +137,8 @@ static func _level_from_data(lot: LotLevel, data: Dictionary) -> void:
 			placed.repair_at = float(entry.get("repair_at", 0.0))
 			placed.growth = float(entry.get("growth", 100.0))
 			placed.water = float(entry.get("water", 100.0))
+			placed.fire = float(entry.get("fire", 0.0))
+			placed.since = float(entry.get("since", 0.0))
 			_restore_purchase(placed, entry)
 			lot.objects.append(placed)
 

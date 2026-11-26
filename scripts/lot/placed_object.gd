@@ -18,10 +18,18 @@ extends Purchase
 ## Plantation (voir Garden) : pousse de 0 (graines) à 100 (mûr), et eau de 0 (fané) à 100.
 @export var growth: float = 100.0
 @export var water: float = 100.0
+## En feu depuis tant de minutes de jeu (0 : pas de feu). Voir Mishaps.
+@export var fire: float = 0.0
+## Flaque (voir Mishaps) : minute de jeu où elle est apparue.
+@export var since: float = 0.0
 
 
 func is_broken() -> bool:
 	return wear >= 100.0
+
+
+func is_burning() -> bool:
+	return fire > 0.0
 
 
 ## Collection effective (celle par défaut si aucune n'est choisie ou si elle n'existe plus).
