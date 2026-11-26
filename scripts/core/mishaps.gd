@@ -313,6 +313,7 @@ func start_burglary() -> bool:
 	look.outfit = &"pull"
 	look.outfit_color = BURGLAR_OUTFIT
 	look.pants_color = BURGLAR_PANTS
+	look.accessory = &"cambrioleur"
 	profile.appearance = look
 	_burglar = world.character_scene.instantiate()
 	world.characters_root.add_child(_burglar)

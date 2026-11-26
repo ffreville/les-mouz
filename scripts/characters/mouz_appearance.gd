@@ -47,6 +47,9 @@ const SWIM_HEAD_DROP := {&"enfant": 9.0, &"ado": 18.0, &"adulte": 24.0, &"aine":
 @export var outfit: StringName = &"tshirt"
 @export var outfit_color: Color = Color("#8DB596")
 @export var pants_color: Color = PANTS_COLOR
+## Accessoire posé par-dessus tout (le bonnet et le sac du cambrioleur) : calques
+## `accessoire_<nom>_<age>_<vue>.svg` (couleurs dessinées) ; vide : aucun. Pas sauvegardé.
+var accessory := &""
 
 
 ## Coupe réellement dessinée (le crâne dégarni n'existe qu'à partir d'adulte).
@@ -96,6 +99,8 @@ func body_layers(direction: StringName, pose: String = "", shadow := true) -> Ar
 	layers.append([FOLDER + head + "_contour.svg", Color.WHITE, true])
 	layers.append([FOLDER + hair_base + ".svg", hair_color, true])
 	layers.append([FOLDER + hair_base + "_contour.svg", Color.WHITE, true])
+	if accessory != &"":
+		layers.append([FOLDER + "accessoire_%s_%s_%s.svg" % [accessory, age, direction], Color.WHITE, true])
 	return layers
 
 
