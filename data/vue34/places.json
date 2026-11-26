@@ -5483,6 +5483,386 @@
      }
     ]
    }
+  },
+  "transat": {
+   "nature": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       51,
+       31
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       13,
+       31
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       16,
+       28
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       16,
+       66
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ]
+   },
+   "retro": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       51,
+       31
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       13,
+       31
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       16,
+       28
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       16,
+       66
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ]
+   },
+   "moderne": {
+    "bas": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 90,
+      "ombre": false,
+      "tete": [
+       51,
+       31
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "haut": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 270,
+      "ombre": false,
+      "tete": [
+       13,
+       31
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "gauche": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 0,
+      "ombre": false,
+      "tete": [
+       16,
+       28
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ],
+    "droite": [
+     {
+      "pose": "allonge",
+      "calques": "debout_bas",
+      "rotation": 180,
+      "ombre": false,
+      "tete": [
+       16,
+       66
+      ],
+      "pivot": {
+       "enfant": [
+        16,
+        23.6
+       ],
+       "ado": [
+        16,
+        14.0
+       ],
+       "adulte": [
+        16,
+        8.5
+       ],
+       "aine": [
+        16,
+        10.3
+       ]
+      },
+      "devant": null
+     }
+    ]
+   }
   }
  },
  "tete_dy": {

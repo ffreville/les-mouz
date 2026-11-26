@@ -719,10 +719,15 @@ func _placement_problem(ghost: PlacedObject, moving: PlacedObject) -> String:
 			if y + 1 < rect.end.y and lot.has_wall(Edges.between(cell, cell + Vector2i.DOWN), level_index):
 				return "Un mur traverse l'objet"
 	if level_index == 0:
+		# Le plongeoir avance au-dessus de l'eau : sa rangée de devant doit y être, le reste sur la terre.
+		var over := ghost.definition.water_cells(rect, ghost.rotation)
 		for y in range(rect.position.y, rect.end.y):
 			for x in range(rect.position.x, rect.end.x):
-				if lot.pool.has(Vector2i(x, y)):
+				var cell := Vector2i(x, y)
+				if lot.pool.has(cell) and not cell in over:
 					return "Dans l'eau de la piscine"
+				if cell in over and not lot.pool.has(cell):
+					return "La planche doit avancer au-dessus de l'eau"
 	# À l'étage, un objet se pose sur le plancher.
 	if level_index > 0:
 		for y in range(rect.position.y, rect.end.y):

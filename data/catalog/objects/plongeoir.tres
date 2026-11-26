@@ -9,10 +9,11 @@
 script = ExtResource("1_object")
 id = &"plongeoir"
 display_name = "Plongeoir"
-sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("3_sprite")})
+sprites = Dictionary[StringName, Texture2D]({&"nature": ExtResource("3_sprite"), &"retro": ExtResource("3_sprite"), &"moderne": ExtResource("3_sprite")})
 size = Vector2i(1, 2)
 blocks_movement = true
 actions = Array[ExtResource("2_action")]([ExtResource("4_action")])
 capacity = 2
 price = 600
 category = &"jardin"
+over_water = true

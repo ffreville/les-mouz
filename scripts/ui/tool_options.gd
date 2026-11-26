@@ -173,17 +173,21 @@ static func _no_roof() -> RoofDefinition:
 	return _no_roof_option
 
 
-## Carte d'un style de toit : échantillon (pan au soleil et pan à l'ombre), nom, prix par case.
+## Carte d'un style de toit : vignette du petit toit (brief n° 8), nom, prix par case.
 func _roof_card(definition: RoofDefinition) -> Button:
 	var card := _card(Vector2(113, 48))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
 	var swatch := Control.new()
-	swatch.custom_minimum_size = Vector2(26, 22)
+	swatch.custom_minimum_size = Vector2(33, 23)
 	swatch.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var thumbnail := definition.thumbnail()
 	var paint := func() -> void:
 		var w := swatch.size.x
 		var h := swatch.size.y
+		if thumbnail != null:
+			swatch.draw_texture_rect(thumbnail, Rect2(Vector2.ZERO, swatch.size), false)
+			return
 		if definition.id == LotEditor.NO_ROOF:
 			swatch.draw_rect(Rect2(Vector2.ZERO, swatch.size), Palette.PAPIER_2)
 			swatch.draw_line(Vector2(3, 3), swatch.size - Vector2(3, 3), Palette.CRITIQUE, 2.0)

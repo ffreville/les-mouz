@@ -6,10 +6,10 @@
 script = ExtResource("1_roof")
 id = &"zinc"
 display_name = "Zinc"
-color = Color(0.6039, 0.6431, 0.6824, 1)
-top_color = Color(0.7176, 0.7529, 0.7843, 1)
-light_color = Color(0.6627, 0.6980, 0.7333, 1)
-dark_color = Color(0.4863, 0.5255, 0.5647, 1)
-line_color = Color(0.4196, 0.4549, 0.4941, 1)
-row_step = 10.0
+color = Color(0.6627, 0.7059, 0.7608, 1)
+top_color = Color(0.5294, 0.5725, 0.6235, 1)
+light_color = Color(0.7804, 0.8157, 0.8588, 1)
+dark_color = Color(0.5294, 0.5725, 0.6235, 1)
+line_color = Color(0.4314, 0.4745, 0.5294, 1)
+ridge_color = Color(0.4314, 0.4745, 0.5294, 1)
 price_per_cell = 7

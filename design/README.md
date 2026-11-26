@@ -1232,3 +1232,78 @@ Toutes ces pièces se dessinent **dans la case vide**, à côté de la case de s
 - **Icônes** : `etage_monter`, `etage_descendre` et `escalier`, en encre et en blanc, dans `svg/icones/`.
 - **Voile des étages du dessous** : uni, `#2B2440`, sans flou ni désaturation. 45 % pour l'étage juste en dessous, 60 % pour deux étages plus bas (au 2e étage, le rez-de-chaussée). Il couvre tout l'étage du dessous ; l'étage regardé se dessine ensuite par-dessus.
 - **Repère d'étage sur les portraits** : une pastille `contour` de 18 px de haut, avec le texte `papier` 11 px 800 (« RDC », « 1er », « 2e »). Elle se pose à −6, −6 du coin haut-gauche du portrait, avec un liseré `papier` de 2 px. Elle s'affiche seulement quand le Mouz n'est pas à l'étage regardé. Pour un Mouz dans l'escalier, elle s'affiche toujours, avec la petite icône escalier et l'étage vers lequel il va.
+
+## Brief n° 8 · Les toits, la piscine et le jardin
+
+Planche : « Brief 8 · Toits, piscine et jardin » sur le canvas. Planche de contrôle : `apercu_toits_piscine.png`. On y voit Les Glycines vue de la rue avec son toit en tuiles : Théo nage, Samir est au bout du plongeoir, Léa bronze sur le transat. Puis le même rez-de-chaussée en murs coupés, sans toit. En bas, les 4 styles de toit sur une maison en L.
+
+Les murs, ouvertures, sols et objets des Glycines sont lus dans `data/quartier/maisons/les_glycines.tres` (les deux niveaux). Le jardin (terrasse, piscine, potager, massifs, transats) est ajouté pour la planche.
+
+Toutes les mesures sont dans `tokens.json` › `toits_piscine_jardin`. Nouveau dossier : `svg/toits/`.
+
+### 1. Les toits
+
+**Ce qui rend le mieux : des motifs à répéter plutôt qu'un toit par pièces.** Le jeu calcule déjà la hauteur de chaque case. Il lui suffit de remplir chaque pan calculé avec la couleur et le motif de son orientation, puis de tracer les filets par-dessus. Des pièces à la case donneraient des joints visibles à chaque case et beaucoup de combinaisons (arêtier, noue, faîtage par case).
+
+- **Géométrie** (c'est ce que fait le jeu, et ce que fait mon moteur pour les planches) : toit en croupe par pièce rectangulaire, pente 45° (+32 px par case vers l'intérieur). La base est le haut des murs pleins (64 px par niveau). Le débord est de 8 px tout autour, donc l'égout est à base − 8. Deux toits qui se touchent se raccordent en noue : en chaque point, on garde le plus haut des deux.
+- **Le pan nord se voit par la tranche.** Avec une pente de 45° et la vue trois quarts, il se réduit à une ligne, au niveau du faîtage. C'est normal, il ne faut rien y dessiner. On voit donc le pan sud en face et les pans est et ouest en biais, comme demandé.
+- **Teinte par pan** (lumière en haut à gauche) : sud = aplat principal, ouest = clair, est = sombre, nord = sombre.
+
+| Style | Nom | Pour | Principal | Clair | Sombre | Prix / case |
+|---|---|---|---|---|---|---|
+| `tuiles` | Tuiles | nature | `#C8644A` | `#DE8466` | `#9E4A37` | 30 Mz |
+| `ardoise` | Ardoise | retro | `#5C6680` | `#7A859E` | `#454E66` | 40 Mz |
+| `zinc` | Zinc | moderne | `#A9B4C2` | `#C7D0DB` | `#87929F` | 45 Mz |
+| `chaume` | Chaume | bicoque, potager | `#C9A45C` | `#DCBC78` | `#A6823F` | 25 Mz |
+
+- **Motifs** : `svg/toits/toit_<style>_<sud|nord|est|ouest>.svg`, 32 × 32, dans le repère du sol. Le jeu les plaque sur le pan avec les coordonnées au sol comme UV : la projection les étire toute seule (×2 en hauteur sur le pan sud, en biais sur les pans est et ouest). Les rangs sont parallèles à l'égout : horizontaux pour sud et nord, verticaux pour est et ouest. Tuiles : rangs de 8 px festonnés. Ardoise : rangs de 8 px, joints décalés. Zinc : joints debout tous les 12 px, perpendiculaires à l'égout. Chaume : rangs ondulés et brins.
+- **Filets** :
+  - contour encre 1,5 px autour de chaque pan : il dessine les arêtiers (angle sortant) et les noues (angle rentrant) ;
+  - faîtage : trait encre 7 px et couleur du faîtage 4,5 px, avec des bombés de tuiles faîtières pour les tuiles (`toit_<style>_faitage.svg`, 32 × 9, à répéter) ;
+  - égout : gouttière de 4,5 px sous l'égout sud (`toit_<style>_gouttiere.svg`, 32 × 6), 2 px le long des égouts est et ouest. Le chaume n'a pas de gouttière, mais un bord épais.
+- **Jonction avec un mur d'étage qui dépasse du toit** : `svg/toits/toit_solin.svg`, bande de zinc de 6 px posée au pied du mur, là où le pan le rencontre.
+- **Cheminée** : `svg/sprites/cheminee_toit_<collection>.svg` (brique en Nature, pierre avec deux mitrons en Rétro, conduit métal en Moderne). Elle est symétrique, donc une seule vue. Le point `ancrage` (dans tokens.json) se pose sur le toit, au centre de la case de la cheminée. Elle descend 10 px sous ce point, ce qui cache le raccord avec la pente.
+- **Vignettes des styles** : `svg/vignettes/toit_<style>.svg` (104 × 72, un petit toit en croupe). Sur le canvas, les cartes de l'outil « Toit » reprennent le format des cartes de sol : échantillon du motif 56 × 56, nom, prix par case.
+- **Icône** : `toit`.
+
+### 2. La piscine
+
+- **Eau** : `svg/sols/piscine_eau_<1|2|3>.svg`, tuiles 32 × 32 raccordables. Les 3 images bouclent, avec des reflets qui glissent de 3 px ; je propose environ 320 ms par image.
+- **Rangée sous la margelle nord** : `piscine_eau_bord_<1|2|3>.svg`. On y voit la paroi carrelée descendre sous l'eau sur 16 px, puis la ligne de flottaison.
+- **Margelle** (`svg/murs/`) : pierre claire `#ECE4D6`, joints tous les 16 px, nez de 2 px. Elle se pose dans les cases autour de l'eau, comme les bords de dalle du brief n° 7. (X, Y) est le coin haut-gauche de la case d'eau.
+
+| Pièce | Taille | Position | Quand |
+|---|---|---|---|
+| `margelle_n` | 32 × 10 | (X, Y − 8) | case d'eau sans eau au nord |
+| `margelle_s` | 32 × 10 | (X, Y + 30) | case d'eau sans eau au sud |
+| `margelle_o` | 8 × 34 | (X − 8, Y − 2) | case d'eau sans eau à l'ouest |
+| `margelle_e` | 8 × 34 | (X + 32, Y − 2) | case d'eau sans eau à l'est |
+| `margelle_coin_no` | 8 × 10 | (X − 8, Y − 8) | coin nord-ouest du bassin |
+| `margelle_coin_ne` | 8 × 10 | (X + 32, Y − 8) | coin nord-est |
+| `margelle_coin_so` | 8 × 10 | (X − 8, Y + 30) | coin sud-ouest |
+| `margelle_coin_se` | 8 × 10 | (X + 32, Y + 30) | coin sud-est |
+| `margelle_rentrant` | 8 × 8 | coin de la case de terre, côté eau | angle rentrant d'un bassin en L (case de terre avec de l'eau sur deux côtés) |
+
+- **Échelle de piscine** : 1 × 1 (32 × 56). Elle se pose sur la case de terre qui touche l'eau, face avant vers l'eau. Deux tubes courbés et deux marches visibles. Tubes acier en Nature, laiton en Rétro, noirs en Moderne.
+- **Plongeoir** : 1 × 2 (32 × 94). Le socle est sur la case du fond (terre), la planche avance au-dessus de la case de devant (eau), entre 14 et 15,5 px de haut. Planche bois en Nature, moutarde à bandes blanches en Rétro, blanche à bout bleu en Moderne.
+- **Transat** : 2 × 1 (64 × 60), dossier relevé à droite. La vue `droite` est livrée, parce que le dossier n'est pas symétrique.
+- **Places du transat** : une place « allongé », comme au lot 7 (`places_transat` dans tokens.json, à ajouter à `data/vue34/places.json`). La tête est posée sur le dossier, donc il n'y a pas de calque devant.
+- **Mouz qui nagent** : `corps_<sexe>_<âge>_nage_<bas|haut|gauche>_<1|2>_<calque>.svg` (328 fichiers avec le plongeon), `droite` = miroir. Deux images de brasse : bras ramenés devant, puis écartés. Le bas du corps n'est pas dessiné.
+  - Ordre des calques : cheveux_arriere, peau, tenue (bretelles du maillot pour les femmes), contour, remous (eau et anneau d'écume, couleurs fixes), bras_contour, bras, puis la tête et les cheveux du lot 2.
+  - L'ancrage (16, 47) est sur la surface de l'eau.
+  - La tête descend de `tete_dy` : enfant 9, ado 18, adulte 24, aîné 22.
+- **Plongeon** : `corps_<sexe>_<âge>_plongeon_<bas|haut|gauche>_<peau|tenue|contour>.svg`. Le Mouz est en maillot, debout en l'air, bras tendus au-dessus de la tête. La tête ne bouge pas (`tete_dy` = 0). Le jeu le fait suivre un arc du bout de la planche jusqu'à l'eau.
+- **Éclaboussure** : `svg/sprites/eclaboussure_<1|2>.svg`, 32 × 32, ancrage (16, 26) sur l'eau. L'image 1 est la gerbe, l'image 2 les ronds dans l'eau.
+- **Icônes** : `piscine`, `nager`, `plonger`, `bronzer`.
+
+### 3. La terrasse et les plantations
+
+- **Terrasse** : `svg/sols/terrasse.svg`, lames est-ouest de 8 px, bouts décalés, sans contour, raccordable. `terrasse_bordure.svg` est la même tuile plus foncée, pour la rangée du bord si le jeu veut marquer la limite. Prix proposé : 18 Mz par case.
+- **Potager** : le bac seul, `potager_<collection>_<vue>_bac.svg`, à la même taille que le sprite complet. Par-dessus, un calque d'état : `potager_<vue>_<graines|pousses|mur|fane>.svg`. Les calques sont les mêmes pour les 3 collections, parce que la terre est au même endroit. Les états :
+  - graines : sillons et graines ;
+  - pousses : deux feuilles ;
+  - mûr : tomates, carottes, salades ;
+  - fané : plants jaunis et couchés.
+- **Massif de fleurs** : 2 × 1, `massif_fleurs_<collection>_<vue>.svg`, avec une bordure en bois (Nature), brique (Rétro) ou béton (Moderne). Calques d'état : `massif_fleurs_<vue>_<graines|pousses|fleuri|fane>.svg`. Fleuri : 10 fleurs roses, jaunes, violettes, orange et blanches. Vignettes en état fleuri. Icône `fleurs`.
+- **Jauge d'eau** : `jauge_eau_vide.svg` (goutte vide en pointillé, « a soif ») et `jauge_eau_pleine.svg`. C'est une bulle de 24 × 30 dont la pointe, en (12, 28), se pose au-dessus de la plantation. Icône `soif`.
+- **Icône** : `terrasse`.

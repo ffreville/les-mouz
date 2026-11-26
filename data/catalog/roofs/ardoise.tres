@@ -6,10 +6,10 @@
 script = ExtResource("1_roof")
 id = &"ardoise"
 display_name = "Ardoise"
-color = Color(0.3647, 0.4000, 0.5020, 1)
-top_color = Color(0.4784, 0.5137, 0.6118, 1)
-light_color = Color(0.4196, 0.4549, 0.5647, 1)
-dark_color = Color(0.2745, 0.3059, 0.4000, 1)
-line_color = Color(0.2314, 0.2588, 0.3412, 1)
-row_step = 7.0
+color = Color(0.3608, 0.4000, 0.5020, 1)
+top_color = Color(0.2706, 0.3059, 0.4000, 1)
+light_color = Color(0.4784, 0.5216, 0.6196, 1)
+dark_color = Color(0.2706, 0.3059, 0.4000, 1)
+line_color = Color(0.2118, 0.2431, 0.3294, 1)
+ridge_color = Color(0.2118, 0.2431, 0.3294, 1)
 price_per_cell = 8

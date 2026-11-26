@@ -254,7 +254,7 @@ func _update_body() -> void:
 		elif swimmer.facing.y < 0:
 			swim_view = &"haut"
 		var stroke := int(Time.get_ticks_msec() / 400) % 2
-		body.show_pose(swim_view, "marche_1" if stroke == 0 else "marche_2")
+		body.show_pose(swim_view, "plongeon" if swimmer.is_diving() else "nage_%d" % (stroke + 1))
 		return
 	var facing := mover.facing
 	var view := &"bas"

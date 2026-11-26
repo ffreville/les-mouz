@@ -30,6 +30,27 @@ extends Resource
 @export var grows: bool = false
 ## Escalier : relie son niveau au suivant (voir Levels et GridNavigation).
 @export var is_stairs: bool = false
+## Plongeoir : la rangée de devant (côté face avant) avance au-dessus de l'eau de la piscine.
+@export var over_water: bool = false
+
+
+## Les cases de l'emprise qui avancent au-dessus de l'eau (rangée de devant), pour un objet `over_water`.
+## Rotation 0 : face avant vers le haut, puis sens horaire.
+func water_cells(rect: Rect2i, rotation: int) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	if not over_water:
+		return cells
+	for y in range(rect.position.y, rect.end.y):
+		for x in range(rect.position.x, rect.end.x):
+			var front := false
+			match posmod(rotation, 4):
+				0: front = y == rect.position.y
+				1: front = x == rect.end.x - 1
+				2: front = y == rect.end.y - 1
+				3: front = x == rect.position.x
+			if front:
+				cells.append(Vector2i(x, y))
+	return cells
 
 
 ## Collections disponibles, dans l'ordre des sprites.

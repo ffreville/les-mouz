@@ -36,6 +36,8 @@ const OUTFIT_COLORS := {"orange": Color("#E8794A"), "moutarde": Color("#E2A93B")
 		"prune": Color("#C46BA0"), "brique": Color("#B85C45"), "ardoise": Color("#4A5568"),
 		"creme": Color("#F3E3C3")}
 const PANTS_COLOR := Color("#4A5568")
+## Dans l'eau, la tête descend avec les épaules (brief n° 8, `nage.tete_dy`).
+const SWIM_HEAD_DROP := {&"enfant": 9.0, &"ado": 18.0, &"adulte": 24.0, &"aine": 22.0}
 
 @export var sex: StringName = &"femme"
 @export var age: StringName = &"adulte"
@@ -68,6 +70,8 @@ func describe() -> String:
 ## `direction` : bas, haut ou gauche (droite = gauche retourné) ; `pose` : "", "marche_1", "marche_2",
 ## "assis", "tailleur", "genoux" ou "allonge".
 func body_layers(direction: StringName, pose: String = "", shadow := true) -> Array:
+	if pose.begins_with("nage") or pose == "plongeon":
+		return _swim_layers(direction, pose)
 	# Allongé : les calques debout de face, sans ombre (le corps les fait pivoter).
 	var lying := pose == "allonge"
 	if lying:
@@ -90,6 +94,31 @@ func body_layers(direction: StringName, pose: String = "", shadow := true) -> Ar
 	layers.append([FOLDER + body + "_contour.svg", Color.WHITE, false])
 	layers.append([FOLDER + head + ".svg", skin, true])
 	layers.append([FOLDER + head + "_contour.svg", Color.WHITE, true])
+	layers.append([FOLDER + hair_base + ".svg", hair_color, true])
+	layers.append([FOLDER + hair_base + "_contour.svg", Color.WHITE, true])
+	return layers
+
+
+## Calques dans la piscine (brief n° 8) : « nage_1 », « nage_2 » (tête et épaules hors de l'eau,
+## avec les remous) ou « plongeon » (en maillot, bras tendus). La tenue est le maillot.
+func _swim_layers(direction: StringName, pose: String) -> Array:
+	var hair := effective_hair()
+	var body := "corps_%s_%s_plongeon_%s" % [sex, age, direction]
+	if pose != "plongeon":
+		body = "corps_%s_%s_nage_%s_%s" % [sex, age, direction, pose.trim_prefix("nage_")]
+	var hair_base := "cheveux_%s_%s_%s" % [hair, age, direction]
+	var layers: Array = []
+	if direction == &"bas":
+		layers.append([FOLDER + hair_base + "_arriere.svg", hair_color, true])
+		layers.append([FOLDER + hair_base + "_arriere_contour.svg", Color.WHITE, true])
+	layers.append([FOLDER + body + "_peau.svg", skin, false])
+	layers.append([FOLDER + body + "_tenue.svg", outfit_color, false])
+	layers.append([FOLDER + body + "_contour.svg", Color.WHITE, false])
+	layers.append([FOLDER + body + "_remous.svg", Color.WHITE, false])
+	layers.append([FOLDER + body + "_bras_contour.svg", Color.WHITE, false])
+	layers.append([FOLDER + body + "_bras.svg", skin, false])
+	layers.append([FOLDER + "tete_%s_%s.svg" % [age, direction], skin, true])
+	layers.append([FOLDER + "tete_%s_%s_contour.svg" % [age, direction], Color.WHITE, true])
 	layers.append([FOLDER + hair_base + ".svg", hair_color, true])
 	layers.append([FOLDER + hair_base + "_contour.svg", Color.WHITE, true])
 	return layers

@@ -34,6 +34,8 @@ func setup(p_placed: PlacedObject, cell_size: int) -> void:
 	z_index = FLOOR_OBJECT_Z if not definition.blocks_movement else 0
 	if definition.is_stairs:
 		_update_front.call_deferred()
+	if definition.grows:
+		Garden.warm(definition)
 	queue_redraw()
 
 
@@ -305,12 +307,14 @@ func power_off(user: Node) -> void:
 
 func _draw() -> void:
 	if placed != null:
-		draw_definition(self, definition, placed.rotation, _origin(), _cell_size, Color.WHITE,
-				placed.get_collection(), is_active())
+		var designed := definition.grows and Garden.draw_design(self, placed, _origin(), _cell_size)
+		if not designed:
+			draw_definition(self, definition, placed.rotation, _origin(), _cell_size, Color.WHITE,
+					placed.get_collection(), is_active())
+			if definition.grows:
+				Garden.draw_plants(self, placed, Rect2(_origin(), Vector2(footprint.size) * _cell_size), sprite_rect_local())
 		if placed.is_broken():
 			_draw_broken_mark()
-		if definition.grows:
-			Garden.draw_plants(self, placed, Rect2(_origin(), Vector2(footprint.size) * _cell_size), sprite_rect_local())
 
 
 ## Signe « en panne » au-dessus de l'objet : un panneau rouge avec un point d'exclamation.

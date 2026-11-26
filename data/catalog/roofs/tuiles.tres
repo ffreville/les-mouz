@@ -6,10 +6,10 @@
 script = ExtResource("1_roof")
 id = &"tuiles"
 display_name = "Tuiles rouges"
-color = Color(0.7686, 0.4000, 0.2902, 1)
-top_color = Color(0.8471, 0.5373, 0.4235, 1)
-light_color = Color(0.8235, 0.4784, 0.3608, 1)
-dark_color = Color(0.6196, 0.3020, 0.2157, 1)
-line_color = Color(0.5569, 0.2627, 0.1882, 1)
-row_step = 6.0
+color = Color(0.7843, 0.3922, 0.2902, 1)
+top_color = Color(0.6196, 0.2902, 0.2157, 1)
+light_color = Color(0.8706, 0.5176, 0.4000, 1)
+dark_color = Color(0.6196, 0.2902, 0.2157, 1)
+line_color = Color(0.5490, 0.2471, 0.1843, 1)
+ridge_color = Color(0.6196, 0.2902, 0.2157, 1)
 price_per_cell = 6

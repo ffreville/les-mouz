@@ -11,6 +11,11 @@ const SIZE := Vector2(32, 64)
 const FEET_FROM_TOP := 48.0
 ## En marche, la tête et les cheveux remontent d'un pixel.
 const WALK_BOB := 1.0
+## Dans l'eau, la surface est à 47 px du haut du calque (brief n° 8).
+const WATER_FROM_TOP := 47.0
+const SPLASH := "res://assets/sprites/eclaboussure_%d.svg"
+## Ancrage de l'éclaboussure (32 × 32) sur l'eau.
+const SPLASH_ANCHOR := Vector2(16, 26)
 
 var appearance: MouzAppearance:
 	set(value):
@@ -19,12 +24,20 @@ var appearance: MouzAppearance:
 var direction: StringName = &"bas"
 var pose: String = ""
 var flipped := false
-## Dans l'eau de la piscine : pas d'ombre, et l'eau cache le bas du corps (provisoire, brief n° 8).
+## Dans l'eau de la piscine ou en plein plongeon : pas d'ombre (les calques de nage ont leurs remous).
 var in_water := false:
 	set(value):
 		in_water = value
 		shadow = not value
 		queue_redraw()
+## Éclaboussure posée sur l'eau aux pieds du Mouz : 0 (aucune), 1 (la gerbe) ou 2 (les ronds).
+var splash := 0:
+	set(value):
+		if splash == 0 and value > 0:
+			MouzLayers.texture(SPLASH % 2)
+		if value != splash:
+			splash = value
+			queue_redraw()
 ## Ombre au sol (pas dans un escalier).
 var shadow := true:
 	set(value):
@@ -69,10 +82,13 @@ func _draw() -> void:
 	elif pose.begins_with("monter") or pose.begins_with("descendre"):
 		# Escalier de profil : la tête remonte d'un pixel sur la deuxième image.
 		bob = WALK_BOB if pose.ends_with("_2") else 0.0
+	elif pose.begins_with("nage"):
+		bob = -float(MouzAppearance.SWIM_HEAD_DROP.get(appearance.age, 0.0)) if appearance != null else 0.0
 	elif pose != "":
 		bob = -head_drop
-	MouzLayers.draw(self, _layers, Rect2(Vector2(-SIZE.x / 2, -FEET_FROM_TOP), SIZE), flipped, bob)
-	if in_water:
-		draw_rect(Rect2(-15, -17, 30, 21), PoolView.WATER)
-		draw_line(Vector2(-15, -17), Vector2(15, -17), PoolView.RIPPLE, 2.0)
-		draw_arc(Vector2(0, -17), 12.0, 0.15, PI - 0.15, 10, PoolView.RIPPLE, 1.5)
+	var top := WATER_FROM_TOP if pose.begins_with("nage") else FEET_FROM_TOP
+	MouzLayers.draw(self, _layers, Rect2(Vector2(-SIZE.x / 2, -top), SIZE), flipped, bob)
+	if splash > 0:
+		var texture := MouzLayers.texture(SPLASH % splash)
+		if texture != null:
+			draw_texture(texture, -SPLASH_ANCHOR)
