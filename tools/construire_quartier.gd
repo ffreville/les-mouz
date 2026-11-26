@@ -78,14 +78,15 @@ func la_bicoque() -> Lot:
 	return b.spawn([Vector2i(12, 16), Vector2i(13, 16)]).build()
 
 
-## Maison de famille : salon, cuisine, deux chambres (dont celle des enfants), salle de bain.
+## Maison de famille sur deux niveaux. En bas : salon, cuisine, salle de jeux, WC et le hall
+## avec l'escalier. En haut : chambre des parents, chambre des enfants, salle de bain, palier.
 func les_glycines() -> Lot:
 	var b := HouseBuilder.new(&"brique", &"retro")
 	b.room(Rect2i(5, 3, 9, 7), &"parquet_fonce")
 	b.room(Rect2i(14, 3, 11, 7), &"tomettes")
 	b.room(Rect2i(5, 10, 7, 5), &"moquette")
 	b.room(Rect2i(12, 10, 5, 5), &"faience")
-	b.room(Rect2i(17, 10, 8, 5), &"moquette")
+	b.room(Rect2i(17, 10, 8, 5), &"parquet")
 	b.door(Vector3i(5, 6, V), false).door(Vector3i(14, 6, V)).door(Vector3i(9, 10, H)).door(Vector3i(14, 10, H)).door(Vector3i(20, 10, H))
 	b.window(Vector3i(7, 3, H), true).window(Vector3i(20, 3, H)).window(Vector3i(7, 15, H), true).window(Vector3i(20, 15, H))
 	b.window(Vector3i(25, 6, V))
@@ -97,21 +98,39 @@ func les_glycines() -> Lot:
 	b.put(&"lave_vaisselle", Vector2i(19, 3), 2).put(&"poubelle", Vector2i(24, 3), 2)
 	b.put(&"table", Vector2i(19, 6)).put(&"chaise", Vector2i(18, 6), 1).put(&"chaise", Vector2i(18, 7), 1)
 	b.put(&"chaise", Vector2i(21, 6), 3).put(&"chaise", Vector2i(21, 7), 3)
+	# Salle de jeux.
+	b.put(&"console_jeux", Vector2i(11, 11), 3).put(&"canape", Vector2i(5, 12), 1).put(&"table_jeux", Vector2i(8, 13))
+	# WC et buanderie.
+	b.put(&"toilettes", Vector2i(12, 10), 2).put(&"lavabo", Vector2i(13, 10), 2).put(&"machine_laver", Vector2i(16, 10), 2)
+	b.put(&"panier_linge", Vector2i(16, 14), 3)
+	# Hall et escalier (il monte vers le haut de l'écran, arrivée sur le palier).
+	b.put(&"escalier", Vector2i(23, 11), 2).put(&"horloge", Vector2i(17, 10), 2).put(&"plante", Vector2i(17, 14))
+	# Étage.
+	b.on_level(1)
+	b.room(Rect2i(5, 3, 9, 7), &"moquette")
+	b.room(Rect2i(14, 3, 11, 7), &"moquette")
+	b.room(Rect2i(5, 10, 7, 5), &"faience")
+	b.room(Rect2i(12, 10, 13, 5), &"parquet")
+	b.door(Vector3i(12, 10, H)).door(Vector3i(18, 10, H)).door(Vector3i(12, 12, V))
+	b.window(Vector3i(8, 3, H), true).window(Vector3i(19, 3, H), true).window(Vector3i(7, 15, H)).window(Vector3i(25, 6, V))
 	# Chambre des parents.
-	b.put(&"lit", Vector2i(6, 10), 2).put(&"table_nuit", Vector2i(8, 10), 2).put(&"lampe_chevet", Vector2i(5, 10), 2)
-	b.put(&"armoire", Vector2i(10, 14), 0)
-	# Salle de bain.
-	b.put(&"toilettes", Vector2i(12, 10), 2).put(&"lavabo", Vector2i(13, 10), 2).put(&"baignoire", Vector2i(12, 13), 0)
-	b.put(&"machine_laver", Vector2i(16, 10), 2).put(&"panier_linge", Vector2i(16, 14), 3)
+	b.put(&"lit", Vector2i(8, 3), 2).put(&"table_nuit", Vector2i(7, 3), 2).put(&"table_nuit", Vector2i(10, 3), 2)
+	b.put(&"armoire", Vector2i(5, 9), 0).put(&"coiffeuse", Vector2i(11, 3), 2)
 	# Chambre des enfants.
-	b.put(&"lit_simple", Vector2i(17, 10), 2).put(&"table_nuit", Vector2i(18, 10), 2).put(&"lit_simple", Vector2i(24, 10), 2)
-	b.put(&"bureau", Vector2i(21, 14), 0).put(&"console_jeux", Vector2i(17, 14), 0)
+	b.put(&"lit_simple", Vector2i(15, 3), 2).put(&"table_nuit", Vector2i(16, 3), 2).put(&"lit_simple", Vector2i(24, 3), 2)
+	b.put(&"bureau", Vector2i(20, 9), 0).put(&"commode", Vector2i(22, 3), 2)
+	# Salle de bain.
+	b.put(&"baignoire", Vector2i(5, 13), 0).put(&"lavabo", Vector2i(6, 10), 2).put(&"toilettes", Vector2i(9, 10), 2)
+	# Palier.
+	b.put(&"plante", Vector2i(13, 14)).put(&"bibliotheque", Vector2i(15, 14), 0)
+	b.on_level(0)
 	# Jardin.
 	b.put(&"arbre", Vector2i(1, 1)).put(&"balancoire", Vector2i(2, 16)).put(&"arbre", Vector2i(26, 15)).put(&"plante", Vector2i(3, 4))
 	return b.spawn([Vector2i(3, 7), Vector2i(3, 8)]).build()
 
 
-## Maison moderne : grande pièce ouverte (cuisine et salon), bureau, chambre, entrée, salle de bain.
+## Maison moderne : grande pièce ouverte (cuisine et salon), bureau, chambre, entrée avec l'escalier,
+## salle de bain ; à l'étage, une chambre d'amis au-dessus du séjour et un palier.
 func villa_horizon() -> Lot:
 	var b := HouseBuilder.new(&"ardoise", &"moderne")
 	b.room(Rect2i(6, 3, 12, 7), &"carrelage")
@@ -137,8 +156,18 @@ func villa_horizon() -> Lot:
 	# Salle de bain.
 	b.put(&"douche", Vector2i(6, 10), 1).put(&"toilettes", Vector2i(8, 10), 2).put(&"lavabo", Vector2i(9, 10), 2)
 	b.put(&"machine_laver", Vector2i(11, 13), 3)
-	# Entrée.
-	b.put(&"plante", Vector2i(12, 13)).put(&"horloge", Vector2i(17, 13), 3)
+	# Entrée et escalier (de profil : il monte vers la droite).
+	b.put(&"escalier", Vector2i(13, 12), 3).put(&"plante", Vector2i(12, 13)).put(&"horloge", Vector2i(17, 13), 3)
+	# Étage.
+	b.on_level(1)
+	b.room(Rect2i(6, 3, 12, 7), &"parquet")
+	b.room(Rect2i(12, 10, 6, 4), &"parquet")
+	b.door(Vector3i(16, 10, H))
+	b.window(Vector3i(8, 3, H), true).window(Vector3i(14, 3, H), true).window(Vector3i(6, 6, V))
+	b.put(&"lit", Vector2i(8, 3), 2).put(&"table_nuit", Vector2i(10, 3), 2).put(&"lampe_chevet", Vector2i(7, 3), 2)
+	b.put(&"armoire", Vector2i(6, 9), 0).put(&"bureau", Vector2i(14, 3), 2).put(&"chevalet", Vector2i(17, 4), 3)
+	b.put(&"tapis_yoga", Vector2i(12, 6))
+	b.on_level(0)
 	# Jardin.
 	b.put(&"telescope", Vector2i(3, 15)).put(&"arbre", Vector2i(26, 15)).put(&"tapis_yoga", Vector2i(26, 4))
 	return b.spawn([Vector2i(14, 16), Vector2i(15, 16)]).build()

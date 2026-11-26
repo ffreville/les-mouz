@@ -375,8 +375,8 @@ Une partie, c'est un **quartier** : le quartier des Tilleuls, huit emplacements 
 | Emplacement | Maison | Style |
 |---|---|---|
 | 1 rue des Lilas | La Bicoque : grande pièce à vivre, une chambre | Nature |
-| 3 rue des Lilas | Les Glycines : salon, cuisine, chambre des parents, chambre des enfants, salle de bain avec baignoire | Rétro |
-| 7 rue des Lilas | Villa Horizon : grande pièce ouverte, bureau avec ordinateur, chambre, entrée | Moderne |
+| 3 rue des Lilas | Les Glycines, sur deux niveaux : en bas salon, cuisine, salle de jeux, WC et hall avec l'escalier ; en haut chambre des parents, chambre des enfants, salle de bain avec baignoire | Rétro |
+| 7 rue des Lilas | Villa Horizon : grande pièce ouverte, bureau avec ordinateur, chambre, entrée avec l'escalier ; à l'étage, une chambre d'amis et un palier | Moderne |
 | 2 rue des Lilas | Le Potager : petite maison, grand jardin (trois potagers, barbecue, salon de jardin, hamac) | Nature |
 | 6 rue des Lilas | L'Atelier : atelier avec piano et chevalet, cuisine, chambre, grande salle de bain | Rétro |
 | 4, 5 et 8 rue des Lilas | Terrains libres | |
@@ -387,7 +387,7 @@ Une partie, c'est un **quartier** : le quartier des Tilleuls, huit emplacements 
 - **Déménager** : dans la fiche d'une famille, « Déménager… », puis on choisit sur la carte une maison à vendre ou un terrain libre. La fiche montre l'argent du foyer, la vente de l'ancienne maison (meubles compris, au prix d'une maison à vendre : 70 % de ce qu'elle a coûté), le prix de la nouvelle et ce qu'il restera ; « Déménager ici » si l'argent suffit. Les Mouz emportent tout ce qu'ils sont (besoins, métiers, compétences, amitiés avec les voisins) ; les meubles restent avec la maison, remise en vente (une maison bâtie sur un terrain libre prend le nom « La maison des … »). Échap ou « Annuler » abandonne.
 - On joue **une famille à la fois** ; les autres attendent, comme on les a laissées. Chaque famille a son argent ; l'heure est commune au quartier. **Retour au quartier** (menu Échap) enregistre la famille et revient à la carte.
 
-Les maisons sont décrites en code dans `tools/construire_quartier.gd` (pièces, portes, fenêtres, meubles en coordonnées de cases), avec l'aide de `HouseBuilder`. Pour les régénérer :
+Les maisons sont décrites en code dans `tools/construire_quartier.gd` (pièces, portes, fenêtres, meubles en coordonnées de cases, `on_level(1)` pour passer à l'étage), avec l'aide de `HouseBuilder`. Les deux maisons à étage (31 500 et 23 000 Mz) sont trop chères pour une famille qui arrive : on y accède en déménageant, une fois qu'on a économisé. Pour les régénérer :
 
 ```
 godot --headless --script tools/construire_quartier.gd
