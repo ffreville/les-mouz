@@ -15,6 +15,9 @@ extends Purchase
 @export var wear: float = 0.0
 ## Minute de jeu où le réparateur appelé passera (0 : pas appelé).
 @export var repair_at: float = 0.0
+## Plantation (voir Garden) : pousse de 0 (graines) à 100 (mûr), et eau de 0 (fané) à 100.
+@export var growth: float = 100.0
+@export var water: float = 100.0
 
 
 func is_broken() -> bool:

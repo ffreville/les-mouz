@@ -48,6 +48,8 @@ var bills := Bills.new()
 var visits := Visits.new()
 ## Usure et réparation des objets.
 var upkeep := Upkeep.new()
+## Plantations qui poussent.
+var garden := Garden.new()
 
 @onready var floor_view: FloorView = $FloorView
 @onready var wall_view: WallView = $WallView
@@ -109,6 +111,8 @@ func _ready() -> void:
 		selection.select.call_deferred(characters[0])
 	add_child(upkeep)
 	upkeep.setup(self)
+	add_child(garden)
+	garden.setup(self)
 	add_child(visits)
 	visits.setup(self, use_save and not played_before)
 	if played_before:

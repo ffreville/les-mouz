@@ -627,6 +627,9 @@ func buy_object(definition: SmartObjectDefinition, cell: Vector2i, rotation: int
 	placed.cell = cell
 	placed.rotation = rotation
 	placed.collection = collection if definition.sprites.has(collection) else definition.default_collection()
+	# Une plantation achetée part des graines.
+	if definition.grows:
+		placed.growth = 0.0
 	Wallet.stamp(placed, definition.price)
 	data.objects.append(placed)
 	EventBus.item_bought.emit(placed, placed.price)

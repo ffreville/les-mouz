@@ -58,6 +58,17 @@ const MIN_PAID_RATIO := 0.25
 ## Faux : les Mouz ne la choisissent jamais d'eux-mêmes (travail à la maison).
 @export var autonomous: bool = true
 
+# --- Plantations (voir Garden) ---------------------------------------------------------
+
+## Remet l'eau de la plantation au plein (et la sauve si elle fanait).
+@export var waters: bool = false
+## Fait avancer la pousse (désherber, biner).
+@export var tends: bool = false
+## Seulement quand la plantation est mûre (ou fleurie), et pas fanée.
+@export var needs_ripe: bool = false
+## Récolte : la plantation repart des graines.
+@export var harvests: bool = false
+
 # --- Piscine ----------------------------------------------------------------------
 
 ## Vrai : l'action se passe dans l'eau de la piscine voisine (nager, plonger). Voir Swimmer.

@@ -104,7 +104,7 @@ Un ordre du joueur remplace toujours les actions choisies par l'autonomie.
 | Clôture | Glisser le long de la grille : piquets blancs, planches de bois ou haie taillée, payés par segment. Une clôture bloque le passage mais ne ferme pas de pièce (le jardin reste dehors) |
 | Démolir | Glisser sur des murs ou des clôtures : ils sont revendus, avec leurs portes, fenêtres et portails |
 | Porte, Fenêtre | Clic sur un mur. Le battant s'ouvre du côté du pointeur ; **R** inverse la charnière. Le **portail** (dans les portes) se pose sur une clôture et s'ouvre quand un Mouz passe |
-| Sol | Glisser pour peindre un rectangle ; l'ancien revêtement est revendu. Pour le jardin : allée de gravier et allée de dalles |
+| Sol | Glisser pour peindre un rectangle ; l'ancien revêtement est revendu. Pour le jardin : allée de gravier, allée de dalles et terrasse en bois |
 | Gomme | Glisser pour remettre de l'herbe (revêtement revendu) |
 | Piscine | Glisser un rectangle dans le jardin (hors des pièces, sans objet ni mur dedans) : un bassin d'eau avec sa margelle, 60 Mz la case. On ne le traverse pas à pied ; la gomme le rebouche (revente). Au bord, une **échelle** (« Nager », 1 h) et un **plongeoir** (« Plonger ») du catalogue Jardin : le Mouz fait des longueurs, le bas du corps sous l'eau ; Forme, Plaisir et Hygiène montent, l'énergie baisse |
 | Toit | Choisir un style (chaume, tuiles rouges, zinc, ardoise) ou « Sans toit », puis cliquer sur le terrain : il couvre toute la maison, au prix des cases couvertes (l'ancien est revendu). On le voit en mode Vivre avec le réglage « Toits » (touche V) |
@@ -406,6 +406,17 @@ Les familles du quartier se rendent visite.
 - **Départ** : au bout de 2 h 30 à 5 h, à 22 h au plus tard, ou quand on le **raccompagne à la porte**, il repart par la rue.
 
 Les relations avec les voisins sont gardées dans le quartier (`"relationships"` de la sauvegarde, une valeur par paire de Mouz) : on retrouve ses amis d'une visite à l'autre, et quand on joue l'autre famille. Deux membres d'une même famille venus ensemble gardent leur relation de famille. Les visiteurs ne sont pas sauvegardés : une partie rechargée repart sans eux. Réglages : `scripts/neighborhood/visits.gd`.
+
+## Les plantations
+
+Le **potager** et le **massif de fleurs** (catalogue Jardin) poussent tout seuls s'ils ont de l'eau : graines → pousses → mûr (ou fleuri) en 3 jours. L'eau tient environ deux jours ; une goutte apparaît au-dessus quand la plantation a soif, et à sec elle **fane** (elle ne pousse plus) jusqu'au prochain arrosage.
+
+- **Arroser** remet l'eau au plein et sauve une plantation fanée ; **Jardiner** fait avancer la pousse.
+- **Récolter** et **Vendre des légumes au marché** demandent un potager mûr ; il repart ensuite des graines.
+- **Admirer les fleurs** (Plaisir) demande un massif fleuri.
+- Une plantation achetée part des graines ; celles des maisons du quartier sont déjà mûres.
+
+Les états sont dessinés provisoirement en attendant le brief n° 8. Réglages : `scripts/objects/garden.gd`.
 
 ## Les toits
 

@@ -16,3 +16,5 @@ shared_relationship_gain = 0.0
 nearby_object_id = &""
 skill = &"jardinage"
 switch = 0
+needs_ripe = true
+harvests = true

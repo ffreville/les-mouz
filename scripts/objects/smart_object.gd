@@ -212,6 +212,11 @@ func get_spots(navigation: GridNavigation) -> Array[Vector2i]:
 func action_problem(action: ActionDefinition, world: World) -> String:
 	if action.swim and pool_cells().is_empty():
 		return "pas de piscine à côté"
+	if action.needs_ripe and definition.grows:
+		if Garden.is_wilted(placed):
+			return "fané : à arroser"
+		if not Garden.is_ripe(placed):
+			return "pas encore mûr" if definition.id == &"potager" else "pas encore fleuri"
 	if action == Upkeep.REPAIR_ACTION:
 		return "réparateur appelé" if placed.repair_at > 0.0 else ""
 	if placed.is_broken():
@@ -304,6 +309,8 @@ func _draw() -> void:
 				placed.get_collection(), is_active())
 		if placed.is_broken():
 			_draw_broken_mark()
+		if definition.grows:
+			Garden.draw_plants(self, placed, Rect2(_origin(), Vector2(footprint.size) * _cell_size), sprite_rect_local())
 
 
 ## Signe « en panne » au-dessus de l'objet : un panneau rouge avec un point d'exclamation.
