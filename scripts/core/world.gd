@@ -92,6 +92,8 @@ func _ready() -> void:
 	day_night.setup(self)
 	# Connecté avant la création des personnages : le monde se met à jour avant leurs files.
 	EventBus.lot_changed.connect(refresh_lot)
+	GameMode.mode_changed.connect(func(_mode: int) -> void: _apply_view())
+	GameMode.wall_mode_changed.connect(func(_wall_mode: int) -> void: _apply_view())
 	# La vue suit le Mouz contrôlé quand il est à un autre étage, ou qu'il en change.
 	EventBus.character_selected.connect(func(character: Node) -> void: _follow(character))
 	EventBus.character_level_changed.connect(_on_character_level_changed)
@@ -137,13 +139,16 @@ func _make_layers() -> void:
 		node.z_index = level * LEVEL_Z
 		add_child(node)
 		move_child(node, floor_view.get_index())
+		var roof := RoofView.new()
+		roof.z_index = LEVEL_Z - 2
+		node.add_child(roof)
 		var veil := Polygon2D.new()
 		var area := Rect2(Vector2.ZERO, Vector2(lot.size * lot.cell_size)).grow(FloorView.OUTSIDE_MARGIN)
 		veil.polygon = PackedVector2Array([area.position, Vector2(area.end.x, area.position.y), area.end,
 				Vector2(area.position.x, area.end.y)])
 		veil.z_index = LEVEL_Z - 1
 		node.add_child(veil)
-		var layer := {"node": node, "veil": veil}
+		var layer := {"node": node, "veil": veil, "roof": roof}
 		if level == 0:
 			for part in [floor_view, wall_view, objects_root, characters_root]:
 				part.reparent(node, false)
@@ -187,7 +192,12 @@ func _follow(character: Node) -> void:
 
 
 func _apply_view() -> void:
+	var roofs := GameMode.shows_roofs() and lot.roof != null
 	for level in _layers.size():
+		var roof: RoofView = _layers[level]["roof"]
+		roof.visible = roofs and level <= view_level
+		if roof.visible:
+			roof.render(lot, level, view_level)
 		var node: Node2D = _layers[level]["node"]
 		node.visible = level <= view_level
 		var veil: Polygon2D = _layers[level]["veil"]

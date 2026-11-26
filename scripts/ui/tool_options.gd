@@ -37,6 +37,10 @@ func show_for(tool: StringName) -> void:
 		&"room":
 			_show_room()
 			return
+		&"roof":
+			columns = 2
+			items = [_no_roof()]
+			items.append_array(Catalog.load_folder(Catalog.ROOFS))
 		&"wallpaper":
 			columns = 2
 			items = [_no_wallpaper()]
@@ -51,7 +55,9 @@ func show_for(tool: StringName) -> void:
 	var group := ButtonGroup.new()
 	for item in items:
 		var card: Button
-		if item is WallpaperDefinition:
+		if item is RoofDefinition:
+			card = _roof_card(item)
+		elif item is WallpaperDefinition:
 			card = _wallpaper_card(item)
 		elif item is WallStyleDefinition or item is FenceDefinition:
 			card = _wall_card(item)
@@ -151,6 +157,53 @@ func _floor_card(definition: FloorDefinition) -> Button:
 	column.add_child(price)
 	_fill(card, column)
 	card.tooltip_text = "%s · %s par case" % [definition.display_name, Palette.format_mz(definition.price_per_cell)]
+	return card
+
+
+## L'option « Sans toit » de l'outil Toit.
+static var _no_roof_option: RoofDefinition
+
+
+static func _no_roof() -> RoofDefinition:
+	if _no_roof_option == null:
+		_no_roof_option = RoofDefinition.new()
+		_no_roof_option.id = LotEditor.NO_ROOF
+		_no_roof_option.display_name = "Sans toit"
+		_no_roof_option.price_per_cell = 0
+	return _no_roof_option
+
+
+## Carte d'un style de toit : échantillon (pan au soleil et pan à l'ombre), nom, prix par case.
+func _roof_card(definition: RoofDefinition) -> Button:
+	var card := _card(Vector2(113, 48))
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var swatch := Control.new()
+	swatch.custom_minimum_size = Vector2(26, 22)
+	swatch.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var paint := func() -> void:
+		var w := swatch.size.x
+		var h := swatch.size.y
+		if definition.id == LotEditor.NO_ROOF:
+			swatch.draw_rect(Rect2(Vector2.ZERO, swatch.size), Palette.PAPIER_2)
+			swatch.draw_line(Vector2(3, 3), swatch.size - Vector2(3, 3), Palette.CRITIQUE, 2.0)
+			return
+		swatch.draw_colored_polygon(PackedVector2Array([Vector2(0, h), Vector2(w * 0.5, 2), Vector2(w * 0.5, h)]), definition.color)
+		swatch.draw_colored_polygon(PackedVector2Array([Vector2(w * 0.5, 2), Vector2(w, h), Vector2(w * 0.5, h)]), definition.dark_color)
+		swatch.draw_polyline(PackedVector2Array([Vector2(0, h), Vector2(w * 0.5, 2), Vector2(w, h), Vector2(0, h)]), Palette.CONTOUR, 1.5)
+	swatch.draw.connect(paint)
+	row.add_child(swatch)
+	if definition.id == LotEditor.NO_ROOF:
+		var label := Label.new()
+		label.text = "Sans toit"
+		label.theme_type_variation = &"StrongLabel"
+		label.add_theme_font_size_override("font_size", 12)
+		label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(label)
+	else:
+		row.add_child(_name_and_price(definition.display_name, definition.price_per_cell))
+	_fill(card, row)
+	card.tooltip_text = definition.display_name + ("" if definition.id == LotEditor.NO_ROOF else " · prix par case couverte")
 	return card
 
 

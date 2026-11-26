@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RoofDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/roof_definition.gd" id="1_roof"]
+
+[resource]
+script = ExtResource("1_roof")
+id = &"zinc"
+display_name = "Zinc"
+color = Color(0.6039, 0.6431, 0.6824, 1)
+top_color = Color(0.7176, 0.7529, 0.7843, 1)
+light_color = Color(0.6627, 0.6980, 0.7333, 1)
+dark_color = Color(0.4863, 0.5255, 0.5647, 1)
+line_color = Color(0.4196, 0.4549, 0.4941, 1)
+row_step = 10.0
+price_per_cell = 7

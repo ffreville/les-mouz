@@ -88,6 +88,9 @@ func _on_left_button(pressed: bool) -> void:
 	elif tool == &"wallpaper":
 		if pressed and option is WallpaperDefinition:
 			editor.apply_wallpaper(_hover_cell, option)
+	elif tool == &"roof":
+		if pressed and option is RoofDefinition:
+			editor.set_roof(option)
 	elif tool in LINE_TOOLS or tool in AREA_TOOLS:
 		if pressed:
 			_drag_start = _hover_point if tool in LINE_TOOLS else _hover_cell
@@ -150,6 +153,11 @@ func _update_preview() -> void:
 	if tool in OPENING_TOOLS and option is OpeningDefinition:
 		text = option.display_name
 		cost = option.price
+	elif tool == &"roof" and option is RoofDefinition:
+		var quote := editor.quote_roof(option)
+		text = (("Retirer le toit" if option.id == LotEditor.NO_ROOF else "Toit · %d cases" % quote["cells"])
+				if quote["valid"] else quote["reason"])
+		cost = quote["cost"]
 	elif tool == &"wallpaper" and option is WallpaperDefinition:
 		var quote := editor.quote_wallpaper(_hover_cell, option)
 		text = (("Retirer · " if option.id == LotEditor.NO_WALLPAPER else "") + _count(quote["edges"].size(), "pan")) \

@@ -13,6 +13,8 @@ extends Resource
 ## Clôtures, posées sur les arêtes comme les murs (mais elles ne ferment pas de pièce).
 ## Au rez-de-chaussée seulement.
 @export var fences: Dictionary[Vector3i, PlacedFence] = {}
+## Le toit de la maison (null : pas de toit). Sa forme est calculée (voir `roof_cells`).
+@export var roof: PlacedRoof
 ## Les niveaux : 0 est le rez-de-chaussée (voir Levels). Les étages vides peuvent manquer.
 @export var levels: Array[LotLevel] = []
 ## Cases de départ des personnages (un par fiche, dans l'ordre).
@@ -82,6 +84,24 @@ func stairs_on(index: int) -> Array[PlacedObject]:
 			if placed.definition.is_stairs:
 				result.append(placed)
 	return result
+
+
+## Cases couvertes par le toit au niveau `index` : ses pièces fermées sans plancher au-dessus.
+## `top_visible` : le dernier niveau affiché (les étages au-dessus, cachés, ne comptent pas).
+func roof_cells(index: int, top_visible := Levels.COUNT - 1) -> Dictionary:
+	var cells := interior_cells(index)
+	if index < top_visible and index + 1 < levels.size():
+		for cell in levels[index + 1].floors:
+			cells.erase(cell)
+	return cells
+
+
+## Nombre de cases couvertes par le toit, à tous les niveaux.
+func roof_size() -> int:
+	var count := 0
+	for index in used_levels():
+		count += roof_cells(index).size()
+	return count
 
 
 ## Vrai si la case est la cage d'un escalier qui monte du niveau du dessous (pas de sol possible).

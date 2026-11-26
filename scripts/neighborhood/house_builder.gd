@@ -74,6 +74,14 @@ func put(object_id: StringName, cell: Vector2i, rotation := 0, p_collection := &
 	return self
 
 
+## Le toit de la maison (style du catalogue), payé au prix des cases couvertes.
+func roof(roof_id: StringName) -> HouseBuilder:
+	var definition: RoofDefinition = Catalog.find(Catalog.ROOFS, roof_id)
+	lot.roof = PlacedRoof.new()
+	lot.roof.definition = definition
+	return self
+
+
 func spawn(cells: Array[Vector2i]) -> HouseBuilder:
 	lot.spawn_cells = cells
 	return self
@@ -87,6 +95,9 @@ func build() -> Lot:
 		items.append_array(data.floors.values())
 		items.append_array(data.openings)
 		items.append_array(data.objects)
+	if lot.roof != null:
+		lot.roof.price = lot.roof_size() * lot.roof.definition.price_per_cell
+		items.append(lot.roof)
 	for item in items:
 		item.bought_day = 0
 	return lot

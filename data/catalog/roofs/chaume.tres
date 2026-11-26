@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RoofDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/roof_definition.gd" id="1_roof"]
+
+[resource]
+script = ExtResource("1_roof")
+id = &"chaume"
+display_name = "Chaume"
+color = Color(0.7882, 0.6510, 0.3686, 1)
+top_color = Color(0.8667, 0.7451, 0.4863, 1)
+light_color = Color(0.8314, 0.6980, 0.4196, 1)
+dark_color = Color(0.6588, 0.5294, 0.2627, 1)
+line_color = Color(0.5922, 0.4667, 0.2275, 1)
+row_step = 5.0
+price_per_cell = 5

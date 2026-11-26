@@ -1,1683 +1,1692 @@
 [gd_resource type="Resource" script_class="Lot" format=3]
 
-[ext_resource type="Resource" path="res://data/catalog/floors/herbe.tres" id="1_64y5s"]
-[ext_resource type="Script" path="res://scripts/lot/placed_fence.gd" id="2_7hdms"]
-[ext_resource type="Script" path="res://scripts/lot/lot_level.gd" id="3_qwq8q"]
-[ext_resource type="Script" path="res://scripts/lot/placed_floor.gd" id="4_dpa0v"]
-[ext_resource type="Resource" path="res://data/catalog/floors/parquet.tres" id="5_6vi4j"]
-[ext_resource type="Resource" path="res://data/catalog/floors/moquette.tres" id="6_bpfee"]
-[ext_resource type="Resource" path="res://data/catalog/floors/faience.tres" id="7_ejlt1"]
-[ext_resource type="Script" path="res://scripts/lot/placed_object.gd" id="8_c743c"]
-[ext_resource type="Resource" path="res://data/catalog/objects/cuisiniere.tres" id="9_nsmdj"]
-[ext_resource type="Resource" path="res://data/catalog/objects/plan_travail.tres" id="10_0ue5c"]
-[ext_resource type="Resource" path="res://data/catalog/objects/frigo.tres" id="11_xmiig"]
-[ext_resource type="Resource" path="res://data/catalog/objects/table.tres" id="12_iaoqm"]
-[ext_resource type="Resource" path="res://data/catalog/objects/chaise.tres" id="13_u51m5"]
-[ext_resource type="Resource" path="res://data/catalog/objects/canape.tres" id="14_3kswj"]
-[ext_resource type="Resource" path="res://data/catalog/objects/tele.tres" id="15_bi83y"]
-[ext_resource type="Resource" path="res://data/catalog/objects/plante.tres" id="16_c8uea"]
-[ext_resource type="Resource" path="res://data/catalog/objects/poubelle.tres" id="17_d3233"]
-[ext_resource type="Resource" path="res://data/catalog/objects/lit.tres" id="18_fnfdf"]
-[ext_resource type="Resource" path="res://data/catalog/objects/table_nuit.tres" id="19_wo6bd"]
-[ext_resource type="Resource" path="res://data/catalog/objects/commode.tres" id="20_g3gw5"]
-[ext_resource type="Resource" path="res://data/catalog/objects/lavabo.tres" id="21_y6va4"]
-[ext_resource type="Resource" path="res://data/catalog/objects/toilettes.tres" id="22_xk08a"]
-[ext_resource type="Resource" path="res://data/catalog/objects/douche.tres" id="23_fs5r1"]
-[ext_resource type="Resource" path="res://data/catalog/objects/arbre.tres" id="24_pc7at"]
-[ext_resource type="Script" path="res://scripts/lot/placed_opening.gd" id="25_fdd0k"]
-[ext_resource type="Resource" path="res://data/catalog/openings/porte_bois.tres" id="26_rtlsu"]
-[ext_resource type="Resource" path="res://data/catalog/openings/fenetre_large.tres" id="27_7s74p"]
-[ext_resource type="Resource" path="res://data/catalog/openings/fenetre.tres" id="28_brot2"]
-[ext_resource type="Script" path="res://scripts/lot/placed_wallpaper.gd" id="29_7tolo"]
-[ext_resource type="Script" path="res://scripts/lot/placed_wall.gd" id="30_1cbva"]
-[ext_resource type="Resource" path="res://data/catalog/walls/sauge.tres" id="31_m1si6"]
-[ext_resource type="Script" path="res://scripts/lot/lot.gd" id="32_clore"]
-
-[sub_resource type="Resource" id="Resource_5gocc"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
-price = 15
-bought_day = 0
-
-[sub_resource type="Resource" id="Resource_rw0ru"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
-price = 15
-bought_day = 0
-
-[sub_resource type="Resource" id="Resource_glo2w"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
-price = 15
-bought_day = 0
-
-[sub_resource type="Resource" id="Resource_t0blk"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
-price = 15
-bought_day = 0
+[ext_resource type="Resource" path="res://data/catalog/floors/herbe.tres" id="1_qwq8q"]
+[ext_resource type="Script" path="res://scripts/lot/placed_fence.gd" id="2_dpa0v"]
+[ext_resource type="Script" path="res://scripts/lot/lot_level.gd" id="3_6vi4j"]
+[ext_resource type="Script" path="res://scripts/lot/placed_floor.gd" id="4_bpfee"]
+[ext_resource type="Resource" path="res://data/catalog/floors/parquet.tres" id="5_ejlt1"]
+[ext_resource type="Resource" path="res://data/catalog/floors/moquette.tres" id="6_c743c"]
+[ext_resource type="Resource" path="res://data/catalog/floors/faience.tres" id="7_nsmdj"]
+[ext_resource type="Script" path="res://scripts/lot/placed_object.gd" id="8_0ue5c"]
+[ext_resource type="Resource" path="res://data/catalog/objects/cuisiniere.tres" id="9_xmiig"]
+[ext_resource type="Resource" path="res://data/catalog/objects/plan_travail.tres" id="10_iaoqm"]
+[ext_resource type="Resource" path="res://data/catalog/objects/frigo.tres" id="11_u51m5"]
+[ext_resource type="Resource" path="res://data/catalog/objects/table.tres" id="12_3kswj"]
+[ext_resource type="Resource" path="res://data/catalog/objects/chaise.tres" id="13_bi83y"]
+[ext_resource type="Resource" path="res://data/catalog/objects/canape.tres" id="14_c8uea"]
+[ext_resource type="Resource" path="res://data/catalog/objects/tele.tres" id="15_d3233"]
+[ext_resource type="Resource" path="res://data/catalog/objects/plante.tres" id="16_fnfdf"]
+[ext_resource type="Resource" path="res://data/catalog/objects/poubelle.tres" id="17_wo6bd"]
+[ext_resource type="Resource" path="res://data/catalog/objects/lit.tres" id="18_g3gw5"]
+[ext_resource type="Resource" path="res://data/catalog/objects/table_nuit.tres" id="19_y6va4"]
+[ext_resource type="Resource" path="res://data/catalog/objects/commode.tres" id="20_xk08a"]
+[ext_resource type="Resource" path="res://data/catalog/objects/lavabo.tres" id="21_fs5r1"]
+[ext_resource type="Resource" path="res://data/catalog/objects/toilettes.tres" id="22_pc7at"]
+[ext_resource type="Resource" path="res://data/catalog/objects/douche.tres" id="23_fdd0k"]
+[ext_resource type="Resource" path="res://data/catalog/objects/arbre.tres" id="24_rtlsu"]
+[ext_resource type="Script" path="res://scripts/lot/placed_opening.gd" id="25_7s74p"]
+[ext_resource type="Resource" path="res://data/catalog/openings/porte_bois.tres" id="26_brot2"]
+[ext_resource type="Resource" path="res://data/catalog/openings/fenetre_large.tres" id="27_7tolo"]
+[ext_resource type="Resource" path="res://data/catalog/openings/fenetre.tres" id="28_1cbva"]
+[ext_resource type="Script" path="res://scripts/lot/placed_wallpaper.gd" id="29_m1si6"]
+[ext_resource type="Script" path="res://scripts/lot/placed_wall.gd" id="30_clore"]
+[ext_resource type="Resource" path="res://data/catalog/walls/sauge.tres" id="31_5gocc"]
+[ext_resource type="Resource" path="res://data/catalog/roofs/chaume.tres" id="32_rw0ru"]
+[ext_resource type="Script" path="res://scripts/lot/placed_roof.gd" id="33_glo2w"]
+[ext_resource type="Script" path="res://scripts/lot/lot.gd" id="34_t0blk"]
 
 [sub_resource type="Resource" id="Resource_7aiw8"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_acdbg"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_sjbr3"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_xt63g"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ofpck"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_cg12e"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_scflu"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_wavvo"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_3qk6l"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_jqnu0"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_rde0o"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_0268v"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_d8mv6"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_bbcgn"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_wed7n"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_twkng"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_6gyg4"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_gs7uo"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_rflrn"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_f1m51"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_trtn6"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_4ckox"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ynbqq"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_mt4ii"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_5afh6"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_2fvtl"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_trbll"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_paema"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_tdxdu"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_11tmh"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_hqwaa"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_dvy74"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_hbepm"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_t6bqg"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_pw2tr"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_1o7ey"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_p0ydv"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_h175a"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_l3di2"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_uocr7"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ymhvx"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_yfhmi"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_sw42j"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_4otla"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_1aawl"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_6ouyk"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_57cpu"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_kp0jy"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_f4xni"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_twmb0"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_hkh4n"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_m05di"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_eunle"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_3140l"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_7bnok"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_530ou"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_3oaqa"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_en47l"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ps2yg"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_iyhg6"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_n721r"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_5tafw"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_hnti0"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_plqfh"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_lqju2"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_cp1jd"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_d07fc"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_yx03a"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_v1spx"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_y64io"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_savfi"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_27e54"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_3p8u5"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ah7jf"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_1pfr5"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_todsu"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_7o5d3"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_8dk0l"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_7lndu"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_l5vts"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_5wo4w"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_7kha1"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_wkids"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_tyqvg"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_n2rek"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_biq7g"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("5_6vi4j")
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
 price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_rw4lo"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
-price = 12
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
+price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_2qbxo"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
-price = 12
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
+price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ducld"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
-price = 12
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
+price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_bw5tq"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
-price = 12
+script = ExtResource("4_bpfee")
+definition = ExtResource("5_ejlt1")
+price = 15
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_3112p"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_3fxw0"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_72slc"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_xiiee"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_x80wg"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_e3e6a"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_8rp80"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_kj7cg"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_hppkp"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_hq4bk"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_q3e87"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_5cxdg"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_bfxcc"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_68txg"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_gm26o"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_bsnww"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_jogxc"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_0sh25"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ngeyr"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_onmfb"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ekhxv"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_lifdl"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_24u3g"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_v283s"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_e0ti0"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_psvje"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("6_bpfee")
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
 price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_kobn1"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
-price = 18
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
+price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_b6u85"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
-price = 18
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
+price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_yb0q0"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
-price = 18
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
+price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_j0ljn"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
-price = 18
+script = ExtResource("4_bpfee")
+definition = ExtResource("6_c743c")
+price = 12
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ypj17"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_uq2bf"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_3djva"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ema04"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_jmc6f"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_kfle3"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_sroq6"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_a2kct"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ho4u5"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_nnaep"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_08b7u"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_gwvqu"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_pb3nr"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_q4kuq"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_h88mb"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_q42km"]
-script = ExtResource("4_dpa0v")
-definition = ExtResource("7_ejlt1")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
 price = 18
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_earm1"]
-script = ExtResource("8_c743c")
-definition = ExtResource("9_nsmdj")
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
+price = 18
+bought_day = 0
+
+[sub_resource type="Resource" id="Resource_j7rq8"]
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
+price = 18
+bought_day = 0
+
+[sub_resource type="Resource" id="Resource_y3o78"]
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
+price = 18
+bought_day = 0
+
+[sub_resource type="Resource" id="Resource_srh4m"]
+script = ExtResource("4_bpfee")
+definition = ExtResource("7_nsmdj")
+price = 18
+bought_day = 0
+
+[sub_resource type="Resource" id="Resource_u5qcm"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("9_xmiig")
 cell = Vector2i(12, 4)
 rotation = 2
 collection = &"nature"
 price = 650
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_j7rq8"]
-script = ExtResource("8_c743c")
-definition = ExtResource("10_0ue5c")
+[sub_resource type="Resource" id="Resource_0c51y"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("10_iaoqm")
 cell = Vector2i(13, 4)
 rotation = 2
 collection = &"nature"
 price = 300
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_y3o78"]
-script = ExtResource("8_c743c")
-definition = ExtResource("11_xmiig")
+[sub_resource type="Resource" id="Resource_4qabw"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("11_u51m5")
 cell = Vector2i(16, 4)
 rotation = 2
 collection = &"nature"
 price = 800
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_srh4m"]
-script = ExtResource("8_c743c")
-definition = ExtResource("12_iaoqm")
+[sub_resource type="Resource" id="Resource_tg16h"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("12_3kswj")
 cell = Vector2i(13, 8)
 collection = &"nature"
 price = 250
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_u5qcm"]
-script = ExtResource("8_c743c")
-definition = ExtResource("13_u51m5")
+[sub_resource type="Resource" id="Resource_87hw8"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("13_bi83y")
 cell = Vector2i(15, 8)
 rotation = 3
 collection = &"nature"
 price = 80
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_0c51y"]
-script = ExtResource("8_c743c")
-definition = ExtResource("13_u51m5")
+[sub_resource type="Resource" id="Resource_dshc8"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("13_bi83y")
 cell = Vector2i(15, 9)
 rotation = 3
 collection = &"nature"
 price = 80
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_4qabw"]
-script = ExtResource("8_c743c")
-definition = ExtResource("14_3kswj")
+[sub_resource type="Resource" id="Resource_0co1g"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("14_c8uea")
 cell = Vector2i(9, 9)
 rotation = 2
 collection = &"nature"
 price = 750
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_tg16h"]
-script = ExtResource("8_c743c")
-definition = ExtResource("15_bi83y")
+[sub_resource type="Resource" id="Resource_lxq0v"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("15_d3233")
 cell = Vector2i(9, 13)
 collection = &"nature"
 price = 600
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_87hw8"]
-script = ExtResource("8_c743c")
-definition = ExtResource("16_c8uea")
+[sub_resource type="Resource" id="Resource_qsxkf"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("16_fnfdf")
 cell = Vector2i(16, 13)
 collection = &"nature"
 price = 40
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_dshc8"]
-script = ExtResource("8_c743c")
-definition = ExtResource("17_d3233")
+[sub_resource type="Resource" id="Resource_hl1rm"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("17_wo6bd")
 cell = Vector2i(8, 4)
 rotation = 2
 collection = &"nature"
 price = 40
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_0co1g"]
-script = ExtResource("8_c743c")
-definition = ExtResource("18_fnfdf")
+[sub_resource type="Resource" id="Resource_7dhd5"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("18_g3gw5")
 cell = Vector2i(19, 4)
 rotation = 2
 collection = &"nature"
 price = 1000
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_lxq0v"]
-script = ExtResource("8_c743c")
-definition = ExtResource("19_wo6bd")
+[sub_resource type="Resource" id="Resource_773cv"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("19_y6va4")
 cell = Vector2i(21, 4)
 rotation = 2
 collection = &"nature"
 price = 90
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_qsxkf"]
-script = ExtResource("8_c743c")
-definition = ExtResource("20_g3gw5")
+[sub_resource type="Resource" id="Resource_gdvqr"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("20_xk08a")
 cell = Vector2i(20, 9)
 collection = &"nature"
 price = 400
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_hl1rm"]
-script = ExtResource("8_c743c")
-definition = ExtResource("21_y6va4")
+[sub_resource type="Resource" id="Resource_6gory"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("21_fs5r1")
 cell = Vector2i(19, 10)
 rotation = 2
 collection = &"nature"
 price = 250
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_7dhd5"]
-script = ExtResource("8_c743c")
-definition = ExtResource("22_xk08a")
+[sub_resource type="Resource" id="Resource_nlutq"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("22_pc7at")
 cell = Vector2i(21, 10)
 rotation = 3
 collection = &"nature"
 price = 300
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_773cv"]
-script = ExtResource("8_c743c")
-definition = ExtResource("23_fs5r1")
+[sub_resource type="Resource" id="Resource_35e8e"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("23_fdd0k")
 cell = Vector2i(20, 12)
 rotation = 3
 collection = &"nature"
 price = 900
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_gdvqr"]
-script = ExtResource("8_c743c")
-definition = ExtResource("24_pc7at")
+[sub_resource type="Resource" id="Resource_x0g8k"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("24_rtlsu")
 cell = Vector2i(2, 14)
 collection = &"nature"
 price = 150
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_6gory"]
-script = ExtResource("8_c743c")
-definition = ExtResource("24_pc7at")
+[sub_resource type="Resource" id="Resource_felg6"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("24_rtlsu")
 cell = Vector2i(25, 3)
 collection = &"nature"
 price = 150
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_nlutq"]
-script = ExtResource("8_c743c")
-definition = ExtResource("16_c8uea")
+[sub_resource type="Resource" id="Resource_87nk7"]
+script = ExtResource("8_0ue5c")
+definition = ExtResource("16_fnfdf")
 cell = Vector2i(10, 15)
 collection = &"nature"
 price = 40
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_35e8e"]
-script = ExtResource("25_fdd0k")
-definition = ExtResource("26_rtlsu")
+[sub_resource type="Resource" id="Resource_ryqs8"]
+script = ExtResource("25_7s74p")
+definition = ExtResource("26_brot2")
 edge = Vector3i(12, 14, 0)
 price = 250
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_x0g8k"]
-script = ExtResource("25_fdd0k")
-definition = ExtResource("26_rtlsu")
+[sub_resource type="Resource" id="Resource_kvsq8"]
+script = ExtResource("25_7s74p")
+definition = ExtResource("26_brot2")
 edge = Vector3i(17, 7, 1)
 price = 250
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_felg6"]
-script = ExtResource("25_fdd0k")
-definition = ExtResource("26_rtlsu")
+[sub_resource type="Resource" id="Resource_jmx6k"]
+script = ExtResource("25_7s74p")
+definition = ExtResource("26_brot2")
 edge = Vector3i(17, 12, 1)
 price = 250
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_87nk7"]
-script = ExtResource("25_fdd0k")
-definition = ExtResource("27_7s74p")
+[sub_resource type="Resource" id="Resource_abmow"]
+script = ExtResource("25_7s74p")
+definition = ExtResource("27_7tolo")
 edge = Vector3i(9, 4, 0)
 price = 350
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_ryqs8"]
-script = ExtResource("25_fdd0k")
-definition = ExtResource("28_brot2")
+[sub_resource type="Resource" id="Resource_a35ru"]
+script = ExtResource("25_7s74p")
+definition = ExtResource("28_1cbva")
 edge = Vector3i(19, 4, 0)
 price = 200
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_kvsq8"]
-script = ExtResource("25_fdd0k")
-definition = ExtResource("28_brot2")
+[sub_resource type="Resource" id="Resource_s6u0c"]
+script = ExtResource("25_7s74p")
+definition = ExtResource("28_1cbva")
 edge = Vector3i(22, 11, 1)
 price = 200
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_jmx6k"]
-script = ExtResource("25_fdd0k")
-definition = ExtResource("28_brot2")
+[sub_resource type="Resource" id="Resource_mt51q"]
+script = ExtResource("25_7s74p")
+definition = ExtResource("28_1cbva")
 edge = Vector3i(8, 9, 1)
 price = 200
 bought_day = 0
 
-[sub_resource type="Resource" id="Resource_abmow"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
-price = 70
-bought_day = 0
-
-[sub_resource type="Resource" id="Resource_a35ru"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
-price = 70
-bought_day = 0
-
-[sub_resource type="Resource" id="Resource_s6u0c"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
-price = 70
-bought_day = 0
-
-[sub_resource type="Resource" id="Resource_mt51q"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
-price = 70
-bought_day = 0
-
 [sub_resource type="Resource" id="Resource_vxhbb"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ref3y"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_523cb"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_gdj1o"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_hmtyp"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_x706m"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_k2dk2"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_4hg3q"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_aa7bb"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_1e6ld"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_k7jhi"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_h1urx"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ck5x6"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_6oq18"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_3ulu7"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_kojwf"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_tlsmd"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_dcov8"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_c47da"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_neibl"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_mg8mu"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_lix0t"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_1hdiw"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_yo70b"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_si1bs"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_t5f8q"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_eyqs7"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_6nd63"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_5x5bv"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_pp2ga"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_c4ulb"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ptalr"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_fatuh"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_8cpix"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_321ub"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ivxny"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_ye2i0"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_o1pkf"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_yx04t"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_vwq01"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_bbtxs"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_0a7vv"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_3ohjr"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_fm7qs"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_urb88"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_8ca56"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_6es1b"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_5dct2"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_0ckc0"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_tbnsj"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_sr1tq"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_a1xh3"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_d1aag"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_iivqr"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_m0ba0"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_4n221"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_bowjf"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_4aq1v"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_wuynt"]
-script = ExtResource("30_1cbva")
-style = ExtResource("31_m1si6")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
 price = 70
 bought_day = 0
 
 [sub_resource type="Resource" id="Resource_objjo"]
-script = ExtResource("3_qwq8q")
-walls = Dictionary[Vector3i, ExtResource("30_1cbva")]({
-Vector3i(8, 4, 0): SubResource("Resource_abmow"),
-Vector3i(8, 4, 1): SubResource("Resource_3ulu7"),
-Vector3i(8, 5, 1): SubResource("Resource_tlsmd"),
-Vector3i(8, 6, 1): SubResource("Resource_c47da"),
-Vector3i(8, 7, 1): SubResource("Resource_mg8mu"),
-Vector3i(8, 8, 1): SubResource("Resource_1hdiw"),
-Vector3i(8, 9, 1): SubResource("Resource_si1bs"),
-Vector3i(8, 10, 1): SubResource("Resource_eyqs7"),
-Vector3i(8, 11, 1): SubResource("Resource_5x5bv"),
-Vector3i(8, 12, 1): SubResource("Resource_c4ulb"),
-Vector3i(8, 13, 1): SubResource("Resource_fatuh"),
-Vector3i(8, 14, 0): SubResource("Resource_a35ru"),
-Vector3i(9, 4, 0): SubResource("Resource_s6u0c"),
-Vector3i(9, 14, 0): SubResource("Resource_mt51q"),
-Vector3i(10, 4, 0): SubResource("Resource_vxhbb"),
-Vector3i(10, 14, 0): SubResource("Resource_ref3y"),
-Vector3i(11, 4, 0): SubResource("Resource_523cb"),
-Vector3i(11, 14, 0): SubResource("Resource_gdj1o"),
-Vector3i(12, 4, 0): SubResource("Resource_hmtyp"),
-Vector3i(12, 14, 0): SubResource("Resource_x706m"),
-Vector3i(13, 4, 0): SubResource("Resource_k2dk2"),
-Vector3i(13, 14, 0): SubResource("Resource_4hg3q"),
-Vector3i(14, 4, 0): SubResource("Resource_aa7bb"),
-Vector3i(14, 14, 0): SubResource("Resource_1e6ld"),
-Vector3i(15, 4, 0): SubResource("Resource_k7jhi"),
-Vector3i(15, 14, 0): SubResource("Resource_h1urx"),
-Vector3i(16, 4, 0): SubResource("Resource_ck5x6"),
-Vector3i(16, 14, 0): SubResource("Resource_6oq18"),
-Vector3i(17, 4, 0): SubResource("Resource_321ub"),
-Vector3i(17, 4, 1): SubResource("Resource_kojwf"),
-Vector3i(17, 5, 1): SubResource("Resource_dcov8"),
-Vector3i(17, 6, 1): SubResource("Resource_neibl"),
-Vector3i(17, 7, 1): SubResource("Resource_lix0t"),
-Vector3i(17, 8, 1): SubResource("Resource_yo70b"),
-Vector3i(17, 9, 1): SubResource("Resource_t5f8q"),
-Vector3i(17, 10, 0): SubResource("Resource_ivxny"),
-Vector3i(17, 10, 1): SubResource("Resource_6nd63"),
-Vector3i(17, 11, 1): SubResource("Resource_pp2ga"),
-Vector3i(17, 12, 1): SubResource("Resource_ptalr"),
-Vector3i(17, 13, 1): SubResource("Resource_8cpix"),
-Vector3i(17, 14, 0): SubResource("Resource_sr1tq"),
-Vector3i(18, 4, 0): SubResource("Resource_ye2i0"),
-Vector3i(18, 10, 0): SubResource("Resource_o1pkf"),
-Vector3i(18, 14, 0): SubResource("Resource_a1xh3"),
-Vector3i(19, 4, 0): SubResource("Resource_yx04t"),
-Vector3i(19, 10, 0): SubResource("Resource_vwq01"),
-Vector3i(19, 14, 0): SubResource("Resource_d1aag"),
-Vector3i(20, 4, 0): SubResource("Resource_bbtxs"),
-Vector3i(20, 10, 0): SubResource("Resource_0a7vv"),
-Vector3i(20, 14, 0): SubResource("Resource_iivqr"),
-Vector3i(21, 4, 0): SubResource("Resource_3ohjr"),
-Vector3i(21, 10, 0): SubResource("Resource_fm7qs"),
-Vector3i(21, 14, 0): SubResource("Resource_m0ba0"),
-Vector3i(22, 4, 1): SubResource("Resource_urb88"),
-Vector3i(22, 5, 1): SubResource("Resource_8ca56"),
-Vector3i(22, 6, 1): SubResource("Resource_6es1b"),
-Vector3i(22, 7, 1): SubResource("Resource_5dct2"),
-Vector3i(22, 8, 1): SubResource("Resource_0ckc0"),
-Vector3i(22, 9, 1): SubResource("Resource_tbnsj"),
-Vector3i(22, 10, 1): SubResource("Resource_4n221"),
-Vector3i(22, 11, 1): SubResource("Resource_bowjf"),
-Vector3i(22, 12, 1): SubResource("Resource_4aq1v"),
-Vector3i(22, 13, 1): SubResource("Resource_wuynt")
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
+price = 70
+bought_day = 0
+
+[sub_resource type="Resource" id="Resource_1fj5g"]
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
+price = 70
+bought_day = 0
+
+[sub_resource type="Resource" id="Resource_0fc4q"]
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
+price = 70
+bought_day = 0
+
+[sub_resource type="Resource" id="Resource_yseai"]
+script = ExtResource("30_clore")
+style = ExtResource("31_5gocc")
+price = 70
+bought_day = 0
+
+[sub_resource type="Resource" id="Resource_c6q0w"]
+script = ExtResource("3_6vi4j")
+walls = Dictionary[Vector3i, ExtResource("30_clore")]({
+Vector3i(8, 4, 0): SubResource("Resource_vxhbb"),
+Vector3i(8, 4, 1): SubResource("Resource_c47da"),
+Vector3i(8, 5, 1): SubResource("Resource_mg8mu"),
+Vector3i(8, 6, 1): SubResource("Resource_1hdiw"),
+Vector3i(8, 7, 1): SubResource("Resource_si1bs"),
+Vector3i(8, 8, 1): SubResource("Resource_eyqs7"),
+Vector3i(8, 9, 1): SubResource("Resource_5x5bv"),
+Vector3i(8, 10, 1): SubResource("Resource_c4ulb"),
+Vector3i(8, 11, 1): SubResource("Resource_fatuh"),
+Vector3i(8, 12, 1): SubResource("Resource_321ub"),
+Vector3i(8, 13, 1): SubResource("Resource_ye2i0"),
+Vector3i(8, 14, 0): SubResource("Resource_ref3y"),
+Vector3i(9, 4, 0): SubResource("Resource_523cb"),
+Vector3i(9, 14, 0): SubResource("Resource_gdj1o"),
+Vector3i(10, 4, 0): SubResource("Resource_hmtyp"),
+Vector3i(10, 14, 0): SubResource("Resource_x706m"),
+Vector3i(11, 4, 0): SubResource("Resource_k2dk2"),
+Vector3i(11, 14, 0): SubResource("Resource_4hg3q"),
+Vector3i(12, 4, 0): SubResource("Resource_aa7bb"),
+Vector3i(12, 14, 0): SubResource("Resource_1e6ld"),
+Vector3i(13, 4, 0): SubResource("Resource_k7jhi"),
+Vector3i(13, 14, 0): SubResource("Resource_h1urx"),
+Vector3i(14, 4, 0): SubResource("Resource_ck5x6"),
+Vector3i(14, 14, 0): SubResource("Resource_6oq18"),
+Vector3i(15, 4, 0): SubResource("Resource_3ulu7"),
+Vector3i(15, 14, 0): SubResource("Resource_kojwf"),
+Vector3i(16, 4, 0): SubResource("Resource_tlsmd"),
+Vector3i(16, 14, 0): SubResource("Resource_dcov8"),
+Vector3i(17, 4, 0): SubResource("Resource_yx04t"),
+Vector3i(17, 4, 1): SubResource("Resource_neibl"),
+Vector3i(17, 5, 1): SubResource("Resource_lix0t"),
+Vector3i(17, 6, 1): SubResource("Resource_yo70b"),
+Vector3i(17, 7, 1): SubResource("Resource_t5f8q"),
+Vector3i(17, 8, 1): SubResource("Resource_6nd63"),
+Vector3i(17, 9, 1): SubResource("Resource_pp2ga"),
+Vector3i(17, 10, 0): SubResource("Resource_vwq01"),
+Vector3i(17, 10, 1): SubResource("Resource_ptalr"),
+Vector3i(17, 11, 1): SubResource("Resource_8cpix"),
+Vector3i(17, 12, 1): SubResource("Resource_ivxny"),
+Vector3i(17, 13, 1): SubResource("Resource_o1pkf"),
+Vector3i(17, 14, 0): SubResource("Resource_m0ba0"),
+Vector3i(18, 4, 0): SubResource("Resource_bbtxs"),
+Vector3i(18, 10, 0): SubResource("Resource_0a7vv"),
+Vector3i(18, 14, 0): SubResource("Resource_4n221"),
+Vector3i(19, 4, 0): SubResource("Resource_3ohjr"),
+Vector3i(19, 10, 0): SubResource("Resource_fm7qs"),
+Vector3i(19, 14, 0): SubResource("Resource_bowjf"),
+Vector3i(20, 4, 0): SubResource("Resource_urb88"),
+Vector3i(20, 10, 0): SubResource("Resource_8ca56"),
+Vector3i(20, 14, 0): SubResource("Resource_4aq1v"),
+Vector3i(21, 4, 0): SubResource("Resource_6es1b"),
+Vector3i(21, 10, 0): SubResource("Resource_5dct2"),
+Vector3i(21, 14, 0): SubResource("Resource_wuynt"),
+Vector3i(22, 4, 1): SubResource("Resource_0ckc0"),
+Vector3i(22, 5, 1): SubResource("Resource_tbnsj"),
+Vector3i(22, 6, 1): SubResource("Resource_sr1tq"),
+Vector3i(22, 7, 1): SubResource("Resource_a1xh3"),
+Vector3i(22, 8, 1): SubResource("Resource_d1aag"),
+Vector3i(22, 9, 1): SubResource("Resource_iivqr"),
+Vector3i(22, 10, 1): SubResource("Resource_objjo"),
+Vector3i(22, 11, 1): SubResource("Resource_1fj5g"),
+Vector3i(22, 12, 1): SubResource("Resource_0fc4q"),
+Vector3i(22, 13, 1): SubResource("Resource_yseai")
 })
-floors = Dictionary[Vector2i, ExtResource("4_dpa0v")]({
-Vector2i(8, 4): SubResource("Resource_5gocc"),
-Vector2i(8, 5): SubResource("Resource_cg12e"),
-Vector2i(8, 6): SubResource("Resource_wed7n"),
-Vector2i(8, 7): SubResource("Resource_mt4ii"),
-Vector2i(8, 8): SubResource("Resource_hbepm"),
-Vector2i(8, 9): SubResource("Resource_yfhmi"),
-Vector2i(8, 10): SubResource("Resource_hkh4n"),
-Vector2i(8, 11): SubResource("Resource_iyhg6"),
-Vector2i(8, 12): SubResource("Resource_v1spx"),
-Vector2i(8, 13): SubResource("Resource_8dk0l"),
-Vector2i(9, 4): SubResource("Resource_rw0ru"),
-Vector2i(9, 5): SubResource("Resource_scflu"),
-Vector2i(9, 6): SubResource("Resource_twkng"),
-Vector2i(9, 7): SubResource("Resource_5afh6"),
-Vector2i(9, 8): SubResource("Resource_t6bqg"),
-Vector2i(9, 9): SubResource("Resource_sw42j"),
-Vector2i(9, 10): SubResource("Resource_m05di"),
-Vector2i(9, 11): SubResource("Resource_n721r"),
-Vector2i(9, 12): SubResource("Resource_y64io"),
-Vector2i(9, 13): SubResource("Resource_7lndu"),
-Vector2i(10, 4): SubResource("Resource_glo2w"),
-Vector2i(10, 5): SubResource("Resource_wavvo"),
-Vector2i(10, 6): SubResource("Resource_6gyg4"),
-Vector2i(10, 7): SubResource("Resource_2fvtl"),
-Vector2i(10, 8): SubResource("Resource_pw2tr"),
-Vector2i(10, 9): SubResource("Resource_4otla"),
-Vector2i(10, 10): SubResource("Resource_eunle"),
-Vector2i(10, 11): SubResource("Resource_5tafw"),
-Vector2i(10, 12): SubResource("Resource_savfi"),
-Vector2i(10, 13): SubResource("Resource_l5vts"),
-Vector2i(11, 4): SubResource("Resource_t0blk"),
-Vector2i(11, 5): SubResource("Resource_3qk6l"),
-Vector2i(11, 6): SubResource("Resource_gs7uo"),
-Vector2i(11, 7): SubResource("Resource_trbll"),
-Vector2i(11, 8): SubResource("Resource_1o7ey"),
-Vector2i(11, 9): SubResource("Resource_1aawl"),
-Vector2i(11, 10): SubResource("Resource_3140l"),
-Vector2i(11, 11): SubResource("Resource_hnti0"),
-Vector2i(11, 12): SubResource("Resource_27e54"),
-Vector2i(11, 13): SubResource("Resource_5wo4w"),
-Vector2i(12, 4): SubResource("Resource_7aiw8"),
-Vector2i(12, 5): SubResource("Resource_jqnu0"),
-Vector2i(12, 6): SubResource("Resource_rflrn"),
-Vector2i(12, 7): SubResource("Resource_paema"),
-Vector2i(12, 8): SubResource("Resource_p0ydv"),
-Vector2i(12, 9): SubResource("Resource_6ouyk"),
-Vector2i(12, 10): SubResource("Resource_7bnok"),
-Vector2i(12, 11): SubResource("Resource_plqfh"),
-Vector2i(12, 12): SubResource("Resource_3p8u5"),
-Vector2i(12, 13): SubResource("Resource_7kha1"),
-Vector2i(13, 4): SubResource("Resource_acdbg"),
-Vector2i(13, 5): SubResource("Resource_rde0o"),
-Vector2i(13, 6): SubResource("Resource_f1m51"),
-Vector2i(13, 7): SubResource("Resource_tdxdu"),
-Vector2i(13, 8): SubResource("Resource_h175a"),
-Vector2i(13, 9): SubResource("Resource_57cpu"),
-Vector2i(13, 10): SubResource("Resource_530ou"),
-Vector2i(13, 11): SubResource("Resource_lqju2"),
-Vector2i(13, 12): SubResource("Resource_ah7jf"),
-Vector2i(13, 13): SubResource("Resource_wkids"),
-Vector2i(14, 4): SubResource("Resource_sjbr3"),
-Vector2i(14, 5): SubResource("Resource_0268v"),
-Vector2i(14, 6): SubResource("Resource_trtn6"),
-Vector2i(14, 7): SubResource("Resource_11tmh"),
-Vector2i(14, 8): SubResource("Resource_l3di2"),
-Vector2i(14, 9): SubResource("Resource_kp0jy"),
-Vector2i(14, 10): SubResource("Resource_3oaqa"),
-Vector2i(14, 11): SubResource("Resource_cp1jd"),
-Vector2i(14, 12): SubResource("Resource_1pfr5"),
-Vector2i(14, 13): SubResource("Resource_tyqvg"),
-Vector2i(15, 4): SubResource("Resource_xt63g"),
-Vector2i(15, 5): SubResource("Resource_d8mv6"),
-Vector2i(15, 6): SubResource("Resource_4ckox"),
-Vector2i(15, 7): SubResource("Resource_hqwaa"),
-Vector2i(15, 8): SubResource("Resource_uocr7"),
-Vector2i(15, 9): SubResource("Resource_f4xni"),
-Vector2i(15, 10): SubResource("Resource_en47l"),
-Vector2i(15, 11): SubResource("Resource_d07fc"),
-Vector2i(15, 12): SubResource("Resource_todsu"),
-Vector2i(15, 13): SubResource("Resource_n2rek"),
-Vector2i(16, 4): SubResource("Resource_ofpck"),
-Vector2i(16, 5): SubResource("Resource_bbcgn"),
-Vector2i(16, 6): SubResource("Resource_ynbqq"),
-Vector2i(16, 7): SubResource("Resource_dvy74"),
-Vector2i(16, 8): SubResource("Resource_ymhvx"),
-Vector2i(16, 9): SubResource("Resource_twmb0"),
-Vector2i(16, 10): SubResource("Resource_ps2yg"),
-Vector2i(16, 11): SubResource("Resource_yx03a"),
-Vector2i(16, 12): SubResource("Resource_7o5d3"),
-Vector2i(16, 13): SubResource("Resource_biq7g"),
-Vector2i(17, 4): SubResource("Resource_rw4lo"),
-Vector2i(17, 5): SubResource("Resource_3fxw0"),
-Vector2i(17, 6): SubResource("Resource_8rp80"),
-Vector2i(17, 7): SubResource("Resource_5cxdg"),
-Vector2i(17, 8): SubResource("Resource_jogxc"),
-Vector2i(17, 9): SubResource("Resource_lifdl"),
-Vector2i(17, 10): SubResource("Resource_kobn1"),
-Vector2i(17, 11): SubResource("Resource_uq2bf"),
-Vector2i(17, 12): SubResource("Resource_sroq6"),
-Vector2i(17, 13): SubResource("Resource_gwvqu"),
-Vector2i(18, 4): SubResource("Resource_2qbxo"),
-Vector2i(18, 5): SubResource("Resource_72slc"),
-Vector2i(18, 6): SubResource("Resource_kj7cg"),
-Vector2i(18, 7): SubResource("Resource_bfxcc"),
-Vector2i(18, 8): SubResource("Resource_0sh25"),
-Vector2i(18, 9): SubResource("Resource_24u3g"),
-Vector2i(18, 10): SubResource("Resource_b6u85"),
-Vector2i(18, 11): SubResource("Resource_3djva"),
-Vector2i(18, 12): SubResource("Resource_a2kct"),
-Vector2i(18, 13): SubResource("Resource_pb3nr"),
-Vector2i(19, 4): SubResource("Resource_ducld"),
-Vector2i(19, 5): SubResource("Resource_xiiee"),
-Vector2i(19, 6): SubResource("Resource_hppkp"),
-Vector2i(19, 7): SubResource("Resource_68txg"),
-Vector2i(19, 8): SubResource("Resource_ngeyr"),
-Vector2i(19, 9): SubResource("Resource_v283s"),
-Vector2i(19, 10): SubResource("Resource_yb0q0"),
-Vector2i(19, 11): SubResource("Resource_ema04"),
-Vector2i(19, 12): SubResource("Resource_ho4u5"),
-Vector2i(19, 13): SubResource("Resource_q4kuq"),
-Vector2i(20, 4): SubResource("Resource_bw5tq"),
-Vector2i(20, 5): SubResource("Resource_x80wg"),
-Vector2i(20, 6): SubResource("Resource_hq4bk"),
-Vector2i(20, 7): SubResource("Resource_gm26o"),
-Vector2i(20, 8): SubResource("Resource_onmfb"),
-Vector2i(20, 9): SubResource("Resource_e0ti0"),
-Vector2i(20, 10): SubResource("Resource_j0ljn"),
-Vector2i(20, 11): SubResource("Resource_jmc6f"),
-Vector2i(20, 12): SubResource("Resource_nnaep"),
-Vector2i(20, 13): SubResource("Resource_h88mb"),
-Vector2i(21, 4): SubResource("Resource_3112p"),
-Vector2i(21, 5): SubResource("Resource_e3e6a"),
-Vector2i(21, 6): SubResource("Resource_q3e87"),
-Vector2i(21, 7): SubResource("Resource_bsnww"),
-Vector2i(21, 8): SubResource("Resource_ekhxv"),
-Vector2i(21, 9): SubResource("Resource_psvje"),
-Vector2i(21, 10): SubResource("Resource_ypj17"),
-Vector2i(21, 11): SubResource("Resource_kfle3"),
-Vector2i(21, 12): SubResource("Resource_08b7u"),
-Vector2i(21, 13): SubResource("Resource_q42km")
+floors = Dictionary[Vector2i, ExtResource("4_bpfee")]({
+Vector2i(8, 4): SubResource("Resource_7aiw8"),
+Vector2i(8, 5): SubResource("Resource_jqnu0"),
+Vector2i(8, 6): SubResource("Resource_rflrn"),
+Vector2i(8, 7): SubResource("Resource_paema"),
+Vector2i(8, 8): SubResource("Resource_p0ydv"),
+Vector2i(8, 9): SubResource("Resource_6ouyk"),
+Vector2i(8, 10): SubResource("Resource_7bnok"),
+Vector2i(8, 11): SubResource("Resource_plqfh"),
+Vector2i(8, 12): SubResource("Resource_3p8u5"),
+Vector2i(8, 13): SubResource("Resource_7kha1"),
+Vector2i(9, 4): SubResource("Resource_acdbg"),
+Vector2i(9, 5): SubResource("Resource_rde0o"),
+Vector2i(9, 6): SubResource("Resource_f1m51"),
+Vector2i(9, 7): SubResource("Resource_tdxdu"),
+Vector2i(9, 8): SubResource("Resource_h175a"),
+Vector2i(9, 9): SubResource("Resource_57cpu"),
+Vector2i(9, 10): SubResource("Resource_530ou"),
+Vector2i(9, 11): SubResource("Resource_lqju2"),
+Vector2i(9, 12): SubResource("Resource_ah7jf"),
+Vector2i(9, 13): SubResource("Resource_wkids"),
+Vector2i(10, 4): SubResource("Resource_sjbr3"),
+Vector2i(10, 5): SubResource("Resource_0268v"),
+Vector2i(10, 6): SubResource("Resource_trtn6"),
+Vector2i(10, 7): SubResource("Resource_11tmh"),
+Vector2i(10, 8): SubResource("Resource_l3di2"),
+Vector2i(10, 9): SubResource("Resource_kp0jy"),
+Vector2i(10, 10): SubResource("Resource_3oaqa"),
+Vector2i(10, 11): SubResource("Resource_cp1jd"),
+Vector2i(10, 12): SubResource("Resource_1pfr5"),
+Vector2i(10, 13): SubResource("Resource_tyqvg"),
+Vector2i(11, 4): SubResource("Resource_xt63g"),
+Vector2i(11, 5): SubResource("Resource_d8mv6"),
+Vector2i(11, 6): SubResource("Resource_4ckox"),
+Vector2i(11, 7): SubResource("Resource_hqwaa"),
+Vector2i(11, 8): SubResource("Resource_uocr7"),
+Vector2i(11, 9): SubResource("Resource_f4xni"),
+Vector2i(11, 10): SubResource("Resource_en47l"),
+Vector2i(11, 11): SubResource("Resource_d07fc"),
+Vector2i(11, 12): SubResource("Resource_todsu"),
+Vector2i(11, 13): SubResource("Resource_n2rek"),
+Vector2i(12, 4): SubResource("Resource_ofpck"),
+Vector2i(12, 5): SubResource("Resource_bbcgn"),
+Vector2i(12, 6): SubResource("Resource_ynbqq"),
+Vector2i(12, 7): SubResource("Resource_dvy74"),
+Vector2i(12, 8): SubResource("Resource_ymhvx"),
+Vector2i(12, 9): SubResource("Resource_twmb0"),
+Vector2i(12, 10): SubResource("Resource_ps2yg"),
+Vector2i(12, 11): SubResource("Resource_yx03a"),
+Vector2i(12, 12): SubResource("Resource_7o5d3"),
+Vector2i(12, 13): SubResource("Resource_biq7g"),
+Vector2i(13, 4): SubResource("Resource_cg12e"),
+Vector2i(13, 5): SubResource("Resource_wed7n"),
+Vector2i(13, 6): SubResource("Resource_mt4ii"),
+Vector2i(13, 7): SubResource("Resource_hbepm"),
+Vector2i(13, 8): SubResource("Resource_yfhmi"),
+Vector2i(13, 9): SubResource("Resource_hkh4n"),
+Vector2i(13, 10): SubResource("Resource_iyhg6"),
+Vector2i(13, 11): SubResource("Resource_v1spx"),
+Vector2i(13, 12): SubResource("Resource_8dk0l"),
+Vector2i(13, 13): SubResource("Resource_rw4lo"),
+Vector2i(14, 4): SubResource("Resource_scflu"),
+Vector2i(14, 5): SubResource("Resource_twkng"),
+Vector2i(14, 6): SubResource("Resource_5afh6"),
+Vector2i(14, 7): SubResource("Resource_t6bqg"),
+Vector2i(14, 8): SubResource("Resource_sw42j"),
+Vector2i(14, 9): SubResource("Resource_m05di"),
+Vector2i(14, 10): SubResource("Resource_n721r"),
+Vector2i(14, 11): SubResource("Resource_y64io"),
+Vector2i(14, 12): SubResource("Resource_7lndu"),
+Vector2i(14, 13): SubResource("Resource_2qbxo"),
+Vector2i(15, 4): SubResource("Resource_wavvo"),
+Vector2i(15, 5): SubResource("Resource_6gyg4"),
+Vector2i(15, 6): SubResource("Resource_2fvtl"),
+Vector2i(15, 7): SubResource("Resource_pw2tr"),
+Vector2i(15, 8): SubResource("Resource_4otla"),
+Vector2i(15, 9): SubResource("Resource_eunle"),
+Vector2i(15, 10): SubResource("Resource_5tafw"),
+Vector2i(15, 11): SubResource("Resource_savfi"),
+Vector2i(15, 12): SubResource("Resource_l5vts"),
+Vector2i(15, 13): SubResource("Resource_ducld"),
+Vector2i(16, 4): SubResource("Resource_3qk6l"),
+Vector2i(16, 5): SubResource("Resource_gs7uo"),
+Vector2i(16, 6): SubResource("Resource_trbll"),
+Vector2i(16, 7): SubResource("Resource_1o7ey"),
+Vector2i(16, 8): SubResource("Resource_1aawl"),
+Vector2i(16, 9): SubResource("Resource_3140l"),
+Vector2i(16, 10): SubResource("Resource_hnti0"),
+Vector2i(16, 11): SubResource("Resource_27e54"),
+Vector2i(16, 12): SubResource("Resource_5wo4w"),
+Vector2i(16, 13): SubResource("Resource_bw5tq"),
+Vector2i(17, 4): SubResource("Resource_3112p"),
+Vector2i(17, 5): SubResource("Resource_e3e6a"),
+Vector2i(17, 6): SubResource("Resource_q3e87"),
+Vector2i(17, 7): SubResource("Resource_bsnww"),
+Vector2i(17, 8): SubResource("Resource_ekhxv"),
+Vector2i(17, 9): SubResource("Resource_psvje"),
+Vector2i(17, 10): SubResource("Resource_ypj17"),
+Vector2i(17, 11): SubResource("Resource_kfle3"),
+Vector2i(17, 12): SubResource("Resource_08b7u"),
+Vector2i(17, 13): SubResource("Resource_q42km"),
+Vector2i(18, 4): SubResource("Resource_3fxw0"),
+Vector2i(18, 5): SubResource("Resource_8rp80"),
+Vector2i(18, 6): SubResource("Resource_5cxdg"),
+Vector2i(18, 7): SubResource("Resource_jogxc"),
+Vector2i(18, 8): SubResource("Resource_lifdl"),
+Vector2i(18, 9): SubResource("Resource_kobn1"),
+Vector2i(18, 10): SubResource("Resource_uq2bf"),
+Vector2i(18, 11): SubResource("Resource_sroq6"),
+Vector2i(18, 12): SubResource("Resource_gwvqu"),
+Vector2i(18, 13): SubResource("Resource_earm1"),
+Vector2i(19, 4): SubResource("Resource_72slc"),
+Vector2i(19, 5): SubResource("Resource_kj7cg"),
+Vector2i(19, 6): SubResource("Resource_bfxcc"),
+Vector2i(19, 7): SubResource("Resource_0sh25"),
+Vector2i(19, 8): SubResource("Resource_24u3g"),
+Vector2i(19, 9): SubResource("Resource_b6u85"),
+Vector2i(19, 10): SubResource("Resource_3djva"),
+Vector2i(19, 11): SubResource("Resource_a2kct"),
+Vector2i(19, 12): SubResource("Resource_pb3nr"),
+Vector2i(19, 13): SubResource("Resource_j7rq8"),
+Vector2i(20, 4): SubResource("Resource_xiiee"),
+Vector2i(20, 5): SubResource("Resource_hppkp"),
+Vector2i(20, 6): SubResource("Resource_68txg"),
+Vector2i(20, 7): SubResource("Resource_ngeyr"),
+Vector2i(20, 8): SubResource("Resource_v283s"),
+Vector2i(20, 9): SubResource("Resource_yb0q0"),
+Vector2i(20, 10): SubResource("Resource_ema04"),
+Vector2i(20, 11): SubResource("Resource_ho4u5"),
+Vector2i(20, 12): SubResource("Resource_q4kuq"),
+Vector2i(20, 13): SubResource("Resource_y3o78"),
+Vector2i(21, 4): SubResource("Resource_x80wg"),
+Vector2i(21, 5): SubResource("Resource_hq4bk"),
+Vector2i(21, 6): SubResource("Resource_gm26o"),
+Vector2i(21, 7): SubResource("Resource_onmfb"),
+Vector2i(21, 8): SubResource("Resource_e0ti0"),
+Vector2i(21, 9): SubResource("Resource_j0ljn"),
+Vector2i(21, 10): SubResource("Resource_jmc6f"),
+Vector2i(21, 11): SubResource("Resource_nnaep"),
+Vector2i(21, 12): SubResource("Resource_h88mb"),
+Vector2i(21, 13): SubResource("Resource_srh4m")
 })
-openings = Array[ExtResource("25_fdd0k")]([SubResource("Resource_35e8e"), SubResource("Resource_x0g8k"), SubResource("Resource_felg6"), SubResource("Resource_87nk7"), SubResource("Resource_ryqs8"), SubResource("Resource_kvsq8"), SubResource("Resource_jmx6k")])
-objects = Array[ExtResource("8_c743c")]([SubResource("Resource_earm1"), SubResource("Resource_j7rq8"), SubResource("Resource_y3o78"), SubResource("Resource_srh4m"), SubResource("Resource_u5qcm"), SubResource("Resource_0c51y"), SubResource("Resource_4qabw"), SubResource("Resource_tg16h"), SubResource("Resource_87hw8"), SubResource("Resource_dshc8"), SubResource("Resource_0co1g"), SubResource("Resource_lxq0v"), SubResource("Resource_qsxkf"), SubResource("Resource_hl1rm"), SubResource("Resource_7dhd5"), SubResource("Resource_773cv"), SubResource("Resource_gdvqr"), SubResource("Resource_6gory"), SubResource("Resource_nlutq")])
+openings = Array[ExtResource("25_7s74p")]([SubResource("Resource_ryqs8"), SubResource("Resource_kvsq8"), SubResource("Resource_jmx6k"), SubResource("Resource_abmow"), SubResource("Resource_a35ru"), SubResource("Resource_s6u0c"), SubResource("Resource_mt51q")])
+objects = Array[ExtResource("8_0ue5c")]([SubResource("Resource_u5qcm"), SubResource("Resource_0c51y"), SubResource("Resource_4qabw"), SubResource("Resource_tg16h"), SubResource("Resource_87hw8"), SubResource("Resource_dshc8"), SubResource("Resource_0co1g"), SubResource("Resource_lxq0v"), SubResource("Resource_qsxkf"), SubResource("Resource_hl1rm"), SubResource("Resource_7dhd5"), SubResource("Resource_773cv"), SubResource("Resource_gdvqr"), SubResource("Resource_6gory"), SubResource("Resource_nlutq"), SubResource("Resource_35e8e"), SubResource("Resource_x0g8k"), SubResource("Resource_felg6"), SubResource("Resource_87nk7")])
+
+[sub_resource type="Resource" id="Resource_iju0m"]
+script = ExtResource("33_glo2w")
+definition = ExtResource("32_rw0ru")
+price = 700
+bought_day = 0
 
 [resource]
-script = ExtResource("32_clore")
-default_floor = ExtResource("1_64y5s")
-levels = Array[ExtResource("3_qwq8q")]([SubResource("Resource_objjo")])
+script = ExtResource("34_t0blk")
+default_floor = ExtResource("1_qwq8q")
+roof = SubResource("Resource_iju0m")
+levels = Array[ExtResource("3_6vi4j")]([SubResource("Resource_c6q0w")])
 spawn_cells = Array[Vector2i]([Vector2i(12, 16), Vector2i(13, 16)])

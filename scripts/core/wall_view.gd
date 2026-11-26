@@ -255,7 +255,7 @@ func _level(full: bool) -> String:
 ## qui ne cachent presque rien, restent pleins.
 func _is_full(edge: Vector3i) -> bool:
 	match GameMode.effective_wall_mode():
-		GameMode.WallMode.FULL:
+		GameMode.WallMode.FULL, GameMode.WallMode.ROOF:
 			return true
 		GameMode.WallMode.LOW:
 			return false

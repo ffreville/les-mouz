@@ -310,6 +310,50 @@ func place_opening(edge: Vector3i, definition: OpeningDefinition, swing_positive
 	return true
 
 
+# --- Toit -----------------------------------------------------------------------
+
+## Option « sans toit » de l'outil (identifiant réservé).
+const NO_ROOF := &"sans_toit"
+
+
+## Devis d'un style de toit pour toute la maison : prix des cases couvertes, moins la revente de l'ancien.
+func quote_roof(definition: RoofDefinition) -> Dictionary:
+	var current := lot.roof
+	var removing := definition.id == NO_ROOF
+	if removing and current == null:
+		return {"cost": 0, "valid": false, "reason": "Pas de toit"}
+	if not removing and current != null and current.definition == definition:
+		return {"cost": 0, "valid": false, "reason": "Déjà ce toit"}
+	var cells := lot.roof_size()
+	if not removing and cells == 0:
+		return {"cost": 0, "valid": false, "reason": "Aucune pièce fermée à couvrir"}
+	var cost := 0 if removing else cells * definition.price_per_cell
+	if current != null:
+		cost -= Wallet.resale_value(current)
+	return {"cost": cost, "valid": true, "reason": "", "cells": cells}
+
+
+func set_roof(definition: RoofDefinition) -> bool:
+	var quote := quote_roof(definition)
+	var cost: int = quote["cost"]
+	if not quote["valid"] or (cost > 0 and not Wallet.pay(cost)):
+		return false
+	if cost < 0:
+		Wallet.receive(-cost)
+	var previous := lot.roof
+	if previous != null:
+		EventBus.item_sold.emit(previous, Wallet.resale_value(previous))
+	if definition.id == NO_ROOF:
+		lot.roof = null
+	else:
+		lot.roof = PlacedRoof.new()
+		lot.roof.definition = definition
+		Wallet.stamp(lot.roof, int(quote["cells"]) * definition.price_per_cell)
+		EventBus.item_bought.emit(lot.roof, lot.roof.price)
+	_commit(func() -> void: lot.roof = previous, -cost)
+	return true
+
+
 # --- Papier peint ---------------------------------------------------------------
 
 ## Option « retirer le papier peint » de l'outil (identifiant réservé).

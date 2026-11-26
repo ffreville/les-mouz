@@ -6,15 +6,15 @@ extends Node
 ## en Construire et Acheter, les murs sont toujours baissés.
 
 enum Mode { LIVE, BUILD, BUY }
-## Murs pleins, coupés (ceux qui cachent l'intérieur sont baissés) ou tous baissés.
-enum WallMode { FULL, CUTAWAY, LOW }
+## Murs pleins, coupés (ceux qui cachent l'intérieur sont baissés), tous baissés, ou pleins avec le toit.
+enum WallMode { FULL, CUTAWAY, LOW, ROOF }
 
 signal mode_changed(mode: Mode)
 signal wall_mode_changed(wall_mode: WallMode)
 
 const NAMES := {Mode.LIVE: "Vivre", Mode.BUILD: "Construire", Mode.BUY: "Acheter"}
 const WALL_MODE_NAMES := {WallMode.FULL: "Murs pleins", WallMode.CUTAWAY: "Murs coupés",
-		WallMode.LOW: "Murs baissés"}
+		WallMode.LOW: "Murs baissés", WallMode.ROOF: "Toits"}
 
 var mode: Mode = Mode.LIVE
 ## Hauteur des murs en mode Vivre.
@@ -31,7 +31,12 @@ func effective_wall_mode() -> WallMode:
 	return wall_mode if is_live() else WallMode.LOW
 
 
-## Passe aux murs suivants : pleins → coupés → baissés.
+## Vrai quand on voit les toits (mode Vivre, réglage « Toits »).
+func shows_roofs() -> bool:
+	return is_live() and wall_mode == WallMode.ROOF
+
+
+## Passe aux murs suivants : pleins → coupés → baissés → toits.
 func cycle_wall_mode() -> void:
 	wall_mode = ((wall_mode + 1) % WallMode.size()) as WallMode
 	wall_mode_changed.emit(wall_mode)

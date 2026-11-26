@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RoofDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/roof_definition.gd" id="1_roof"]
+
+[resource]
+script = ExtResource("1_roof")
+id = &"tuiles"
+display_name = "Tuiles rouges"
+color = Color(0.7686, 0.4000, 0.2902, 1)
+top_color = Color(0.8471, 0.5373, 0.4235, 1)
+light_color = Color(0.8235, 0.4784, 0.3608, 1)
+dark_color = Color(0.6196, 0.3020, 0.2157, 1)
+line_color = Color(0.5569, 0.2627, 0.1882, 1)
+row_step = 6.0
+price_per_cell = 6

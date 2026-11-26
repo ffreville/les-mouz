@@ -75,6 +75,7 @@ func la_bicoque() -> Lot:
 	b.put(&"lavabo", Vector2i(19, 10), 2).put(&"toilettes", Vector2i(21, 10), 3).put(&"douche", Vector2i(20, 12), 3)
 	# Jardin.
 	b.put(&"arbre", Vector2i(2, 14)).put(&"arbre", Vector2i(25, 3)).put(&"plante", Vector2i(10, 15))
+	b.roof(&"chaume")
 	return b.spawn([Vector2i(12, 16), Vector2i(13, 16)]).build()
 
 
@@ -126,6 +127,7 @@ func les_glycines() -> Lot:
 	b.on_level(0)
 	# Jardin.
 	b.put(&"arbre", Vector2i(1, 1)).put(&"balancoire", Vector2i(2, 16)).put(&"arbre", Vector2i(26, 15)).put(&"plante", Vector2i(3, 4))
+	b.roof(&"ardoise")
 	return b.spawn([Vector2i(3, 7), Vector2i(3, 8)]).build()
 
 
@@ -170,6 +172,7 @@ func villa_horizon() -> Lot:
 	b.on_level(0)
 	# Jardin.
 	b.put(&"telescope", Vector2i(3, 15)).put(&"arbre", Vector2i(26, 15)).put(&"tapis_yoga", Vector2i(26, 4))
+	b.roof(&"zinc")
 	return b.spawn([Vector2i(14, 16), Vector2i(15, 16)]).build()
 
 
@@ -193,6 +196,7 @@ func le_potager() -> Lot:
 	b.put(&"potager", Vector2i(18, 3)).put(&"potager", Vector2i(21, 3)).put(&"potager", Vector2i(24, 3))
 	b.put(&"barbecue", Vector2i(18, 9), 0).put(&"salon_jardin", Vector2i(21, 8)).put(&"hamac", Vector2i(18, 14), 0)
 	b.put(&"arbre", Vector2i(26, 11)).put(&"arbre", Vector2i(1, 15)).put(&"poubelle", Vector2i(8, 13))
+	b.roof(&"chaume")
 	return b.spawn([Vector2i(6, 15), Vector2i(7, 15)]).build()
 
 
@@ -221,4 +225,5 @@ func l_atelier() -> Lot:
 	b.put(&"machine_laver", Vector2i(22, 14), 3)
 	# Jardin.
 	b.put(&"arbre", Vector2i(2, 2)).put(&"plante", Vector2i(5, 5)).put(&"arbre", Vector2i(25, 15)).put(&"chevalet", Vector2i(26, 6), 3)
+	b.roof(&"tuiles")
 	return b.spawn([Vector2i(4, 8), Vector2i(4, 9)]).build()

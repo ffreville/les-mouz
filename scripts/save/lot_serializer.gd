@@ -18,6 +18,7 @@ static func to_data(lot: Lot) -> Dictionary:
 		"size": _cell(lot.size),
 		"default_floor": String(lot.default_floor.id) if lot.default_floor != null else "",
 		"fences": fences,
+		"roof": {"roof": String(lot.roof.definition.id)}.merged(_purchase(lot.roof)) if lot.roof != null else {},
 		"levels": levels,
 		"spawn_cells": lot.spawn_cells.map(_cell),
 	}
@@ -64,6 +65,13 @@ static func from_data(data: Dictionary) -> Lot:
 			fence.definition = fence_definition
 			_restore_purchase(fence, entry)
 			lot.fences[_to_edge(entry["edge"])] = fence
+	var roof_entry: Dictionary = data.get("roof", {})
+	if not roof_entry.is_empty():
+		var roof_definition := Catalog.find(Catalog.ROOFS, StringName(roof_entry.get("roof", ""))) as RoofDefinition
+		if _known(roof_definition, roof_entry, "roof"):
+			lot.roof = PlacedRoof.new()
+			lot.roof.definition = roof_definition
+			_restore_purchase(lot.roof, roof_entry)
 	# Avant les étages, le terrain gardait son unique niveau à la racine.
 	var levels: Array = data.get("levels", [data])
 	for index in levels.size():

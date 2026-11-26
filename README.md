@@ -106,6 +106,7 @@ Un ordre du joueur remplace toujours les actions choisies par l'autonomie.
 | Porte, Fenêtre | Clic sur un mur. Le battant s'ouvre du côté du pointeur ; **R** inverse la charnière. Le **portail** (dans les portes) se pose sur une clôture et s'ouvre quand un Mouz passe |
 | Sol | Glisser pour peindre un rectangle ; l'ancien revêtement est revendu. Pour le jardin : allée de gravier et allée de dalles |
 | Gomme | Glisser pour remettre de l'herbe (revêtement revendu) |
+| Toit | Choisir un style (chaume, tuiles rouges, zinc, ardoise) ou « Sans toit », puis cliquer sur le terrain : il couvre toute la maison, au prix des cases couvertes (l'ancien est revendu). On le voit en mode Vivre avec le réglage « Toits » (touche V) |
 | Papier | Clic dans une pièce fermée : le papier peint choisi habille la face visible de ses murs (le mur du haut de chaque case, vue trois quarts) ; « Retirer » le revend. Les portes séparent les pièces. Démolir un mur revend aussi son papier |
 | Déplacer | Clic sur un objet pour le reprendre, puis le reposer |
 | ▼ RDC ▲ (barre du haut) ou Page bas / Page haut | Change d'étage : on construit et on achète à l'étage regardé (voir « Les étages ») |
@@ -404,6 +405,12 @@ Les familles du quartier se rendent visite.
 - **Départ** : au bout de 2 h 30 à 5 h, à 22 h au plus tard, ou quand on le **raccompagne à la porte**, il repart par la rue.
 
 Les relations avec les voisins sont gardées dans le quartier (`"relationships"` de la sauvegarde, une valeur par paire de Mouz) : on retrouve ses amis d'une visite à l'autre, et quand on joue l'autre famille. Deux membres d'une même famille venus ensemble gardent leur relation de famille. Les visiteurs ne sont pas sauvegardés : une partie rechargée repart sans eux. Réglages : `scripts/neighborhood/visits.gd`.
+
+## Les toits
+
+Le toit se calcule tout seul : un toit à quatre pans sur chaque pièce fermée qui n'a pas de plancher au-dessus (sur une maison à étage, le toit du rez-de-chaussée couvre ce qui dépasse). Chaque case monte selon sa distance au bord de la pièce (16 px par case), à partir du haut des murs pleins ; le faîtage, les arêtiers et les noues se placent d'eux-mêmes. La maison partage un seul style, choisi avec l'outil Toit (les maisons du quartier en ont déjà un).
+
+La touche V passe par **murs pleins → murs coupés → murs baissés → toits**. Avec « Toits », en mode Vivre, on voit la maison de l'extérieur : murs pleins et toit sur les pièces ; quand on regarde un étage, les étages au-dessus (cachés) ne comptent pas et le toit couvre celui qu'on regarde. Le dessin est provisoire (aplats, rangs du matériau) en attendant le brief n° 8 (`docs/brief-claude-design-8.md`). Réglages : `scripts/core/roof_view.gd`, styles dans `data/catalog/roofs/`.
 
 ## Les étages
 

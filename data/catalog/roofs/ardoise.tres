@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RoofDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/lot/roof_definition.gd" id="1_roof"]
+
+[resource]
+script = ExtResource("1_roof")
+id = &"ardoise"
+display_name = "Ardoise"
+color = Color(0.3647, 0.4000, 0.5020, 1)
+top_color = Color(0.4784, 0.5137, 0.6118, 1)
+light_color = Color(0.4196, 0.4549, 0.5647, 1)
+dark_color = Color(0.2745, 0.3059, 0.4000, 1)
+line_color = Color(0.2314, 0.2588, 0.3412, 1)
+row_step = 7.0
+price_per_cell = 8
