@@ -81,7 +81,9 @@ func is_walkable(cell: Vector2i) -> bool:
 	var flat := Levels.flat(cell)
 	if level < 0 or level >= Levels.COUNT or not _lot.contains(flat) or _blocked.has(cell):
 		return false
-	return level == 0 or _lot.floor_at(flat, level) != null
+	if level == 0:
+		return not _lot.pool.has(flat)
+	return _lot.floor_at(flat, level) != null
 
 
 ## Centre d'une case, en coordonnées du monde (le même à tous les niveaux).

@@ -157,6 +157,8 @@ static func lot_value(lot: Lot) -> int:
 		total += fence.price
 	if lot.roof != null:
 		total += lot.roof.price
+	for water in lot.pool.values():
+		total += water.price
 	for level in lot.levels:
 		for wall in level.walls.values():
 			total += wall.price

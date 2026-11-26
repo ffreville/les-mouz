@@ -112,6 +112,39 @@ func has_actions() -> bool:
 	return not get_actions().is_empty()
 
 
+## Les cases de la piscine qui touche l'objet (rez-de-chaussée), ou [] s'il n'y en a pas.
+func pool_cells() -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	if level != 0 or world_lot() == null:
+		return result
+	var pool: Dictionary = world_lot().pool
+	var todo: Array[Vector2i] = []
+	for y in range(footprint.position.y - 1, footprint.end.y + 1):
+		for x in range(footprint.position.x - 1, footprint.end.x + 1):
+			var cell := Vector2i(x, y)
+			var beside := (x >= footprint.position.x and x < footprint.end.x) or (y >= footprint.position.y and y < footprint.end.y)
+			if beside and pool.has(cell) and not cell in todo:
+				todo.append(cell)
+	var index := 0
+	while index < todo.size():
+		var cell := todo[index]
+		index += 1
+		for step in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+			var next: Vector2i = cell + step
+			if pool.has(next) and not next in todo:
+				todo.append(next)
+	result.assign(todo)
+	return result
+
+
+## Le terrain où l'objet est posé (null hors du monde).
+func world_lot() -> Lot:
+	var node := get_parent()
+	while node != null and not node is World:
+		node = node.get_parent()
+	return (node as World).lot if node != null else null
+
+
 ## Emprise en cases de navigation (niveau compris).
 func nav_footprint() -> Rect2i:
 	return Rect2i(Levels.nav(footprint.position, level), footprint.size)
@@ -177,6 +210,8 @@ func get_spots(navigation: GridNavigation) -> Array[Vector2i]:
 
 ## Raison pour laquelle l'action n'est pas possible ici ("" si elle l'est).
 func action_problem(action: ActionDefinition, world: World) -> String:
+	if action.swim and pool_cells().is_empty():
+		return "pas de piscine à côté"
 	if action == Upkeep.REPAIR_ACTION:
 		return "réparateur appelé" if placed.repair_at > 0.0 else ""
 	if placed.is_broken():

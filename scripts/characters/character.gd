@@ -22,6 +22,8 @@ var _walk_time := 0.0
 var job := MouzJob.new()
 ## Compétences (cuisine, informatique…).
 var skills := MouzSkills.new()
+## Nage dans la piscine (voir Swimmer).
+var swimmer := Swimmer.new()
 ## Installé sur un objet (chaise, lit…) : la place, l'objet et la position debout à retrouver.
 ## Assis, le nœud prend le point de tri de l'objet (il s'affiche juste après lui) et le corps
 ## est décalé vers sa place ; un calque de l'objet peut repasser devant lui (`_front`).
@@ -88,6 +90,8 @@ func setup(p_world: World, p_profile: CharacterProfile, cell: Vector2i) -> void:
 	job.setup(self)
 	add_child(skills)
 	skills.setup(self)
+	add_child(swimmer)
+	swimmer.setup(self)
 	bubble.setup(queue)
 	queue_redraw()
 
@@ -243,6 +247,15 @@ func _update_body() -> void:
 	if mover.is_on_stairs():
 		_update_body_on_stairs(mover.stairs_state())
 		return
+	if swimmer.active:
+		var swim_view := &"bas"
+		if absf(swimmer.facing.x) > absf(swimmer.facing.y):
+			swim_view = &"droite" if swimmer.facing.x > 0 else &"gauche"
+		elif swimmer.facing.y < 0:
+			swim_view = &"haut"
+		var stroke := int(Time.get_ticks_msec() / 400) % 2
+		body.show_pose(swim_view, "marche_1" if stroke == 0 else "marche_2")
+		return
 	var facing := mover.facing
 	var view := &"bas"
 	if absf(facing.x) > absf(facing.y):
@@ -269,7 +282,7 @@ func _update_body_on_stairs(state: Dictionary) -> void:
 
 ## Ellipse de sélection en tirets, posée au sol sous les pieds.
 func _draw() -> void:
-	if not is_selected or is_seated() or _stairs != null:
+	if not is_selected or is_seated() or _stairs != null or swimmer.active:
 		return
 	var accent := Palette.ACCENT
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1, SELECTION_RADII.y / SELECTION_RADII.x))

@@ -11,7 +11,7 @@ extends Node2D
 const HANDLE_RADIUS := 7.0
 const PREVIEW_ALPHA := 0.45
 const LINE_TOOLS: Array[StringName] = [&"wall", &"fence", &"demolish"]
-const AREA_TOOLS: Array[StringName] = [&"floor", &"eraser", &"room"]
+const AREA_TOOLS: Array[StringName] = [&"floor", &"eraser", &"room", &"pool"]
 const OPENING_TOOLS: Array[StringName] = [&"door", &"window"]
 
 var editor: LotEditor
@@ -137,6 +137,8 @@ func _apply_drag() -> void:
 		&"room":
 			if option is RoomStyle:
 				editor.build_room(_drag_rect(), option)
+		&"pool":
+			editor.build_pool(_drag_rect())
 
 
 func _cancel() -> void:
@@ -187,8 +189,13 @@ func _update_preview() -> void:
 					cost = quote["cost"]
 			&"eraser":
 				var quote := editor.quote_erase(_drag_rect())
-				text = "Gommer " + _count(quote["cells"].size(), "case")
+				text = "Gommer " + _count(quote["cells"].size() + quote["pool"].size(), "case")
 				cost = -quote["refund"]
+			&"pool":
+				var quote := editor.quote_pool(_drag_rect())
+				var size := _drag_rect().size
+				text = "Piscine %d × %d" % [size.x, size.y] if quote["valid"] else quote["reason"]
+				cost = quote["cost"]
 			&"room":
 				if option is RoomStyle:
 					var quote := editor.quote_room(_drag_rect(), option)
@@ -244,6 +251,11 @@ func _draw_area_preview(cs: float) -> void:
 	var area := Rect2(Vector2(rect.position) * cs, Vector2(rect.size) * cs)
 	if tool == &"room" and option is RoomStyle:
 		_draw_room_preview(rect, cs)
+		return
+	if tool == &"pool":
+		var valid: bool = not _dragging or editor.quote_pool(rect)["valid"]
+		draw_rect(Rect2(Vector2(rect.position) * cs, Vector2(rect.size) * cs), Color(PoolView.WATER if valid else Palette.CRITIQUE, 0.6))
+		_draw_dashed_rect(Rect2(Vector2(rect.position) * cs, Vector2(rect.size) * cs), Palette.ACCENT if valid else Palette.CRITIQUE)
 		return
 	if tool == &"floor" and option is FloorDefinition and option.texture != null:
 		for y in range(rect.position.y, rect.end.y):

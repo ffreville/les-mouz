@@ -18,6 +18,7 @@ static func to_data(lot: Lot) -> Dictionary:
 		"size": _cell(lot.size),
 		"default_floor": String(lot.default_floor.id) if lot.default_floor != null else "",
 		"fences": fences,
+		"pool": lot.pool.keys().map(func(cell: Vector2i) -> Dictionary: return {"cell": _cell(cell)}.merged(_purchase(lot.pool[cell]))),
 		"roof": {"roof": String(lot.roof.definition.id)}.merged(_purchase(lot.roof)) if lot.roof != null else {},
 		"levels": levels,
 		"spawn_cells": lot.spawn_cells.map(_cell),
@@ -65,6 +66,10 @@ static func from_data(data: Dictionary) -> Lot:
 			fence.definition = fence_definition
 			_restore_purchase(fence, entry)
 			lot.fences[_to_edge(entry["edge"])] = fence
+	for entry in data.get("pool", []):
+		var water := PlacedPool.new()
+		_restore_purchase(water, entry)
+		lot.pool[_to_cell(entry["cell"])] = water
 	var roof_entry: Dictionary = data.get("roof", {})
 	if not roof_entry.is_empty():
 		var roof_definition := Catalog.find(Catalog.ROOFS, StringName(roof_entry.get("roof", ""))) as RoofDefinition

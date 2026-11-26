@@ -27,6 +27,8 @@ const VEIL_OPACITY := [0.0, 0.45, 0.6]
 var lot: Lot
 ## Niveau regardé (0 : rez-de-chaussée). On construit et on achète à ce niveau.
 var view_level := 0
+## La piscine (rez-de-chaussée).
+var pool_view := PoolView.new()
 ## Un calque par niveau : { "node", "floor", "walls", "objects", "characters" }.
 var _layers: Array[Dictionary] = []
 ## La famille jouée.
@@ -122,6 +124,7 @@ func refresh_lot() -> void:
 		_layers[level]["floor"].render(lot, level)
 		_layers[level]["walls"].render(lot, people, level)
 	grid_overlay.render(lot)
+	pool_view.render(lot)
 	_sync_objects()
 	_build_navigation()
 	_apply_view()
@@ -152,6 +155,8 @@ func _make_layers() -> void:
 		if level == 0:
 			for part in [floor_view, wall_view, objects_root, characters_root]:
 				part.reparent(node, false)
+			node.add_child(pool_view)
+			node.move_child(pool_view, floor_view.get_index() + 1)
 			layer.merge({"floor": floor_view, "walls": wall_view, "objects": objects_root, "characters": characters_root})
 		else:
 			var floor_part := FloorView.new()

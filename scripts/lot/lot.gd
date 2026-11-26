@@ -13,6 +13,8 @@ extends Resource
 ## Clôtures, posées sur les arêtes comme les murs (mais elles ne ferment pas de pièce).
 ## Au rez-de-chaussée seulement.
 @export var fences: Dictionary[Vector3i, PlacedFence] = {}
+## Cases de piscine (jardin, rez-de-chaussée) : de l'eau, qu'on ne traverse pas à pied.
+@export var pool: Dictionary[Vector2i, PlacedPool] = {}
 ## Le toit de la maison (null : pas de toit). Sa forme est calculée (voir `roof_cells`).
 @export var roof: PlacedRoof
 ## Les niveaux : 0 est le rez-de-chaussée (voir Levels). Les étages vides peuvent manquer.

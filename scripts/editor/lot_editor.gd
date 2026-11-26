@@ -310,6 +310,68 @@ func place_opening(edge: Vector3i, definition: OpeningDefinition, swing_positive
 	return true
 
 
+# --- Piscine --------------------------------------------------------------------
+
+## Prix d'une case de piscine.
+const POOL_PRICE_PER_CELL := 60
+
+
+## Devis d'une piscine : au jardin (rez-de-chaussée, hors des pièces), sans objet, mur ni clôture
+## qui la traverse, et sans Mouz dedans.
+func quote_pool(rect: Rect2i) -> Dictionary:
+	var result := {"cells": [], "cost": 0, "valid": false, "reason": ""}
+	if level_index > 0:
+		result["reason"] = "La piscine se creuse au jardin"
+		return result
+	if rect.intersection(Rect2i(Vector2i.ZERO, lot.size)) != rect:
+		result["reason"] = "Hors du terrain"
+		return result
+	var interior := lot.interior_cells(0)
+	var cells: Array[Vector2i] = []
+	for cell in _cells_in(rect):
+		if interior.has(cell):
+			result["reason"] = "Pas dans une pièce"
+			return result
+		if _object_on(cell) != null:
+			result["reason"] = "Un objet est sur le passage"
+			return result
+		for step in [Vector2i.RIGHT, Vector2i.DOWN]:
+			var next: Vector2i = cell + step
+			if rect.has_point(next) and (lot.has_wall(Edges.between(cell, next)) or lot.fences.has(Edges.between(cell, next))):
+				result["reason"] = "Un mur ou une clôture la traverse"
+				return result
+		for character in world.people:
+			if character.get_cell() == cell:
+				result["reason"] = "Un Mouz est dans le passage"
+				return result
+		if not lot.pool.has(cell):
+			cells.append(cell)
+	if cells.is_empty():
+		result["reason"] = "Déjà creusée"
+		return result
+	result["cells"] = cells
+	result["cost"] = cells.size() * POOL_PRICE_PER_CELL
+	result["valid"] = true
+	return result
+
+
+func build_pool(rect: Rect2i) -> bool:
+	var quote := quote_pool(rect)
+	if not quote["valid"] or not Wallet.pay(quote["cost"]):
+		return false
+	var cells: Array = quote["cells"]
+	for cell in cells:
+		var water := PlacedPool.new()
+		Wallet.stamp(water, POOL_PRICE_PER_CELL)
+		lot.pool[cell] = water
+		EventBus.item_bought.emit(water, water.price)
+	var revert := func() -> void:
+		for cell in cells:
+			lot.pool.erase(cell)
+	_commit(revert, -quote["cost"])
+	return true
+
+
 # --- Toit -----------------------------------------------------------------------
 
 ## Option « sans toit » de l'outil (identifiant réservé).
@@ -464,12 +526,17 @@ func paint_floor(rect: Rect2i, definition: FloorDefinition) -> bool:
 func quote_erase(rect: Rect2i) -> Dictionary:
 	var cells: Array[Vector2i] = []
 	var refund := 0
+	var water: Array[Vector2i] = []
 	for cell in _cells_in(rect):
 		# À l'étage, on ne retire pas le plancher sous un objet.
 		if data.floors.has(cell) and (level_index == 0 or _object_on(cell) == null):
 			cells.append(cell)
 			refund += Wallet.resale_value(data.floors[cell])
-	return {"cells": cells, "refund": refund, "valid": not cells.is_empty()}
+		# La gomme rebouche aussi la piscine.
+		if level_index == 0 and lot.pool.has(cell):
+			water.append(cell)
+			refund += Wallet.resale_value(lot.pool[cell])
+	return {"cells": cells, "pool": water, "refund": refund, "valid": not cells.is_empty() or not water.is_empty()}
 
 
 func erase_floor(rect: Rect2i) -> bool:
@@ -478,7 +545,16 @@ func erase_floor(rect: Rect2i) -> bool:
 		return false
 	Wallet.receive(quote["refund"])
 	var previous := _replace_floors(quote["cells"], null)
-	_commit(_restore_floors.bind(previous), quote["refund"])
+	var filled: Dictionary = {}
+	for cell in quote["pool"]:
+		filled[cell] = lot.pool[cell]
+		lot.pool.erase(cell)
+		EventBus.item_sold.emit(filled[cell], Wallet.resale_value(filled[cell]))
+	var revert := func() -> void:
+		_restore_floors(previous)
+		for cell in filled:
+			lot.pool[cell] = filled[cell]
+	_commit(revert, quote["refund"])
 	return true
 
 
@@ -639,6 +715,11 @@ func _placement_problem(ghost: PlacedObject, moving: PlacedObject) -> String:
 				return "Un mur traverse l'objet"
 			if y + 1 < rect.end.y and lot.has_wall(Edges.between(cell, cell + Vector2i.DOWN), level_index):
 				return "Un mur traverse l'objet"
+	if level_index == 0:
+		for y in range(rect.position.y, rect.end.y):
+			for x in range(rect.position.x, rect.end.x):
+				if lot.pool.has(Vector2i(x, y)):
+					return "Dans l'eau de la piscine"
 	# À l'étage, un objet se pose sur le plancher.
 	if level_index > 0:
 		for y in range(rect.position.y, rect.end.y):

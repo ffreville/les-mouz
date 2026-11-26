@@ -19,6 +19,12 @@ var appearance: MouzAppearance:
 var direction: StringName = &"bas"
 var pose: String = ""
 var flipped := false
+## Dans l'eau de la piscine : pas d'ombre, et l'eau cache le bas du corps (provisoire, brief n° 8).
+var in_water := false:
+	set(value):
+		in_water = value
+		shadow = not value
+		queue_redraw()
 ## Ombre au sol (pas dans un escalier).
 var shadow := true:
 	set(value):
@@ -66,3 +72,7 @@ func _draw() -> void:
 	elif pose != "":
 		bob = -head_drop
 	MouzLayers.draw(self, _layers, Rect2(Vector2(-SIZE.x / 2, -FEET_FROM_TOP), SIZE), flipped, bob)
+	if in_water:
+		draw_rect(Rect2(-15, -17, 30, 21), PoolView.WATER)
+		draw_line(Vector2(-15, -17), Vector2(15, -17), PoolView.RIPPLE, 2.0)
+		draw_arc(Vector2(0, -17), 12.0, 0.15, PI - 0.15, 10, PoolView.RIPPLE, 1.5)

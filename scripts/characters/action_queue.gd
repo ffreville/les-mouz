@@ -195,6 +195,8 @@ func _run(action: QueuedAction) -> void:
 	if action.target_object != null:
 		_character.sit_on(action.target_object)
 	EventBus.action_started.emit(_character, action)
+	if action.definition.swim and action.target_object != null:
+		_character.swimmer.start(action.target_object)
 	if action.is_social() and not action.is_social_guest:
 		_invite_partner(action)
 	changed.emit()
@@ -283,6 +285,7 @@ func _pay_earning(action: QueuedAction) -> void:
 
 ## Arrête le déplacement et libère l'objet éventuellement réservé.
 func _stop(action: QueuedAction) -> void:
+	_character.swimmer.stop()
 	_character.mover.stop()
 	_character.stand_up()
 	if action.target_object != null:

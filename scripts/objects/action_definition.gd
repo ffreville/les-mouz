@@ -58,6 +58,11 @@ const MIN_PAID_RATIO := 0.25
 ## Faux : les Mouz ne la choisissent jamais d'eux-mêmes (travail à la maison).
 @export var autonomous: bool = true
 
+# --- Piscine ----------------------------------------------------------------------
+
+## Vrai : l'action se passe dans l'eau de la piscine voisine (nager, plonger). Voir Swimmer.
+@export var swim: bool = false
+
 # --- Interrupteur -------------------------------------------------------------------
 
 enum Switch { NONE, TURN_ON, TURN_OFF }

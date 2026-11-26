@@ -31,6 +31,8 @@ func _draw() -> void:
 			draw_texture_rect(floor_piece.definition.texture, rect, false)
 		else:
 			draw_rect(rect, Palette.PISTE)
+	for water in lot.pool:
+		draw_rect(Rect2(origin + Vector2(water) * cell, Vector2(cell, cell)), PoolView.WATER)
 	for placed in lot.objects:
 		_draw_object(placed, origin, cell)
 	var width := maxf(cell * 0.35, 1.5)

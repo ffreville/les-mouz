@@ -106,6 +106,7 @@ Un ordre du joueur remplace toujours les actions choisies par l'autonomie.
 | Porte, Fenêtre | Clic sur un mur. Le battant s'ouvre du côté du pointeur ; **R** inverse la charnière. Le **portail** (dans les portes) se pose sur une clôture et s'ouvre quand un Mouz passe |
 | Sol | Glisser pour peindre un rectangle ; l'ancien revêtement est revendu. Pour le jardin : allée de gravier et allée de dalles |
 | Gomme | Glisser pour remettre de l'herbe (revêtement revendu) |
+| Piscine | Glisser un rectangle dans le jardin (hors des pièces, sans objet ni mur dedans) : un bassin d'eau avec sa margelle, 60 Mz la case. On ne le traverse pas à pied ; la gomme le rebouche (revente). Au bord, une **échelle** (« Nager », 1 h) et un **plongeoir** (« Plonger ») du catalogue Jardin : le Mouz fait des longueurs, le bas du corps sous l'eau ; Forme, Plaisir et Hygiène montent, l'énergie baisse |
 | Toit | Choisir un style (chaume, tuiles rouges, zinc, ardoise) ou « Sans toit », puis cliquer sur le terrain : il couvre toute la maison, au prix des cases couvertes (l'ancien est revendu). On le voit en mode Vivre avec le réglage « Toits » (touche V) |
 | Papier | Clic dans une pièce fermée : le papier peint choisi habille la face visible de ses murs (le mur du haut de chaque case, vue trois quarts) ; « Retirer » le revend. Les portes séparent les pièces. Démolir un mur revend aussi son papier |
 | Déplacer | Clic sur un objet pour le reprendre, puis le reposer |
