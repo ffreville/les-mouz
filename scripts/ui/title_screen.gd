@@ -164,9 +164,15 @@ func _build_menu() -> void:
 	_menu.add_child(load_game)
 	if not has_slots:
 		_menu.add_child(_note("Aucune partie enregistrée pour l'instant."))
-	var quit := _button("Quitter", &"QuietButton", "quitter")
-	quit.pressed.connect(func() -> void: get_tree().quit())
-	_menu.add_child(quit)
+	if Device.mobile:
+		var full := _button("Plein écran", &"QuietButton", "plein_ecran")
+		full.pressed.connect(Device.toggle_fullscreen)
+		_menu.add_child(full)
+	# Dans un navigateur, « Quitter » ne ferme rien : on ferme l'onglet.
+	if not OS.has_feature("web"):
+		var quit := _button("Quitter", &"QuietButton", "quitter")
+		quit.pressed.connect(func() -> void: get_tree().quit())
+		_menu.add_child(quit)
 
 
 func _new_game() -> void:

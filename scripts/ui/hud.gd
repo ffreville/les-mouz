@@ -14,6 +14,9 @@ var _selected: Character
 var skills_panel := SkillsPanel.new()
 var bills_button := BillsButton.new()
 var level_selector := LevelSelector.new()
+## Tourner / Poser / Annuler au doigt (téléphone).
+var placement_bar := PlacementBar.new()
+var _holding := false
 @onready var relationship_panel: RelationshipPanel = %RelationshipPanel
 @onready var queue_panel: ActionQueuePanel = %ActionQueuePanel
 @onready var queue_help: Label = %QueueHelp
@@ -22,13 +25,15 @@ var level_selector := LevelSelector.new()
 @onready var left_column: Control = %LeftColumn
 @onready var right_panel: Control = %RightColumn
 @onready var build_panel: BuildPanel = %BuildPanel
+## Ce qu'on montre ou cache pour le panneau Construire (sa zone qui défile, sur téléphone).
+@onready var build_panel_area: Control = %BuildPanel
 @onready var catalog_panel: CatalogPanel = %CatalogPanel
 @onready var logo: Button = %Logo
 const MENU_ICON := preload("res://assets/icons/ink/menu.svg")
 var _fitting := false
 @onready var pause_menu: PauseMenu = %PauseMenu
 @onready var toast: Toast = %Toast
-@onready var clock_panel: Control = %ClockPanel
+@onready var clock_panel: ClockPanel = %ClockPanel
 @onready var speed_group: Control = %SpeedGroup
 @onready var pause_pill: Control = %PausePill
 
@@ -61,6 +66,10 @@ func _ready() -> void:
 	if toast.get_parent() == root:
 		root.move_child(job_board, toast.get_index())
 	EventBus.notice.connect(func(text: String) -> void: toast.show_message(text))
+	if Device.mobile:
+		MobileLayout.apply(self)
+		root.add_child(placement_bar)
+		_on_mode_changed(GameMode.mode)
 	EventBus.salary_paid.connect(func(_character: Node, _amount: int) -> void: Sfx.play(&"achat"))
 
 
@@ -70,6 +79,9 @@ func _on_character_selected(character: Node) -> void:
 		bills_button.setup(character.world.bills)
 		level_selector.setup(character.world)
 		pause_menu.setup(character.world)
+		if Device.mobile:
+			placement_bar.setup(character.world.buy_controller)
+			character.world.buy_controller.holding_changed.connect(_on_holding_changed)
 	if _selected != null:
 		_selected.brain.enabled_changed.disconnect(_on_brain_enabled_changed)
 	_selected = character
@@ -120,12 +132,19 @@ func _on_mode_changed(mode: int) -> void:
 	clock_panel.visible = live
 	speed_group.visible = live
 	pause_pill.visible = not live
-	build_panel.visible = mode == GameMode.Mode.BUILD
-	catalog_panel.visible = mode == GameMode.Mode.BUY
+	build_panel_area.visible = mode == GameMode.Mode.BUILD
+	# Sur téléphone, le catalogue s'efface tant qu'on tient un objet (place pour la maison).
+	catalog_panel.visible = mode == GameMode.Mode.BUY and not _holding
+
+
+func _on_holding_changed(holding: bool) -> void:
+	_holding = holding
+	_on_mode_changed(GameMode.mode)
 
 
 ## Resserre la barre du haut si elle déborde de l'écran : le logo devient l'icône du menu, puis
-## les onglets Vivre / Construire / Acheter ne gardent que leur icône. Elle se rouvre dès qu'il y a la place.
+## les onglets Vivre / Construire / Acheter ne gardent que leur icône, l'horloge perd la saison et
+## la température, et le sélecteur d'étage son nom. Elle se rouvre dès qu'il y a la place.
 func _fit_top_bar() -> void:
 	if _fitting:
 		return
@@ -134,10 +153,13 @@ func _fit_top_bar() -> void:
 	var row: Control = root.get_node("TopBar/Row")
 	var tabs = root.get_node("TopBar/Row/ModeTabs")
 	var room := get_viewport().get_visible_rect().size.x - 24.0 - (bar.get_minimum_size().x - row.get_combined_minimum_size().x)
-	for step in 3:
+	# Sur téléphone, on part directement du logo en icône.
+	for step in range(1 if Device.mobile else 0, 5):
 		logo.text = "" if step >= 1 else "Les Mouz"
 		logo.icon = MENU_ICON if step >= 1 else null
 		tabs.set_compact(step >= 2)
+		clock_panel.set_compact(step >= 3)
+		level_selector.set_compact(step >= 4)
 		if row.get_combined_minimum_size().x <= room:
 			break
 	_fitting = false

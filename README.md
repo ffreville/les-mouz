@@ -49,6 +49,21 @@ python3 -m http.server 8000 --directory build/web
 
 et ouvrir http://localhost:8000. Le dossier `build/` est ignoré par git.
 
+## Sur téléphone
+
+Sur un téléphone ou une tablette (navigateur Android ou iOS), l'autoload `Device` (`scripts/core/device.gd`) passe le jeu en **mode mobile**. Pour l'essayer sur ordinateur : `?mobile=1` à la fin de l'adresse de la version web, ou `godot --path . -- --mobile`.
+
+- **Taille** : en partie, l'interface est calculée pour un écran de 480 unités de haut au lieu de 720, pour rester lisible. Les écrans d'accueil, du quartier et de création gardent 720.
+- **Paysage** : en portrait, un voile demande de tourner le téléphone. Le menu du jeu et l'écran d'accueil proposent « Plein écran » (Android ; sur iPhone, Safari ne le permet pas).
+- **Gestes** :
+  - toucher = cliquer ; le jeu agit quand le doigt se lève sans avoir glissé ;
+  - en mode Vivre, glisser à un doigt fait défiler la caméra ;
+  - partout, deux doigts font défiler, et pincer zoome (aussi au pavé tactile) ;
+  - en Construire, le doigt trace les murs, les sols et les pièces comme la souris.
+- **Panneaux** : le panneau du Mouz se replie sous son en-tête (flèche à côté du portrait) et les relations sous leur titre, repliés au départ. Les colonnes et le panneau Construire défilent au doigt quand ils dépassent l'écran (`scripts/ui/mobile_layout.gd`).
+- **Acheter** : l'objet pris dans le catalogue apparaît au milieu de l'écran et suit le doigt. Le catalogue s'efface, et la barre de placement propose Tourner, Poser, Revendre (objet déplacé) et Annuler (`scripts/ui/placement_bar.gd`).
+- **Barre du haut** : sur téléphone, elle part compacte (logo en icône) et se resserre encore si besoin (onglets en icônes, horloge sans saison ni température, étage sans les points).
+
 ## Les parties et les sauvegardes
 
 Le jeu s'ouvre sur un **écran d'accueil** : la maison de la dernière partie en fond (ou un petit jardin où se promènent des Mouz s'il n'y en a pas), et les portraits de la dernière famille jouée.

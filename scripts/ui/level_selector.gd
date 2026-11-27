@@ -84,6 +84,11 @@ func _ready() -> void:
 	_refresh()
 
 
+## Version compacte (barre du haut trop étroite) : les flèches et le nom court, sans les points.
+func set_compact(compact: bool) -> void:
+	_dots.visible = not compact
+
+
 func setup(world: World) -> void:
 	_world = world
 	_refresh()

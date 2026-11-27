@@ -96,7 +96,8 @@ func _stream(sound: StringName) -> AudioStream:
 
 ## Chaque bouton qui apparaît fait « clic » quand on appuie dessus.
 func _on_node_added(node: Node) -> void:
-	if node is BaseButton:
+	# Un bouton déplacé dans l'arbre (reparent) repasse ici : on ne le branche qu'une fois.
+	if node is BaseButton and not node.pressed.is_connected(play.bind(&"clic")):
 		node.pressed.connect(play.bind(&"clic"))
 
 

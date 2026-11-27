@@ -41,6 +41,8 @@ func _ready() -> void:
 	header.add_child(spacer)
 	var hint := Label.new()
 	hint.text = "R : tourner · Échap : lâcher"
+	# Au doigt, la barre de placement remplace ces touches.
+	hint.visible = not Device.mobile
 	hint.theme_type_variation = &"MutedLabel"
 	header.add_child(hint)
 

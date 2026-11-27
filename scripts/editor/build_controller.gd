@@ -14,6 +14,8 @@ const LINE_TOOLS: Array[StringName] = [&"wall", &"fence", &"demolish"]
 const AREA_TOOLS: Array[StringName] = [&"floor", &"eraser", &"room", &"pool"]
 const OPENING_TOOLS: Array[StringName] = [&"door", &"window"]
 
+## Dernière position du pointeur (souris ou doigt), dans le monde, tirée des événements reçus.
+var _pointer := Vector2.ZERO
 var editor: LotEditor
 var tool: StringName = &"wall"
 ## Option de l'outil : couleur de mur, sol, porte ou fenêtre.
@@ -35,6 +37,8 @@ func is_busy() -> bool:
 
 func setup(p_editor: LotEditor) -> void:
 	editor = p_editor
+	# Un geste à deux doigts (défiler, zoomer) annule le tracé commencé par le premier doigt.
+	editor.world.camera.gesture_started.connect(_cancel)
 
 
 func _ready() -> void:
@@ -53,6 +57,8 @@ func _active() -> bool:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouse:
+		_pointer = make_input_local(event).position
 	if not _active():
 		return
 	if event is InputEventMouseMotion:
@@ -74,6 +80,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if click.button_index == MOUSE_BUTTON_RIGHT and click.pressed:
 		_cancel()
+	elif click.button_index == MOUSE_BUTTON_LEFT and Touch.is_touch(click) and not (tool in LINE_TOOLS or tool in AREA_TOOLS):
+		# Au doigt, une porte, un papier peint ou un toit se pose quand le doigt se lève sans avoir
+		# glissé (pas au début d'un geste à deux doigts).
+		if not click.pressed and not editor.world.camera.touch_moved():
+			_on_left_button(true)
 	elif click.button_index == MOUSE_BUTTON_LEFT:
 		_on_left_button(click.pressed)
 	else:
@@ -82,6 +93,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_left_button(pressed: bool) -> void:
+	# Au doigt, il n'y a pas de survol : la position se prend au moment où il touche.
+	if pressed:
+		_track_mouse()
 	if tool in OPENING_TOOLS:
 		if pressed and option is OpeningDefinition:
 			editor.place_opening(_hover_edge, option, _swing_positive, _hinge_flipped)
@@ -104,7 +118,7 @@ func _on_left_button(pressed: bool) -> void:
 ## Position de la souris ramenée sur la grille (point, case et arête les plus proches).
 func _track_mouse() -> void:
 	var cs := float(editor.lot.cell_size)
-	var mouse := get_global_mouse_position()
+	var mouse := _pointer
 	_hover_point = Edges.nearest_point(mouse, cs)
 	_hover_cell = Vector2i((mouse / cs).floor())
 	_hover_edge = Edges.nearest(mouse, cs)

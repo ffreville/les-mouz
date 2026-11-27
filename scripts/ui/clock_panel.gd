@@ -31,6 +31,12 @@ func _ready() -> void:
 	_refresh()
 
 
+## Version compacte (barre du haut trop étroite) : l'heure et l'icône du temps seulement.
+func set_compact(compact: bool) -> void:
+	_season_icon.visible = not compact
+	_weather_label.visible = not compact
+
+
 func _icon(texture: Texture2D) -> TextureRect:
 	var icon := TextureRect.new()
 	icon.texture = texture

@@ -12,12 +12,22 @@ extends Node2D
 
 func _unhandled_input(event: InputEvent) -> void:
 	var click := event as InputEventMouseButton
-	if click == null or not click.pressed or click.button_index != MOUSE_BUTTON_LEFT:
+	if click == null or click.button_index != MOUSE_BUTTON_LEFT:
 		return
 	if not GameMode.is_live():
 		return
+	# Au doigt, on agit quand il se lève, et seulement s'il n'a pas glissé (sinon il faisait
+	# défiler la caméra ou zoomer).
+	if Touch.is_touch(click):
+		if click.pressed:
+			return
+		if world.camera.touch_moved():
+			return
+	elif not click.pressed:
+		return
 	get_viewport().set_input_as_handled()
-	var position_in_world := get_global_mouse_position()
+	# Position tirée du clic lui-même : au doigt, la « souris » ne suit pas toujours.
+	var position_in_world: Vector2 = make_input_local(click).position
 	var selected := world.selection.selected
 
 	var character := world.get_character_at(position_in_world)

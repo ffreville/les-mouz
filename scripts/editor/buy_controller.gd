@@ -4,6 +4,11 @@ extends Node2D
 ##  - un objet choisi dans le catalogue suit la souris ; R le tourne ; clic pour l'acheter ;
 ##  - un clic sur un objet posé ouvre Déplacer / Revendre ;
 ##  - pendant un déplacement : clic pour reposer, Suppr pour revendre, Échap pour annuler.
+## Au doigt : l'objet en main suit le doigt, et la barre de placement (PlacementBar) le tourne,
+## le pose ou le lâche ; toucher un objet posé ouvre son menu.
+
+## On prend un objet en main (`holding`) ou on le lâche.
+signal holding_changed(holding: bool)
 
 const GHOST_ALPHA := 0.6
 const BADGE_RADIUS := 11.0
@@ -19,6 +24,8 @@ var _moving: PlacedObject
 var _rotation := 0
 var _cell := Vector2i.ZERO
 var _build_tool: StringName = &"wall"
+## Dernière position du pointeur (souris ou doigt), dans le monde, tirée des événements reçus.
+var _pointer := Vector2.ZERO
 
 
 ## Vrai quand un objet est en main (Échap sert alors à le lâcher, pas à ouvrir le menu).
@@ -58,11 +65,49 @@ func _on_catalog_item_selected(definition: Resource, collection: StringName) -> 
 		queue_redraw()
 		return
 	_rotation = 0
-	_track_mouse()
+	_follow_start()
+	holding_changed.emit(true)
+
+
+## Sur mobile, l'objet pris dans le catalogue apparaît au milieu de l'écran (le doigt est sur le
+## catalogue) ; à la souris, il suit le pointeur.
+func _follow_start() -> void:
+	if Device.mobile and editor != null:
+		_track_point(editor.world.camera.get_screen_center_position())
+	else:
+		_track_mouse()
 	_update_preview()
 
 
+## Barre de placement au doigt : tourner, poser, lâcher, revendre (objet déplacé).
+func turn() -> void:
+	if _definition != null:
+		_rotation = (_rotation + 1) % 4
+		_update_preview()
+
+
+func place() -> void:
+	if _definition != null:
+		_place()
+
+
+func drop() -> void:
+	_stop()
+
+
+func sell_moving() -> void:
+	if _moving != null:
+		editor.sell_object(_moving)
+		_stop()
+
+
+func is_moving() -> bool:
+	return _moving != null
+
+
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouse:
+		_pointer = make_input_local(event).position
 	if not _active():
 		return
 	if event is InputEventMouseMotion:
@@ -87,6 +132,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	var click := event as InputEventMouseButton
+	if click != null and Touch.is_touch(click):
+		_on_touch(click)
+		get_viewport().set_input_as_handled()
+		return
 	if click == null or not click.pressed:
 		return
 	if click.button_index == MOUSE_BUTTON_RIGHT:
@@ -98,16 +147,30 @@ func _unhandled_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 
+## Au doigt : l'objet en main se pose là où on touche (il suit le doigt qui glisse) ; sans objet en
+## main, toucher un objet posé ouvre son menu.
+func _on_touch(click: InputEventMouseButton) -> void:
+	if _definition != null:
+		_track_mouse()
+		_update_preview()
+	elif not click.pressed and not editor.world.camera.touch_moved():
+		_on_click(click.position)
+
+
 func _on_click(screen_position: Vector2) -> void:
 	if _definition == null:
 		var cs := float(editor.lot.cell_size)
-		var mouse := get_global_mouse_position()
+		var mouse := _pointer
 		# L'image d'un meuble (qui dépasse au-dessus de sa case) passe avant la case visée.
 		var under := editor.world.get_object_at_point(mouse)
 		var placed := under.placed if under != null else editor.object_at(Vector2i((mouse / cs).floor()))
 		if placed != null:
 			_open_object_menu(placed, screen_position)
 		return
+	_place()
+
+
+func _place() -> void:
 	if _moving != null:
 		if editor.move_object(_moving, _cell, _rotation):
 			Sfx.play(&"poser")
@@ -163,6 +226,7 @@ func _start_moving(placed: PlacedObject) -> void:
 	_rotation = placed.rotation
 	_track_mouse()
 	_update_preview()
+	holding_changed.emit(true)
 
 
 func _stop() -> void:
@@ -173,17 +237,22 @@ func _stop() -> void:
 	queue_redraw()
 	if was_placing:
 		EventBus.placement_ended.emit()
+		holding_changed.emit(false)
 
 
 ## L'emprise est centrée sur le pointeur.
 func _track_mouse() -> void:
+	_track_point(_pointer)
+
+
+func _track_point(point: Vector2) -> void:
 	if _definition == null or editor == null:
 		return
 	var cs := float(editor.lot.cell_size)
 	var size := _definition.size
 	if _rotation % 2 == 1:
 		size = Vector2i(size.y, size.x)
-	var corner := get_global_mouse_position() / cs - Vector2(size) / 2.0
+	var corner := point / cs - Vector2(size) / 2.0
 	_cell = Vector2i(corner.round())
 
 

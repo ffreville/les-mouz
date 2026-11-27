@@ -83,7 +83,11 @@ func _build_buttons() -> void:
 	_buttons.add_child(line)
 	_add(_buttons, "Retour au quartier", &"SecondaryButton", _on_neighborhood_pressed, "emmenager")
 	_add(_buttons, "Menu principal", &"QuietButton", _on_title_pressed, "menu")
-	_add(_buttons, "Quitter le jeu", &"QuietButton", _on_quit_pressed, "quitter")
+	if Device.mobile:
+		_add(_buttons, "Plein écran", &"QuietButton", Device.toggle_fullscreen, "plein_ecran")
+	# Dans un navigateur, « Quitter » ne ferme rien : on ferme l'onglet.
+	if not OS.has_feature("web"):
+		_add(_buttons, "Quitter le jeu", &"QuietButton", _on_quit_pressed, "quitter")
 
 
 func _on_save_pressed() -> void:
@@ -138,12 +142,13 @@ func _add(parent: Control, text: String, variation: StringName, action: Callable
 	button.text = text
 	button.theme_type_variation = variation
 	button.focus_mode = Control.FOCUS_NONE
-	button.custom_minimum_size = Vector2(BUTTON_WIDTH, 44)
+	button.custom_minimum_size = Vector2(BUTTON_WIDTH, 38 if Device.mobile else 44)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	if icon != "":
 		button.icon = load("res://assets/icons/white/%s.svg" % icon)
 	button.pressed.connect(action)
-	if shortcut != "":
+	# Pas de raccourci clavier à afficher sur un téléphone.
+	if shortcut != "" and not Device.mobile:
 		var light := variation == &"PrimaryButton"
 		var pill := Label.new()
 		pill.text = shortcut
