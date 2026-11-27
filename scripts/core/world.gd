@@ -107,6 +107,7 @@ func _ready() -> void:
 	EventBus.lot_changed.connect(refresh_lot)
 	GameMode.mode_changed.connect(func(_mode: int) -> void: _apply_view())
 	GameMode.wall_mode_changed.connect(func(_wall_mode: int) -> void: _apply_view())
+	GameMode.roof_changed.connect(func(_shown: bool) -> void: _apply_view())
 	# La vue suit le Mouz contrôlé quand il est à un autre étage, ou qu'il en change.
 	EventBus.character_selected.connect(func(character: Node) -> void: _follow(character))
 	EventBus.character_level_changed.connect(_on_character_level_changed)

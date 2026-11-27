@@ -24,6 +24,8 @@ var level_selector := LevelSelector.new()
 @onready var build_panel: BuildPanel = %BuildPanel
 @onready var catalog_panel: CatalogPanel = %CatalogPanel
 @onready var logo: Button = %Logo
+const MENU_ICON := preload("res://assets/icons/ink/menu.svg")
+var _fitting := false
 @onready var pause_menu: PauseMenu = %PauseMenu
 @onready var toast: Toast = %Toast
 @onready var clock_panel: Control = %ClockPanel
@@ -122,6 +124,25 @@ func _on_mode_changed(mode: int) -> void:
 	catalog_panel.visible = mode == GameMode.Mode.BUY
 
 
+## Resserre la barre du haut si elle déborde de l'écran : le logo devient l'icône du menu, puis
+## les onglets Vivre / Construire / Acheter ne gardent que leur icône. Elle se rouvre dès qu'il y a la place.
+func _fit_top_bar() -> void:
+	if _fitting:
+		return
+	_fitting = true
+	var bar: Control = root.get_node("TopBar")
+	var row: Control = root.get_node("TopBar/Row")
+	var tabs = root.get_node("TopBar/Row/ModeTabs")
+	var room := get_viewport().get_visible_rect().size.x - 24.0 - (bar.get_minimum_size().x - row.get_combined_minimum_size().x)
+	for step in 3:
+		logo.text = "" if step >= 1 else "Les Mouz"
+		logo.icon = MENU_ICON if step >= 1 else null
+		tabs.set_compact(step >= 2)
+		if row.get_combined_minimum_size().x <= room:
+			break
+	_fitting = false
+
+
 ## Le logo ouvre le menu du jeu (comme Échap).
 func _setup_game_menu() -> void:
 	logo.add_theme_font_override("font", HudTheme.font(HudTheme.BALOO, 800))
@@ -132,12 +153,23 @@ func _setup_game_menu() -> void:
 	for state in ["normal", "hover", "pressed", "focus", "hover_pressed"]:
 		logo.add_theme_stylebox_override(state, StyleBoxEmpty.new())
 	logo.pressed.connect(pause_menu.open)
+	# Barre du haut trop étroite (facture affichée, petite fenêtre) : on la resserre.
+	var row: Control = root.get_node("TopBar/Row")
+	row.minimum_size_changed.connect(_fit_top_bar)
+	get_viewport().size_changed.connect(_fit_top_bar)
+	_fit_top_bar.call_deferred()
 	pause_menu.message.connect(_on_save_message)
 	GameMode.wall_mode_changed.connect(_on_wall_mode_changed)
+	GameMode.roof_changed.connect(_on_roof_changed)
 
 
-func _on_wall_mode_changed(wall_mode: int) -> void:
-	toast.show_message("%s (touche V)" % GameMode.WALL_MODE_NAMES[wall_mode])
+func _on_wall_mode_changed(_wall_mode: int) -> void:
+	if not GameMode.show_roof:
+		toast.show_message("%s (touche V)" % GameMode.WALL_MODE_NAMES[GameMode.wall_mode])
+
+
+func _on_roof_changed(shown: bool) -> void:
+	toast.show_message("Toit affiché (touche T)" if shown else "Toit masqué (touche T)")
 
 
 ## Résultat d'une sauvegarde : réussite (2 s) ou échec avec « Réessayer » (6 s).

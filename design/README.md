@@ -1307,3 +1307,61 @@ Toutes les mesures sont dans `tokens.json` › `toits_piscine_jardin`. Nouveau d
 - **Massif de fleurs** : 2 × 1, `massif_fleurs_<collection>_<vue>.svg`, avec une bordure en bois (Nature), brique (Rétro) ou béton (Moderne). Calques d'état : `massif_fleurs_<vue>_<graines|pousses|fleuri|fane>.svg`. Fleuri : 10 fleurs roses, jaunes, violettes, orange et blanches. Vignettes en état fleuri. Icône `fleurs`.
 - **Jauge d'eau** : `jauge_eau_vide.svg` (goutte vide en pointillé, « a soif ») et `jauge_eau_pleine.svg`. C'est une bulle de 24 × 30 dont la pointe, en (12, 28), se pose au-dessus de la plantation. Icône `soif`.
 - **Icône** : `terrasse`.
+
+## Brief n° 9 · Coups durs, saisons et météo
+
+Planche de contrôle : `apercu_coups_durs_saisons.png`. Elle montre une cuisine en feu que Samir éteint, une buanderie inondée, le salon la nuit avec le cambrioleur, et le même jardin aux 4 saisons. Les tailles et les noms sont aussi dans `tokens.json`, section `coups_durs_saisons`.
+
+### 1. Le feu
+
+- **Images** : `svg/sprites/feu_<1|2|3>.svg`, 32 × 48. Le bas des flammes est à y = 46. De la fumée grise monte au-dessus.
+- **Pose** : une image par case de largeur de l'objet. Le bas de l'image est à 30 % de la hauteur du sprite de l'objet, mesurée depuis son sommet. Sur une cuisinière, un canapé ou un arbre, les flammes sortent donc du haut de l'objet.
+- **Animation** : 150 ms par image. Décaler l'image de départ d'une case à l'autre pour que les flammes ne bougent pas toutes ensemble.
+
+### 2. Les objets de sécurité
+
+Les trois objets font 1 × 1 et existent dans les 3 collections. Les vues livrées sont `bas`, `haut` et `gauche`. `droite` est le miroir de `gauche`. Il y a aussi une vue de dessus `<id>_<collection>.svg` (32 × 32) et une vignette 104 × 72.
+
+| Objet | Sprite | Hauteur | État actif | Prix proposé |
+|---|---|---|---|---|
+| `detecteur_fumee` | 32 × 90 | 58 | voyant rouge allumé | 40 Mz |
+| `extincteur` | 32 × 62 | 30 | aucun | 60 Mz |
+| `alarme` | 32 × 80 | 48 | écran rouge et ondes sonores | 250 Mz |
+
+- **Détecteur de fumée** : un disque au plafond, au bout d'une console fixée au mur du fond. Il se pose contre un mur, comme une applique. La bague change selon la collection : teinte du corps un peu plus foncée en Nature, coloris du coussin en Rétro, gris clair en Moderne.
+- **Extincteur** : une bouteille rouge sur son support mural, avec un tuyau noir. L'étiquette blanche n'est visible qu'en vue `bas`.
+- **Alarme** : un boîtier à clavier (écran, 9 touches, voyant). Le voyant est vert au repos. Quand l'alarme sonne, l'écran passe au rouge et des ondes sortent de chaque côté (`_actif`).
+
+### 3. La flaque
+
+`svg/sprites/flaque.svg`, 32 × 32. C'est une forme d'eau bleue plate, à 85 % d'opacité, avec un fin bord bleu de 1 px et deux reflets blancs. Elle n'a pas de gros contour. Elle se lit sur le parquet, le carrelage et l'herbe. On peut en mettre plusieurs, décalées de quelques pixels, autour d'une machine qui fuit.
+
+### 4. Le cambrioleur
+
+- **Calque** : `svg/personnages/accessoire_cambrioleur_adulte_<bas|haut|gauche>.svg`, 32 × 64, avec les pieds à 48 comme tous les calques du corps. Il se pose par-dessus tous les calques du corps et de la tête. `droite` est le miroir de `gauche`.
+- Il contient un bonnet noir, un masque sur les yeux et un sac en toile porté à l'épaule. Le calque est en couleurs fixes et va aux deux sexes.
+- Le cambrioleur est un Mouz adulte en pull `#3A3550` avec un pantalon `#2E2A3A`.
+- La nuit, la planche pose un voile `#1E1A3A` à 42 % sur la pièce et un faisceau de lampe torche jaune pâle.
+
+### 5. Les saisons
+
+- **Herbe** : `svg/sols/herbe.svg` reste l'herbe du printemps. Les autres saisons ont leur tuile, raccordable et sans contour :
+  - `herbe_ete.svg` : herbe jaunie, avec des brins secs ;
+  - `herbe_automne.svg` : herbe brune, avec des feuilles rousses ;
+  - `herbe_hiver.svg` : herbe gris-vert, avec du givre.
+- **Neige** : `svg/sols/neige.svg`, un blanc bleuté avec des creux. Elle se pose par-dessus l'herbe, la terrasse et les allées, à une opacité entre 35 % (premiers flocons) et 90 % (neige épaisse). Ne pas la mettre sur l'eau de la piscine.
+- **Arbre** : `svg/sprites/arbre_<collection>_<bas|haut|gauche>_<printemps|ete|automne|hiver>.svg`. Le cadre est le même que l'arbre actuel : 64 × 146 en Nature et en Rétro, 64 × 154 en Moderne.
+  - Printemps : fleurs roses (Nature) ou blanches (Rétro).
+  - Été : l'arbre actuel.
+  - Automne : feuillage roux et doré, avec des feuilles qui tombent.
+  - Hiver : branches nues avec de la neige sur les fourches.
+  - Le cyprès Moderne garde ses aiguilles. Il change seulement de teinte selon la saison, et il porte de la neige en hiver.
+- **Bonhomme de neige** : `svg/sprites/bonhomme_neige_nature_<bas|gauche>.svg`, 32 × 88, 1 × 1. Il a un chapeau, une écharpe rouge, un nez en carotte et des bras en branches. `droite` est le miroir de `gauche`, et `haut` reprend la vue `bas`.
+
+### 6. Les icônes
+
+- Coups durs : `securite`, `eteindre_feu`, `eponger`, `feu`.
+- Météo : `soleil`, `nuages`, `pluie`, `orage`, `neige`, `canicule`.
+- Saisons : `printemps`, `ete`, `automne`, `hiver`, `bonhomme_neige`.
+
+Elles sont livrées en `encre` et en `blanc`, en 24 × 24.

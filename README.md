@@ -90,7 +90,8 @@ Pour changer le format : augmenter `WorldSerializer.FORMAT_VERSION`, puis compl�
 | Boutons Pépin / Myrtille, ou **Tab** | Change de Mouz |
 | Bouton « Autonomie » | Active ou coupe l'autonomie du Mouz sélectionné |
 | Pause / x1 / x2 / x3, ou **Espace** et **1** à **3** | Vitesse du jeu |
-| **V** | Hauteur des murs : coupés (par défaut), baissés, pleins |
+| **V** | Hauteur des murs : coupés (par défaut), baissés, pleins (aussi le bouton murs de la barre du haut) |
+| **T** | Afficher ou masquer le toit (aussi le bouton toit de la barre du haut) |
 | **M** | Couper ou remettre la musique |
 
 Un ordre du joueur remplace toujours les actions choisies par l'autonomie.
@@ -107,7 +108,7 @@ Un ordre du joueur remplace toujours les actions choisies par l'autonomie.
 | Sol | Glisser pour peindre un rectangle ; l'ancien revêtement est revendu. Pour le jardin : allée de gravier, allée de dalles et terrasse en bois |
 | Gomme | Glisser pour remettre de l'herbe (revêtement revendu) |
 | Piscine | Glisser un rectangle dans le jardin (hors des pièces, sans objet ni mur dedans) : un bassin d'eau avec sa margelle, 60 Mz la case. On ne le traverse pas à pied ; la gomme le rebouche (revente). Au bord, une **échelle** (« Nager », 1 h) et un **plongeoir** (« Plonger ») du catalogue Jardin. La planche du plongeoir avance au-dessus de l'eau : sa case de devant doit être dans le bassin. Le Mouz fait des longueurs, la tête et les épaules hors de l'eau ; du plongeoir, il saute d'abord en arc jusqu'à l'eau, dans une éclaboussure. Forme, Plaisir et Hygiène montent, l'énergie baisse. Un **transat** (« Bronzer », Plaisir et Énergie) se pose à côté |
-| Toit | Choisir un style (chaume, tuiles rouges, zinc, ardoise) ou « Sans toit », puis cliquer sur le terrain : il couvre toute la maison, au prix des cases couvertes (l'ancien est revendu). On le voit en mode Vivre avec le réglage « Toits » (touche V) |
+| Toit | Choisir un style (chaume, tuiles rouges, zinc, ardoise) ou « Sans toit », puis cliquer sur le terrain : il couvre toute la maison, au prix des cases couvertes (l'ancien est revendu). On le voit en mode Vivre avec le bouton toit de la barre du haut (touche T) |
 | Papier | Clic dans une pièce fermée : le papier peint choisi habille la face visible de ses murs (le mur du haut de chaque case, vue trois quarts) ; « Retirer » le revend. Les portes séparent les pièces. Démolir un mur revend aussi son papier |
 | Déplacer | Clic sur un objet pour le reprendre, puis le reposer |
 | ▼ RDC ▲ (barre du haut) ou Page bas / Page haut | Change d'étage : on construit et on achète à l'étage regardé (voir « Les étages ») |
@@ -424,7 +425,7 @@ Chaque état est un calque dessiné (brief n° 8) posé sur le bac du potager ou
 
 Le toit se calcule tout seul : un toit à quatre pans sur chaque pièce fermée qui n'a pas de plancher au-dessus (sur une maison à étage, le toit du rez-de-chaussée couvre ce qui dépasse). Chaque case monte selon sa distance au bord de la pièce (16 px par case), à partir du haut des murs pleins ; le faîtage, les arêtiers et les noues se placent d'eux-mêmes. La maison partage un seul style, choisi avec l'outil Toit (les maisons du quartier en ont déjà un).
 
-La touche V passe par **murs pleins → murs coupés → murs baissés → toits**. Avec « Toits », en mode Vivre, on voit la maison de l'extérieur : murs pleins et toit sur les pièces ; quand on regarde un étage, les étages au-dessus (cachés) ne comptent pas et le toit couvre celui qu'on regarde. Chaque pan est rempli du motif de son orientation (brief n° 8, `assets/toits/`), avec la bande du faîtage, la gouttière (sauf le chaume), un solin au pied d'un mur d'étage et une cheminée qui sort du toit au-dessus de l'objet cheminée. La pente reste de 16 px par case, plus douce que les 45° du brief, pour garder le pan nord visible et un toit à l'échelle de la maison. Réglages : `scripts/core/roof_view.gd`, styles dans `data/catalog/roofs/`.
+La vue de la maison, en mode Vivre, se règle avec deux boutons de la barre du haut, à côté du sélecteur d'étage. Le bouton murs (touche V) passe par **murs pleins → murs coupés → murs baissés**. Le bouton toit (touche T) **affiche ou masque le toit**, et reste enfoncé tant qu'il est affiché. Avec le toit, on voit la maison de l'extérieur : murs pleins et toit sur les pièces ; changer les murs masque le toit ; quand on regarde un étage, les étages au-dessus (cachés) ne comptent pas et le toit couvre celui qu'on regarde. Chaque pan est rempli du motif de son orientation (brief n° 8, `assets/toits/`), avec la bande du faîtage, la gouttière (sauf le chaume), un solin au pied d'un mur d'étage et une cheminée qui sort du toit au-dessus de l'objet cheminée. La pente reste de 16 px par case, plus douce que les 45° du brief, pour garder le pan nord visible et un toit à l'échelle de la maison. Réglages : `scripts/core/roof_view.gd`, styles dans `data/catalog/roofs/`.
 
 ## Les étages
 

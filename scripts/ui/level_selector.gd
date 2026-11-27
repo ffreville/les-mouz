@@ -3,9 +3,13 @@ extends PanelContainer
 ## Sélecteur d'étage de la barre du haut (brief n° 7, version compacte) : une pastille avec « descendre »,
 ## trois points qui montrent l'étage regardé parmi les trois, son nom court (« RDC », « 1er », « 2e »)
 ## et « monter ». Le nom complet est dans l'infobulle. Page bas / Page haut aussi.
+## Après un trait, la vue de la maison en mode Vivre : la hauteur des murs (pleins, coupés,
+## baissés ; touche V) et le toit affiché ou non (touche T).
 
 const DOWN_ICON := preload("res://assets/icons/ink/etage_descendre.svg")
 const UP_ICON := preload("res://assets/icons/ink/etage_monter.svg")
+const WALLS_ICON := preload("res://assets/icons/ink/murs.svg")
+const ROOF_ICON := preload("res://assets/icons/ink/toit.svg")
 const HEIGHT := 44.0
 const BUTTON := 32.0
 
@@ -14,6 +18,8 @@ var _down := Button.new()
 var _up := Button.new()
 var _label := Label.new()
 var _dots := Control.new()
+var _walls := Button.new()
+var _roof := Button.new()
 
 
 func _ready() -> void:
@@ -23,7 +29,7 @@ func _ready() -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 	add_child(row)
-	for button in [_down, _up]:
+	for button in [_down, _up, _walls, _roof]:
 		button.focus_mode = Control.FOCUS_NONE
 		button.custom_minimum_size = Vector2(BUTTON, BUTTON)
 		button.expand_icon = true
@@ -54,6 +60,26 @@ func _ready() -> void:
 	row.add_child(_dots)
 	row.add_child(_label)
 	row.add_child(_up)
+	var line := ColorRect.new()
+	line.color = Color(Palette.ENCRE_DOUCE, 0.3)
+	line.custom_minimum_size = Vector2(2, 24)
+	line.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(line)
+	_walls.icon = WALLS_ICON
+	_walls.pressed.connect(GameMode.cycle_wall_mode)
+	row.add_child(_walls)
+	_roof.icon = ROOF_ICON
+	_roof.toggle_mode = true
+	_roof.toggled.connect(GameMode.set_show_roof)
+	# Toit affiché : bouton enfoncé, sans le survol qui le cacherait.
+	_roof.add_theme_stylebox_override("hover_pressed", HudTheme.box(Palette.CONTOUR, 9, Palette.ACCENT, 2, 6))
+	_roof.add_theme_color_override("icon_hover_pressed_color", Palette.PAPIER)
+	row.add_child(_roof)
+	GameMode.wall_mode_changed.connect(func(_wall_mode: int) -> void: _refresh_view())
+	GameMode.roof_changed.connect(func(_shown: bool) -> void: _refresh_view())
+	GameMode.mode_changed.connect(func(_mode: int) -> void: _refresh_view())
+	_refresh_view()
 	EventBus.view_level_changed.connect(func(_level: int) -> void: _refresh())
 	_refresh()
 
@@ -76,6 +102,21 @@ func _refresh() -> void:
 	_down.disabled = level <= 0
 	_up.disabled = level >= Levels.COUNT - 1
 	_dots.queue_redraw()
+
+
+## Boutons de la vue de la maison : état courant dans l'infobulle, grisés hors du mode Vivre.
+func _refresh_view() -> void:
+	var live := GameMode.is_live()
+	_walls.disabled = not live
+	_roof.disabled = not live
+	_roof.set_pressed_no_signal(GameMode.show_roof)
+	if not live:
+		_walls.tooltip_text = "Murs baissés pour construire"
+		_roof.tooltip_text = "Toit masqué pour construire"
+		return
+	var walls: String = "Murs pleins (avec le toit)" if GameMode.show_roof else GameMode.WALL_MODE_NAMES[GameMode.wall_mode]
+	_walls.tooltip_text = "%s : cliquer pour changer (V)" % walls
+	_roof.tooltip_text = "Masquer le toit (T)" if GameMode.show_roof else "Afficher le toit (T)"
 
 
 ## Trois points empilés, du 2e étage (en haut) au rez-de-chaussée (en bas) ; celui de l'étage regardé est plein.

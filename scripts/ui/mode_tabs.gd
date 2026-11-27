@@ -36,6 +36,12 @@ func _ready() -> void:
 	_on_mode_changed(GameMode.mode)
 
 
+## Version compacte (barre du haut trop étroite) : les icônes seules, le nom dans l'infobulle.
+func set_compact(compact: bool) -> void:
+	for mode in _buttons:
+		_buttons[mode].text = "" if compact else GameMode.NAMES[mode]
+
+
 func _on_mode_changed(mode: int) -> void:
 	# set_pressed_no_signal ne relâche pas les autres boutons du groupe : on le fait nous-mêmes.
 	for key in _buttons:

@@ -34,6 +34,7 @@ var _interior: Dictionary = {}
 func _ready() -> void:
 	GameMode.mode_changed.connect(_on_view_changed)
 	GameMode.wall_mode_changed.connect(_on_view_changed)
+	GameMode.roof_changed.connect(func(_shown: bool) -> void: _on_view_changed(0))
 
 
 ## `characters` : la liste (partagée) des personnages, pour ouvrir les portes ;
@@ -255,7 +256,7 @@ func _level(full: bool) -> String:
 ## qui ne cachent presque rien, restent pleins.
 func _is_full(edge: Vector3i) -> bool:
 	match GameMode.effective_wall_mode():
-		GameMode.WallMode.FULL, GameMode.WallMode.ROOF:
+		GameMode.WallMode.FULL:
 			return true
 		GameMode.WallMode.LOW:
 			return false
