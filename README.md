@@ -61,7 +61,9 @@ Sur un téléphone ou une tablette (navigateur Android ou iOS), l'autoload `Devi
   - partout, deux doigts font défiler, et pincer zoome (aussi au pavé tactile) ;
   - en Construire, le doigt trace les murs, les sols et les pièces comme la souris.
 - **Panneaux** : le panneau du Mouz se replie sous son en-tête (flèche à côté du portrait) et les relations sous leur titre, repliés au départ. Les colonnes et le panneau Construire défilent au doigt quand ils dépassent l'écran (`scripts/ui/mobile_layout.gd`).
-- **Acheter** : l'objet pris dans le catalogue apparaît au milieu de l'écran et suit le doigt. Le catalogue s'efface, et la barre de placement propose Tourner, Poser, Revendre (objet déplacé) et Annuler (`scripts/ui/placement_bar.gd`).
+- **Acheter** : l'objet pris dans le catalogue apparaît au milieu de l'écran et suit le doigt, dessiné un peu au-dessus de lui pour rester visible. Le catalogue s'efface, et la barre de placement propose Tourner, Poser, Revendre (objet déplacé) et Annuler (`scripts/ui/placement_bar.gd`).
+- **Déplacer un objet** : en Acheter, on le fait glisser au doigt. Il se repose quand on lève le doigt si la place est bonne ; sinon il reste en main avec la barre de placement. Toucher un objet sans glisser ouvre toujours son menu (Déplacer, Revendre, Style).
+- **Menus** : les lignes des menus d'actions sont plus hautes et leur texte plus gros, et le menu du jeu passe sur deux colonnes de gros boutons.
 - **Barre du haut** : sur téléphone, elle part compacte (logo en icône) et se resserre encore si besoin (onglets en icônes, horloge sans saison ni température, étage sans les points).
 
 ## Les parties et les sauvegardes
@@ -460,6 +462,8 @@ Chaque état est un calque dessiné (brief n° 8) posé sur le bac du potager ou
 ## Les toits
 
 Le toit se calcule tout seul : un toit à quatre pans sur chaque pièce fermée qui n'a pas de plancher au-dessus (sur une maison à étage, le toit du rez-de-chaussée couvre ce qui dépasse). Chaque case monte selon sa distance au bord de la pièce (16 px par case), à partir du haut des murs pleins ; le faîtage, les arêtiers et les noues se placent d'eux-mêmes. La maison partage un seul style, choisi avec l'outil Toit (les maisons du quartier en ont déjà un).
+
+Le sélecteur d'étage ne propose que les étages qui ont quelque chose (murs, planchers, objets) ; en Construire et en Acheter, il propose aussi celui juste au-dessus, pour y commencer un étage.
 
 La vue de la maison, en mode Vivre, se règle avec deux boutons de la barre du haut, à côté du sélecteur d'étage. Le bouton murs (touche V) passe par **murs pleins → murs coupés → murs baissés**. Le bouton toit (touche T) **affiche ou masque le toit**, et reste enfoncé tant qu'il est affiché. Avec le toit, on voit la maison de l'extérieur : murs pleins et toit sur les pièces ; changer les murs masque le toit ; quand on regarde un étage, les étages au-dessus (cachés) ne comptent pas et le toit couvre celui qu'on regarde. Chaque pan est rempli du motif de son orientation (brief n° 8, `assets/toits/`), avec la bande du faîtage, la gouttière (sauf le chaume), un solin au pied d'un mur d'étage et une cheminée qui sort du toit au-dessus de l'objet cheminée. La pente reste de 16 px par case, plus douce que les 45° du brief, pour garder le pan nord visible et un toit à l'échelle de la maison. Réglages : `scripts/core/roof_view.gd`, styles dans `data/catalog/roofs/`.
 

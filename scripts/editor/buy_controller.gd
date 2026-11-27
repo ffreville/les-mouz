@@ -4,8 +4,10 @@ extends Node2D
 ##  - un objet choisi dans le catalogue suit la souris ; R le tourne ; clic pour l'acheter ;
 ##  - un clic sur un objet posé ouvre Déplacer / Revendre ;
 ##  - pendant un déplacement : clic pour reposer, Suppr pour revendre, Échap pour annuler.
-## Au doigt : l'objet en main suit le doigt, et la barre de placement (PlacementBar) le tourne,
-## le pose ou le lâche ; toucher un objet posé ouvre son menu.
+## Au doigt : l'objet en main suit le doigt (dessiné un peu au-dessus, pour rester visible), et la
+## barre de placement (PlacementBar) le tourne, le pose ou le lâche. Toucher un objet posé ouvre son
+## menu ; le faire glisser le déplace : il se repose en levant le doigt si la place est bonne,
+## sinon il reste en main.
 
 ## On prend un objet en main (`holding`) ou on le lâche.
 signal holding_changed(holding: bool)
@@ -26,6 +28,11 @@ var _cell := Vector2i.ZERO
 var _build_tool: StringName = &"wall"
 ## Dernière position du pointeur (souris ou doigt), dans le monde, tirée des événements reçus.
 var _pointer := Vector2.ZERO
+## Au doigt : l'objet posé sous le doigt quand il s'est posé, et vrai pendant qu'on le fait glisser.
+var _pressed_object: PlacedObject
+var _dragging_object := false
+## Au doigt, l'objet en main est dessiné à cette distance au-dessus du doigt (pixels d'écran).
+const FINGER_OFFSET := 56.0
 
 
 ## Vrai quand un objet est en main (Échap sert alors à le lâcher, pas à ouvrir le menu).
@@ -111,8 +118,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not _active():
 		return
 	if event is InputEventMouseMotion:
-		_track_mouse()
-		_update_preview()
+		if Touch.is_touch(event):
+			_on_touch_motion()
+		else:
+			_track_mouse()
+			_update_preview()
 		return
 	if event.is_action_pressed("ui_cancel") and _definition != null:
 		_stop()
@@ -150,20 +160,58 @@ func _unhandled_input(event: InputEvent) -> void:
 ## Au doigt : l'objet en main se pose là où on touche (il suit le doigt qui glisse) ; sans objet en
 ## main, toucher un objet posé ouvre son menu.
 func _on_touch(click: InputEventMouseButton) -> void:
+	if click.pressed:
+		_pressed_object = _placed_under(_pointer) if _definition == null else null
+		if _definition != null:
+			_track_finger()
+			_update_preview()
+		return
+	_pressed_object = null
+	if _dragging_object:
+		# Fin du glisser : l'objet se repose s'il le peut, sinon il reste en main avec la barre.
+		_dragging_object = false
+		_track_finger()
+		if editor.move_object(_moving, _cell, _rotation):
+			Sfx.play(&"poser")
+			_stop()
+		else:
+			Sfx.play(&"erreur")
+			_update_preview()
+		return
 	if _definition != null:
-		_track_mouse()
+		_track_finger()
 		_update_preview()
-	elif not click.pressed and not editor.world.camera.touch_moved():
+	elif not editor.world.camera.touch_moved():
 		_on_click(click.position)
+
+
+## Le doigt glisse : il emporte l'objet posé sous lui, ou fait suivre l'objet en main.
+func _on_touch_motion() -> void:
+	if _definition == null and _pressed_object != null and editor.world.camera.touch_moved():
+		_start_moving(_pressed_object)
+		_dragging_object = true
+	if _definition != null:
+		_track_finger()
+		_update_preview()
+
+
+## L'objet suit le doigt, un peu au-dessus de lui.
+func _track_finger() -> void:
+	var zoom := get_canvas_transform().get_scale().x
+	_track_point(_pointer - Vector2(0, FINGER_OFFSET / maxf(zoom, 0.01)))
+
+
+## L'objet posé sous ce point du monde (son image d'abord, puis sa case), ou null.
+func _placed_under(point: Vector2) -> PlacedObject:
+	var cs := float(editor.lot.cell_size)
+	var under := editor.world.get_object_at_point(point)
+	return under.placed if under != null else editor.object_at(Vector2i((point / cs).floor()))
 
 
 func _on_click(screen_position: Vector2) -> void:
 	if _definition == null:
-		var cs := float(editor.lot.cell_size)
-		var mouse := _pointer
 		# L'image d'un meuble (qui dépasse au-dessus de sa case) passe avant la case visée.
-		var under := editor.world.get_object_at_point(mouse)
-		var placed := under.placed if under != null else editor.object_at(Vector2i((mouse / cs).floor()))
+		var placed := _placed_under(_pointer)
 		if placed != null:
 			_open_object_menu(placed, screen_position)
 		return
@@ -231,6 +279,7 @@ func _start_moving(placed: PlacedObject) -> void:
 
 func _stop() -> void:
 	var was_placing := _definition != null
+	_dragging_object = false
 	_definition = null
 	_moving = null
 	EventBus.cost_preview_changed.emit("", 0)

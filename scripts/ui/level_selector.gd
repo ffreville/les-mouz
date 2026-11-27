@@ -3,6 +3,8 @@ extends PanelContainer
 ## Sélecteur d'étage de la barre du haut (brief n° 7, version compacte) : une pastille avec « descendre »,
 ## trois points qui montrent l'étage regardé parmi les trois, son nom court (« RDC », « 1er », « 2e »)
 ## et « monter ». Le nom complet est dans l'infobulle. Page bas / Page haut aussi.
+## On ne monte qu'aux étages qui ont quelque chose (murs, planchers, objets), plus, en Construire
+## et Acheter, celui juste au-dessus pour y commencer un étage ; les points ne montrent que ceux-là.
 ## Après un trait, la vue de la maison en mode Vivre : la hauteur des murs (pleins, coupés,
 ## baissés ; touche V) et le toit affiché ou non (touche T).
 
@@ -81,6 +83,8 @@ func _ready() -> void:
 	GameMode.mode_changed.connect(func(_mode: int) -> void: _refresh_view())
 	_refresh_view()
 	EventBus.view_level_changed.connect(func(_level: int) -> void: _refresh())
+	EventBus.lot_changed.connect(_refresh)
+	GameMode.mode_changed.connect(func(_mode: int) -> void: _refresh())
 	_refresh()
 
 
@@ -96,7 +100,16 @@ func setup(world: World) -> void:
 
 func _step(delta: int) -> void:
 	if _world != null:
-		_world.set_view_level(_world.view_level + delta)
+		_world.set_view_level(clampi(_world.view_level + delta, 0, maxi(top_level(), _world.view_level)))
+
+
+## Étage le plus haut où l'on peut monter : le dernier qui a quelque chose ; en Construire et
+## Acheter, un de plus (pour bâtir dessus).
+func top_level() -> int:
+	if _world == null:
+		return 0
+	var used := _world.lot.used_levels() - 1
+	return mini(used + (0 if GameMode.is_live() else 1), Levels.COUNT - 1)
 
 
 func _refresh() -> void:
@@ -105,7 +118,7 @@ func _refresh() -> void:
 	_label.tooltip_text = Levels.display_name(level)
 	tooltip_text = Levels.display_name(level)
 	_down.disabled = level <= 0
-	_up.disabled = level >= Levels.COUNT - 1
+	_up.disabled = level >= top_level()
 	_dots.queue_redraw()
 
 
@@ -127,7 +140,8 @@ func _refresh_view() -> void:
 ## Trois points empilés, du 2e étage (en haut) au rez-de-chaussée (en bas) ; celui de l'étage regardé est plein.
 func _draw_dots() -> void:
 	var level := _world.view_level if _world != null else 0
-	for i in Levels.COUNT:
+	var shown := maxi(top_level(), level) + 1
+	for i in shown:
 		var center := Vector2(3, 3 + (Levels.COUNT - 1 - i) * 8)
 		if i == level:
 			_dots.draw_circle(center, 3.0, Palette.CONTOUR)

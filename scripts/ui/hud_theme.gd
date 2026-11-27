@@ -221,14 +221,16 @@ static func _popup_menu(theme: Theme) -> void:
 	theme.set_color("font_hover_color", "PopupMenu", Palette.ENCRE)
 	theme.set_color("font_separator_color", "PopupMenu", Palette.ENCRE)
 	theme.set_color("font_disabled_color", "PopupMenu", Palette.ENCRE_DOUCE)
-	theme.set_font_size("font_size", "PopupMenu", 15)
-	theme.set_font_size("font_separator_size", "PopupMenu", 13)
+	# Au doigt (téléphone), des lignes plus hautes et un texte plus gros, faciles à toucher.
+	var touch := Device.mobile
+	theme.set_font_size("font_size", "PopupMenu", 18 if touch else 15)
+	theme.set_font_size("font_separator_size", "PopupMenu", 15 if touch else 13)
 	theme.set_font("font_separator", "PopupMenu", font(NUNITO, 800))
-	theme.set_constant("v_separation", "PopupMenu", 14)
+	theme.set_constant("v_separation", "PopupMenu", 30 if touch else 14)
 	theme.set_constant("h_separation", "PopupMenu", 10)
 	theme.set_constant("item_start_padding", "PopupMenu", 10)
 	theme.set_constant("item_end_padding", "PopupMenu", 16)
-	theme.set_constant("icon_max_width", "PopupMenu", 20)
+	theme.set_constant("icon_max_width", "PopupMenu", 24 if touch else 20)
 
 
 static func _misc(theme: Theme) -> void:

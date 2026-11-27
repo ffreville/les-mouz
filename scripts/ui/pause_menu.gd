@@ -18,7 +18,8 @@ var world: World
 var _card := PanelContainer.new()
 var _title := Label.new()
 var _subtitle := Label.new()
-var _buttons := VBoxContainer.new()
+## Les boutons du menu : en colonne, ou sur deux colonnes sur téléphone (pour tenir en hauteur).
+var _buttons: Container = GridContainer.new() if Device.mobile else VBoxContainer.new()
 var _save_as := VBoxContainer.new()
 var _name_field := LineEdit.new()
 var _load_panel := LoadPanel.new()
@@ -70,17 +71,24 @@ func setup(p_world: World) -> void:
 
 
 func _build_buttons() -> void:
-	_buttons.add_theme_constant_override("separation", 8)
-	_buttons.alignment = BoxContainer.ALIGNMENT_CENTER
+	var grid := _buttons as GridContainer
+	if grid != null:
+		grid.columns = 2
+		grid.add_theme_constant_override("h_separation", 10)
+		grid.add_theme_constant_override("v_separation", 10)
+	else:
+		_buttons.add_theme_constant_override("separation", 8)
+		(_buttons as VBoxContainer).alignment = BoxContainer.ALIGNMENT_CENTER
 	_add(_buttons, "Reprendre", &"PrimaryButton", close, "continuer", "Échap")
 	_add(_buttons, "Sauvegarder", &"SecondaryButton", _on_save_pressed, "sauvegarder", "Ctrl S")
 	_add(_buttons, "Sauvegarder sous…", &"SecondaryButton", _show_save_as, "sauvegarder")
 	_add(_buttons, "Charger une partie…", &"SecondaryButton", _show_load, "charger")
-	var line := ColorRect.new()
-	line.color = Palette.TRAIT
-	line.custom_minimum_size = Vector2(BUTTON_WIDTH, 2)
-	line.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	_buttons.add_child(line)
+	if not Device.mobile:
+		var line := ColorRect.new()
+		line.color = Palette.TRAIT
+		line.custom_minimum_size = Vector2(BUTTON_WIDTH, 2)
+		line.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		_buttons.add_child(line)
 	_add(_buttons, "Retour au quartier", &"SecondaryButton", _on_neighborhood_pressed, "emmenager")
 	_add(_buttons, "Menu principal", &"QuietButton", _on_title_pressed, "menu")
 	if Device.mobile:
@@ -142,7 +150,9 @@ func _add(parent: Control, text: String, variation: StringName, action: Callable
 	button.text = text
 	button.theme_type_variation = variation
 	button.focus_mode = Control.FOCUS_NONE
-	button.custom_minimum_size = Vector2(BUTTON_WIDTH, 38 if Device.mobile else 44)
+	button.custom_minimum_size = Vector2(260, 52) if Device.mobile else Vector2(BUTTON_WIDTH, 44)
+	if Device.mobile:
+		button.add_theme_font_size_override("font_size", 18)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	if icon != "":
 		button.icon = load("res://assets/icons/white/%s.svg" % icon)
