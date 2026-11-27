@@ -28,6 +28,27 @@ Les graphismes suivent la direction artistique « Maison de poche » décrite da
 
 À la première ouverture, Godot crée le dossier `.godot/` (cache, ignoré par git). Si tu ajoutes un script avec un nouveau `class_name` en dehors de l'éditeur, ouvre l'éditeur une fois (ou lance `Godot --headless --path . --import`) pour qu'il soit reconnu.
 
+## Jouer dans le navigateur
+
+Le jeu est publié sur GitHub Pages : **https://ffreville.github.io/les-mouz/**
+
+- À chaque push sur `main`, l'action `.github/workflows/web.yml` télécharge Godot 4.7.2 et son modèle web, exporte le jeu (réglage « Web » de `export_presets.cfg`) et publie le résultat. Compter quelques minutes entre le push et la mise à jour du site.
+- L'export est « sans threads » (`variant/thread_support=false`) : il tourne sur GitHub Pages, qui ne sait pas envoyer les en-têtes demandés par la version avec threads.
+- Les sauvegardes restent dans le navigateur (stockage du site) : elles sont propres à chaque navigateur et à chaque ordinateur, et disparaissent si on efface les données du site.
+- Les navigateurs ne jouent aucun son avant le premier clic.
+
+Pour essayer la version web chez soi, il faut le modèle web de Godot (Godot ▸ Éditeur ▸ Gérer les modèles d'export), puis :
+
+```bash
+godot --headless --path . --export-release "Web" build/web/index.html
+```
+
+```bash
+python3 -m http.server 8000 --directory build/web
+```
+
+et ouvrir http://localhost:8000. Le dossier `build/` est ignoré par git.
+
 ## Les parties et les sauvegardes
 
 Le jeu s'ouvre sur un **écran d'accueil** : la maison de la dernière partie en fond (ou un petit jardin où se promènent des Mouz s'il n'y en a pas), et les portraits de la dernière famille jouée.

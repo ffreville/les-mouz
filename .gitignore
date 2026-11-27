@@ -2,3 +2,7 @@
 .godot/
 /android/
 .DS_Store
+
+# Version web exportée (voir .github/workflows/web.yml)
+/build/
+/.claude/launch.json
